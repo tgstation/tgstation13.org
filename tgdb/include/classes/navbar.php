@@ -1,6 +1,5 @@
 <?php
 
-
 class navbar {
 	
 	//format:
@@ -8,9 +7,10 @@ class navbar {
 	//1=friendly name (defaults to everything between the last / and last . if omitted)
 	//2=internal name (defaults to friendly name if omitted) used for toggling the active class on a navitem
 	static private $items = array(
-	array("index.php", "Home"),
-	array("bans.php", "BanDB", "ban"),
-	array("conndb.php", "Connection DB", "cdb"),
+		array("index.php", "Home"),
+		array("bans.php", "Ban DB", "ban"),
+		array("conndb.php", "Connection DB", "cdb"),
+		//array("player.php", "Player Lookup", "player"),
 	);
 	static private $active = null;
 

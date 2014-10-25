@@ -36,4 +36,5 @@ Hello {USERCKEY} ({USERRANK}).
 		</div>
 	</div>
 </div>
+
 {BANTABLE}

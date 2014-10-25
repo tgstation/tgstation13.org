@@ -27,10 +27,11 @@ class theme {
 	}
 	private function header() {
 		$navbar = navbar::get();
-		return (new template("header", array('NAVBAR' => $navbar)))->process();
+		return (new template("header", array('NAVBAR' => $navbar)));
 	}
 	private function footer() {
-		return (new template("footer"))->process();
+
+		return (new template("footer", array('TIMETABLE' => timing::generatetimetable())));
 	}
 	
 	private function fmtpagetitle() {

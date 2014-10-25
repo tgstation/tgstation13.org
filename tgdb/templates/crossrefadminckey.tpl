@@ -1,0 +1,1 @@
+<a href="bans.php?adminckey={ITEM}">{ITEM}</a>
