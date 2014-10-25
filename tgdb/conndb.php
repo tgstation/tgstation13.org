@@ -1,0 +1,248 @@
+<?php
+$totaltime = microtime(true);
+require_once("include/include.php");
+navbar::setactive("cdb");
+$user = auth();
+$thm = new theme("Connection DB");
+$tpl = new template("condb", array(
+	"USERCKEY"	 			=>	$user[0], 
+	"USERRANK" 				=>	$user[1],
+ 	"ADMINCKEY"		 		=>	"",
+	"PLAYERCKEY" 			=>	"",
+	"PLAYERCID" 			=>	"",
+	"PLAYERIP"		 		=>	"",
+	"PANELOPEN"				=>	"collapse",
+	"SEARCHTYPEANYCHECKED"	=>	"checked",
+	"SEARCHTYPEALLCHECKED"	=>	"",
+	"CONRES"				=>	""
+	));
+$conrestpl = new template("conres");
+//takes a array of 1 day of connections grouped by date then ckey then ip and spins it into a 1 master row of the 
+//	connection table with subrows for ckey and subrows for ip.
+function processdate ($date) {
+	$conrows = "";
+	$conrowtpl = new template("conrow", array(	//initialize optional variables
+		'DATECOL' 		=>	"",
+		'CKEYCOL'		=>	"",
+		'IPCOL'			=>	""
+	));
+	$conrowdatecol = new template("conrowdatecol");
+	$conrowckeycol = new template("conrowckeycol");
+	$conrowipcol = new template("conrowipcol"); 
+	$datecount = 0;
+	
+	foreach ($date as $i) 
+		foreach ($i as $k) 
+			$datecount += count($k);
+				
+	$conrowdatecol->setvar('ROWSPAN', $datecount);
+	$conrowdatecol->setvar('DATE', $date[0][0][0][0]);
+	$conrowtpl->setvar('DATECOL', $conrowdatecol->process());
+	foreach ($date as $ckey) {
+		$ckeycount = 0;
+		foreach ($ckey as $k) 
+			$ckeycount += count($k);
+		$conrowckeycol->setvar('ROWSPAN', $ckeycount);
+		$conrowckeycol->setvar('CKEY', $ckey[0][0][2]);
+		$conrowtpl->setvar('CKEYCOL', $conrowckeycol->process());
+		foreach ($ckey as $ip) {
+			$conrowipcol->setvar('ROWSPAN', count($ip));
+			$conrowipcol->setvar('IP', $ip[0][3]);
+			$conrowtpl->setvar('IPCOL', $conrowipcol->process());
+			foreach ($ip as $irow) {
+				$conrowtpl->setvar('CID', $irow[4]);
+				$conrowtpl->setvar('SERVER', $irow[1]);
+				$conrowtpl->setvar('COUNT', $irow[5]);
+				$conrows .= $conrowtpl->process()."\n";
+				$conrowtpl->resetvars(array(	//re-initialize optional variables
+					'DATECOL' 		=>	"",
+					'CKEYCOL'		=>	"",
+					'IPCOL'			=>	""
+				));
+				
+			}
+			$conrowipcol->resetvars();
+		}
+		$conrowckeycol->resetvars();
+		
+	}
+	return $conrows;
+}
+
+
+$sqlwherea = array();
+
+if (isset($_GET['playerckey']) && $_GET['playerckey']) {
+	$playerckey = "'".esc($_GET['playerckey'])."'";
+	$sqlwherea[] = "ckey LIKE ".$playerckey;
+	$tpl->setvar('PLAYERCKEY', htmlspecialchars($_GET['playerckey']));
+}
+
+if (isset($_GET['playercid']) && $_GET['playercid']) {
+	$playercid = "'".esc($_GET['playercid'])."'";
+	$sqlwherea[] = "computerid LIKE ".$playercid;
+	$tpl->setvar('PLAYERCID', htmlspecialchars($_GET['playercid']));
+}
+
+if (isset($_GET['playerip']) && $_GET['playerip']) {
+	$playerip = "'".esc($_GET['playerip'])."'";
+	$sqlwherea[] = "ip LIKE ".$playerip;
+	$tpl->setvar('PLAYERIP', htmlspecialchars($_GET['playerip']));
+}
+$sqlwheresep = "OR";
+if (isset($_GET['searchtype']) && $_GET['searchtype'] == "all") {
+	$tpl->setvar("SEARCHTYPEANYCHECKED", "");
+	$tpl->setvar("SEARCHTYPEALLCHECKED", "checked");
+	$sqlwheresep = "AND";
+}
+
+$sqlwhere = "";
+$orderby = "desc";
+$limit = "LIMIT 100";
+if (count($sqlwherea)) {
+	//show the search panel
+	$tpl->setvar('PANELOPEN', 'in');
+	$sqlwhere = " WHERE ".join(" ".$sqlwheresep." ", $sqlwherea);
+	$limit = "LIMIT 10000";
+	$orderby = "asc";
+} else {
+	$thm->send($tpl);
+	return;
+}
+
+$sqltime = microtime(true);
+$res = $mysqli->query("SELECT DATE(datetime) AS `day`, serverip, ckey, ip, computerid, count(id) AS `count` FROM `".fmttable("connection_log")."`".$sqlwhere." GROUP BY day,serverip,ckey,ip,computerid ORDER BY day,ckey,ip ".$orderby." ".$limit);
+$sqltime = microtime(true) - $sqltime;
+
+
+
+//group same dates, then ckeys, then ips
+//this assumes data is sorted by date, then ckey, then ip.
+$date = array(array(array())); //date holds an array of ckeys,each holding an array of ips, each holding an array of rows
+$ckeyi = 0;
+$ipi = 0;
+$conrows = "";
+
+//we will also keep a running tabs on a list of ckeys/ips/cids seen so we can display that as an easy list.
+$ckeys = array();
+$cids = array();
+$ips = array();
+$rowcount = 0;
+$connectioncount = 0;
+
+//main sql processing loop
+while ($row = $res->fetch_row()) {
+	$connectioncount += $row[5];
+	$rowcount++;
+	
+	if (!array_key_exists((string)$row[2],$ckeys))
+		$ckeys[(string)$row[2]] = 0;
+	$ckeys[(string)$row[2]] += $row[5];
+	
+	if (!array_key_exists((string)$row[3],$ips))
+		$ips[(string)$row[3]] = 0;
+	$ips[(string)$row[3]] += $row[5];
+	
+	if (!array_key_exists((string)$row[4],$cids))
+		$cids[(string)$row[4]] = 0;
+	$cids[(string)$row[4]] += $row[5];	
+	
+	if (!count($date) || !count($date[0]) || !count($date[0][0]) || !count($date[0][0][0])) { //first run, fill in current data
+		$date = array(array(array($row)));
+		continue;
+	}
+		
+	//date change, process current row set with the templates then reset state and continue
+	if ($row[0] != $date[0][0][0][0]) {
+		if (count($date)) //if we got an array in $date, lets turn it into a section of the connection table
+			$conrows .= processdate($date)."\n";
+		
+		//reset state
+		$date = array(array(array($row)));
+		$ckeyi = 0;
+		$ipi = 0;
+		continue;//no need to do any of the stuff down there
+	}
+	
+	//look at the first row of the first ip of the current ckey array to see what ckey we are on
+	if ($row[2] != $date[$ckeyi][0][0][2]) { //new ckey, reset state and continue
+		$date[] = array(array($row));
+		$ckeyi++;
+		$ipi = 0;
+		continue;
+	}
+	
+	//look at the first row of the current ip of the current ckey to see what ip we are on
+	if ($row[3] != $date[$ckeyi][$ipi][0][3]) { //new ip, reset state and continue
+		$date[$ckeyi][] = array($row);
+		$ipi++;
+		continue;
+	}
+	
+	//make a new row in the current ip in the current cey of $date with all the data
+	$date[$ckeyi][$ipi][] = $row;
+}
+//now lets unset and free all the things
+unset($row);
+$res->free();
+
+if (count($date)) //finish off the remaining day.
+	$conrows .= processdate($date)."\n";
+unset($date);
+		
+$contabletpl = new template("contable", array("CON_ROWS" => $conrows));
+unset($conrows);
+$conrestpl->setvar('CONTABLE', $contabletpl->process());
+unset($contabletpl);
+
+//now we build the other tables. 
+
+$ckeycontablerow = new template("ckeycontablerow");
+$ckeycontablerows = "";
+foreach ($ckeys as $ckey=>$rounds) {
+	$ckeycontablerow->resetvars(array(
+	'CKEY'		=>	$ckey,
+	'ROUNDS'	=>	$rounds
+	));
+	$ckeycontablerows .= "\n".$ckeycontablerow->process();
+}
+$conrestpl->setvar('CKEYTABLE', (new template('ckeycontable',array('ROWS' => $ckeycontablerows)))->process());
+$conrestpl->setvar('CKEYCOUNT', count($ckeys));
+$conrestpl->setvar('CKEYTABLEOPEN', (count($ckeys) > 1 ? "collapse" : "in"));
+
+$cidcontablerow = new template("cidcontablerow");
+$cidcontablerows = "";
+foreach ($cids as $cid=>$rounds) {
+	$cidcontablerow->resetvars(array(
+	'CID'		=>	$cid,
+	'ROUNDS'	=>	$rounds
+	));
+	$cidcontablerows .= "\n".$cidcontablerow->process();
+}
+$conrestpl->setvar('CIDTABLE', (new template('cidcontable',array('ROWS' => $cidcontablerows)))->process());
+$conrestpl->setvar('CIDCOUNT', count($cids));
+$conrestpl->setvar('CIDTABLEOPEN', (count($cids) > 1 ? "collapse" : "in"));
+
+$ipcontablerow = new template("ipcontablerow");
+$ipcontablerows = "";
+foreach ($ips as $ip=>$rounds) {
+	$ipcontablerow->resetvars(array(
+	'IP'		=>	$ip,
+	'ROUNDS'	=>	$rounds
+	));
+	$ipcontablerows .= "\n".$ipcontablerow->process();
+}
+$conrestpl->setvar('IPTABLE', (new template('ipcontable',array('ROWS' => $ipcontablerows)))->process());
+$conrestpl->setvar('IPCOUNT', count($ips));
+$conrestpl->setvar('IPTABLEOPEN', (count($ips) > 1 ? "collapse" : "in"));
+
+$conrestpl->setvar('ROWCOUNT', $rowcount);
+$conrestpl->setvar('CONNECTIONCOUNT', $connectioncount);
+$totaltime = microtime(true) - $totaltime;
+$phptime = $totaltime - $sqltime;
+$tpl->setvar('SQLTIME', $sqltime);
+$tpl->setvar('TOTALTIME', $totaltime);
+$tpl->setvar('PHPTIME', $phptime);
+$tpl->setvar('CONRES', $conrestpl->process());
+$thm->send($tpl);
+?>

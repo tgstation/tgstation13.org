@@ -1,0 +1,24 @@
+<?php
+/* 
+*
+*		COPYRIGHT GPL ETC SHIT GOES HERE
+*
+*
+*/
+
+//rename to config.php after you do all that editing stuff
+
+define ("CONFIG_LOADED", true); //this isn't actually used for anything yet
+
+$config = array();
+
+//Start MySQL config
+$config['sql'] = array();
+$config['sql']['user'] = "feedback"; //sql username
+$config['sql']['password'] = 'P@$$w0rd'; //sql password
+$config['sql']['db'] = "feedback"; //sql database name
+$config['sql']['tableprefix'] = "erro_"; //prefex all table names with this
+$config['sql']['addr'] = "localhost"; //sql server address/ip (tends to be localhost)
+$config['sql']['port'] = 3456; //sql server port (sock file **should** work fine here, if not, edit include.php to fit)
+//End MySQL config
+?>
