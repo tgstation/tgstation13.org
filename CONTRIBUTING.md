@@ -16,3 +16,12 @@ Your PR should clearly state what it does. Adding unrelated things then never me
 Breaking this rule too many times will lead to a block.
 Breaking this rule to add something that compromises the security of this application will lead to a block and report to github and/or the proper authorities.
 
+
+##Style and Code Requirements
+
+### Seperate logic and content.
+In the bandb stuff: At no point should any php code not in template.php echo html, javascript, or css. Furthermore: no php code should be sending the template class html code as a variable.
+Rather, have all content(html,js,css) in template files or included from template files, add template variables for dynamic content, and use defined conditionals in templates to determine when something should show. (see bandetails.php and template/bandetails.tpl for an example)
+
+--to be continued--
+
