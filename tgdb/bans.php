@@ -18,6 +18,7 @@ $thm = new theme("Bans");
 
 $sqlwherea = array();
 if (isset($_GET['adminckey']) && $_GET['adminckey']) {
+	$_GET['adminckey'] = keytockey($_GET['adminckey']);
 	$adminckey = "'".esc($_GET['adminckey'])."'";
 	$sqlwherea[] = "a_ckey LIKE ".$adminckey;
 	$tpl->setvar('ADMINCKEY', htmlspecialchars($_GET['adminckey']));
@@ -26,6 +27,7 @@ if (isset($_GET['adminckey']) && $_GET['adminckey']) {
 //player search stuff, uses its own array because it needs to OR its search in () then AND it with the admin search.
 $playersearcha = array();
 if (isset($_GET['playerckey']) && $_GET['playerckey']) {
+	$_GET['playerckey'] = keytockey($_GET['playerckey']);
 	$playerckey = "'".esc($_GET['playerckey'])."'";
 	$playersearcha[] = "ckey LIKE ".$playerckey;
 	$tpl->setvar('PLAYERCKEY', htmlspecialchars($_GET['playerckey']));

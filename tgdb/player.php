@@ -25,6 +25,7 @@ $playerrestpl = new template("playerres");
 $sqlwherea = array();
 
 if (isset($_GET['playerckey']) && $_GET['playerckey']) {
+	$_GET['playerckey'] = keytockey($_GET['playerckey']);
 	header("location: playerdetails.php?ckey=".urlencode($_GET['playerckey']));
 	die();
 }

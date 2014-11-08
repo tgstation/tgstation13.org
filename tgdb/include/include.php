@@ -58,6 +58,10 @@ function is_assoc($var)
         return (((array)$var === $var) && (!count($var) || array_diff_key($var,array_keys(array_keys($var)))));
 }
 
+function keytockey ($key) {
+	return strtolower(preg_replace('/[^a-zA-Z0-9@]/', '', $key));
+}
+
 function crossrefify ($item, $type, $vars = array()) {
 	$crossrefed = '';
 	$tpl = null;

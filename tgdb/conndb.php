@@ -88,6 +88,7 @@ function processdate ($date) {
 $sqlwherea = array();
 
 if (isset($_GET['playerckey']) && $_GET['playerckey']) {
+	$_GET['playerckey'] = keytockey($_GET['playerckey']);
 	$playerckey = "'".esc($_GET['playerckey'])."'";
 	$sqlwherea[] = "ckey LIKE ".$playerckey;
 	$tpl->setvar('PLAYERCKEY', htmlspecialchars($_GET['playerckey']));
