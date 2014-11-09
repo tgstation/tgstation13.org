@@ -58,8 +58,11 @@ function is_assoc($var)
         return (((array)$var === $var) && (!count($var) || array_diff_key($var,array_keys(array_keys($var)))));
 }
 
-function keytockey ($key) {
-	return strtolower(preg_replace('/[^a-zA-Z0-9@]/', '', $key));
+function keytockey ($key, $keepmysqlwildcards = true) {
+	if ($keepmysqlwildcards)
+		return strtolower(preg_replace('/[^a-zA-Z0-9@%_]/', '', $key));
+	else 
+		return strtolower(preg_replace('/[^a-zA-Z0-9@]/', '', $key));
 }
 
 function crossrefify ($item, $type, $vars = array()) {
