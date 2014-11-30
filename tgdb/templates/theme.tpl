@@ -79,7 +79,7 @@
 	{#IFNDEF:DEBUG}
 	<div class="alert alert-info">
 			<strong>Hey! Listen!</strong>
-				Please report any bugs or display quirks <a href="/phpBB/viewtopic.php?t=1110">here</a>
+				Please report any bugs or display quirks <a href="https://github.com/MrStonedOne/tgstation13-website/issues/new">here</a>
 		</div>{#ENDIF}
 	{CONTENT}
 	</div>
