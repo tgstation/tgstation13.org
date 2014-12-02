@@ -56,31 +56,53 @@ if (count($sqlwherea)) {
 	$sqlwhere = " WHERE ".join(" AND ", $sqlwherea);
 }
 
-$res = $mysqli->query("SELECT ckey,computerid,ip,bantype,reason,job,duration,a_ckey,bantime,unbanned,unbanned_datetime,unbanned_ckey,id,expiration_time FROM ".fmttable("ban").$sqlwhere." ORDER BY id DESC LIMIT 250;");
+$res = $mysqli->query("SELECT id, bantime, ckey, computerid, ip, bantype, reason, job, a_ckey, expiration_time, unbanned, unbanned_datetime, unbanned_ckey FROM ".fmttable("ban").$sqlwhere." ORDER BY id DESC LIMIT 250;");
 
 $banrowtpl = new template("banrow");
 $banrows = "";
-while ($row = $res->fetch_row()) {
-	$bantime = new DateTime($row[8]);
-	$banexpires = new DateTime($row[13]);
+while ($row = $res->fetch_assoc()) {
+	$bantime = new DateTime($row['bantime']);
+	$banexpires = new DateTime($row['expiration_time']);
+	
 	$banlen = generateDurationFromDates($bantime, $banexpires);
-	$banrowtpl->setvar('BAN_STATUS', ($row[9] ? 'Unbanned':'Active'));
-	//$banexpires = $bantime->add(new DateInterval('PT' . ($row[6]>=0?$row[6]:1999999999) . 'M'));
-	if (strpos($row[3],"PERMA") === FALSE && !$row[9] && $banexpires < (New DateTime()))
-		$banrowtpl->setvar('BAN_STATUS', 'Expired');
-	$banrowtpl->setvar('UNBANNING_ADMIN', $row[11]?crossrefify($row[11],"adminckey"):"");
-	$banrowtpl->setvar('UNBAN_TIME', ($row[10]?$row[10]:(strpos($row[3],"PERMA")?"":$banexpires->format("Y-m-d H:i:s")))); //if unbanned, show unban time, else, show expire time (unless a perma)
-	$banrowtpl->setvar('BANNED_CKEY', crossrefify($row[0],'ckey'));
-	$banrowtpl->setvar('BANNED_CID', crossrefify($row[1],'cid'));
-	$banrowtpl->setvar('BANNED_IP', crossrefify($row[2],'ip'));
-	$banrowtpl->setvar('USER_DETAILS', htmlspecialchars($row[0]).'<br/>'.$row[1].'<br/>'.$row[2]);
-	$banrowtpl->setvar('BAN_TYPE', ($row[5]?$row[5]:FALSE));
-	$banrowtpl->setvar('BAN_JOB', $row[5]);
-	$banrowtpl->setvar('BAN_REASON', htmlspecialchars($row[4]));
-	$banrowtpl->setvar('BAN_LENGTH', (strpos($row[3],"PERMA")!== FALSE?"Permanent":$banlen." Minute".($banlen==1?"":"s")));
-	$banrowtpl->setvar('BANNING_ADMIN', crossrefify($row[7],"adminckey"));
-	$banrowtpl->setvar('BAN_DATE', $row[8]);
-	$banrowtpl->setvar('BAN_ID', $row[12]);
+	
+	$banrowtpl->setvar('BAN_STATUS', ($row['unbanned'] ? 'Unbanned':'Active'));
+	
+	//Stuff we only do when the ban isn't a permaban
+	if (strpos($row['bantype'],"PERMA") === FALSE) {
+		if (!$row['unbanned'] && $banexpires < (New DateTime()))
+			$banrowtpl->setvar('BAN_STATUS', 'Expired');
+			
+		$banrowtpl->setvar('EXPIRE_TIME', $row['expiration_time']);
+		$banrowtpl->setvar('BAN_LENGTH', $banlen." Minute".($banlen==1?"":"s"));
+	}
+	
+	if ($row['unbanned']) {
+		$banrowtpl->setvar('UNBANNED', $row['unbanned']);		
+		$banrowtpl->setvar('UNBANNING_ADMIN', crossrefify($row['unbanned_ckey'], "adminckey"));
+		$banrowtpl->setvar('UNBAN_TIME', $row['unbanned_datetime']);
+	}
+	
+	if ($row['ckey'])
+		$banrowtpl->setvar('BANNED_CKEY', crossrefify($row['ckey'],'ckey'));
+	if ($row['computerid'])
+		$banrowtpl->setvar('BANNED_CID', crossrefify($row['computerid'],'cid'));
+	if ($row['ip'])
+		$banrowtpl->setvar('BANNED_IP', crossrefify($row['ip'],'ip'));
+
+	if ($row['job'])
+		$banrowtpl->setvar('BAN_JOB', $row['job']);
+		
+	$banrowtpl->setvar('BAN_REASON', htmlspecialchars($row['reason']));
+	
+	
+	
+	$banrowtpl->setvar('BANNING_ADMIN', crossrefify($row['a_ckey'],"adminckey"));
+	
+	$banrowtpl->setvar('BAN_DATE', $row['bantime']);
+	
+	$banrowtpl->setvar('BAN_ID', $row['id']);
+	
 	$banrows .= $banrowtpl->process();
 }
 
