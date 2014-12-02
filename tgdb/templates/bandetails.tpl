@@ -39,8 +39,19 @@ unbanned_ip
 						<td>{BAN_STATUS}</td>
 					</tr>
 					<tr>
-						<td>Ban Time</td>
+						<td>Ban Date</td>
+						<td>{BANTIME}</td>
+					</tr>
+					{#IFDEF:DURATION}
+					<tr>
+						<td>Ban length</td>
 						<td>{DURATION}</td>
+					</tr>
+					{#ENDIF}
+					
+					<tr>
+						<td>{#IFDEF:DURATION}Real {#ENDIF}Ban length</td>
+						<td>{REAL_BAN_TIME}</td>
 					</tr>
 					<tr>
 						<td>Expire Time</td>

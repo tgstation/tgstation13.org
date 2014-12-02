@@ -86,7 +86,25 @@ function crossrefify ($item, $type, $vars = array()) {
 			$tpl->setvar('ITEM', $item);
 		break;
 	}
+	
 	return $tpl;
 }
+//takes two DateTime dates and returns the amount of minutes between them.
+function generateDurationFromDates($start, $end) {
+	$minutes = 0;
+	$diff = $start->diff($end);
+	$minutes += $diff->days * 24 * 60;
+	$minutes += $diff->h * 60;
+	$minutes += $diff->i;
+	return $minutes;
+}
+
+
+
+
+
+
+
+
 
 ?>

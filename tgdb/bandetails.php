@@ -73,6 +73,7 @@ if ((int)$id <= (int)0) {
 			
 		}
 	$expirebantime = new DateTime($row['expiration_time']);
+	$bantime = new DateTime($row['bantime']);
 	if ($row['unbanned'])
 		$tpl->setvar("BAN_STATUS", 'Unbanned');
 	else if ($expirebantime < new datetime() && (int)$row['duration'] >= 0 && strpos($row['bantype'],"PERMA") === FALSE)
@@ -80,6 +81,12 @@ if ((int)$id <= (int)0) {
 	else
 		$tpl->setvar("BAN_STATUS", 'Active');
 	
+	
+	if (strpos($row['bantype'],"PERMA") === FALSE)
+		$realbantime = generateDurationFromDates($bantime,$expirebantime);
+		$tpl->setvar("REAL_BAN_TIME", $realbantime . " Minute".($realbantime==1?"":"s"));
+	else
+		$tpl->setvar("REAL_BAN_TIME", "Permanent");
 	
 	} else {
 		$tpl->setvar("ERROR_MSG", "id not found!");
