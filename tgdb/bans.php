@@ -66,7 +66,7 @@ while ($row = $res->fetch_row()) {
 	$banlen = generateDurationFromDates($bantime, $banexpires);
 	$banrowtpl->setvar('BAN_STATUS', ($row[9] ? 'Unbanned':'Active'));
 	//$banexpires = $bantime->add(new DateInterval('PT' . ($row[6]>=0?$row[6]:1999999999) . 'M'));
-	if (!$row[9] && $banexpires < (New DateTime()))
+	if (strpos($row[3],"PERMA") === FALSE && !$row[9] && $banexpires < (New DateTime()))
 		$banrowtpl->setvar('BAN_STATUS', 'Expired');
 	$banrowtpl->setvar('UNBANNING_ADMIN', $row[11]?crossrefify($row[11],"adminckey"):"");
 	$banrowtpl->setvar('UNBAN_TIME', ($row[10]?$row[10]:(strpos($row[3],"PERMA")?"":$banexpires->format("Y-m-d H:i:s")))); //if unbanned, show unban time, else, show expire time (unless a perma)
