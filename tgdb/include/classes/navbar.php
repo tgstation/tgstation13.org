@@ -30,7 +30,7 @@ class navbar {
 	//fills the item values that were left blank
 	static private function processitem (array $item) {
 		if (!$item)
-				continue;
+			throw new exception("Processitem called with null argument");
 		if (count($item) < 1)
 			throw new exception("Processitem called on empty array");
 		if (count($item) < 2) {
