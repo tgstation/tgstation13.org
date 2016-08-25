@@ -14,19 +14,19 @@ Hello {USERCKEY} ({USERRANK}).
 				<form action='?' method='get' class="form" role="form">
 					<div class="row">
 						<div class="form-group col-md-2">
+							<label class="control-label" for='adminckey'>Admin ckey:</label>
+							<input id='adminckey' class="form-control input-sm" type='text' value='{ADMINCKEY}' name='adminckey'/>
+						</div>
+						<div class="form-group col-md-2">
 							<label class="control-label" for='playerckey'>Player ckey:</label>
 							<input id='playerckey' class="form-control input-sm" type='text' value='{PLAYERCKEY}' name='playerckey'/>
 						</div>
 						<div class="form-group col-md-2">
-							<label class="control-label" for='playercid'>Player cid:</label>
-							<input id='playercid' class="form-control input-sm" type='text' value='{PLAYERCID}' name='playercid'/>
+							<label class="control-label" for='text'>Text:</label>
+							<input id='text' class="form-control input-sm" type='text' value='{TEXT}' name='text'/>
 						</div>
 						<div class="form-group col-md-2">
-							<label class="control-label" for='playerip'>Player ip:</label>
-							<input id='playerip' class="form-control input-sm" type='text' value='{PLAYERIP}' name='playerip'/>
-						</div>
-						<div class="form-group col-md-2">
-							<label class="control-label" for="searchsubmit">Search type:</label><br>
+							<label class="control-label" for="searchtype">Search type:</label><br>
 							<input type="radio" id="searchtype" name="searchtype" value="any" {SEARCHTYPEANYCHECKED}/>Any
 							<input type="radio" id="searchtype" name="searchtype" value="all" {SEARCHTYPEALLCHECKED}/>All
 						</div>
@@ -39,5 +39,27 @@ Hello {USERCKEY} ({USERRANK}).
 			</div>
 		</div>
 	</div>
-	{CONRES}
+</div>
+<div class="panel panel-default">
+	<div class="panel-body">
+		<table class="table table-bordered table-hover table-condensed table-striped floatthead">
+			<thead>
+				<th style="min-width:200px;padding:0px;text-align:center">Details</th>
+				<th style="padding:0px;text-align:center">Note</th>
+			</thead>
+			<tbody>
+				{#ARRAY:NOTES}
+					<tr>
+						<td style="text-overflow:nowrap;overflow:nowrap;padding:0px">
+							<b>{CKEY}</b><br/>
+							{DATE}<br/>
+							<b>{ADMIN}</b><br/>
+							{SERVER}<br/>
+						</td>
+						<td style="padding:0px">{NOTE}</td>
+					</tr>
+				{#ENDIF}
+			</tbody>
+		</table>
+	</div>
 </div>

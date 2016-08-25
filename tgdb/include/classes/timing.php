@@ -1,5 +1,5 @@
 <?php
-
+namespace tgdb;
 //tracks how long things took.
 //used to build the time table in footer.tpl
 

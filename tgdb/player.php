@@ -1,12 +1,12 @@
 <?php
-
+namespace tgdb;
 $totaltime = microtime(true);
 require_once("include/include.php");
 navbar::setactive("player");
 $user = auth();
 $thm = new theme("Player Lookup");
 $tpl = new template("player", array(
-	"USERCKEY"	 			=>	$user[0], 
+	"USERCKEY"	 			=>	crossrefify($user[0],'adminckey'), 
 	"USERRANK" 				=>	$user[1],
  	"ADMINCKEY"		 		=>	"",
 	"PLAYERCKEY" 			=>	"",
@@ -16,7 +16,9 @@ $tpl = new template("player", array(
 	"SEARCHTYPEALLCHECKED"	=>	"",
 	"PLAYERRES"				=>	""
 	));
-$playerrestpl = new template("playerres");
+$playerrestpl = new template("playerres", array(
+	"QUERY"		=> $_SERVER["QUERY_STRING"]
+	));
 
 
 //takes a array of 1 day of connections grouped by date then ckey then ip and spins it into 1 master row of the 
@@ -25,20 +27,20 @@ $playerrestpl = new template("playerres");
 $sqlwherea = array();
 
 if (isset($_GET['playerckey']) && $_GET['playerckey']) {
-	$_GET['playerckey'] = keytockey($_GET['playerckey']);
-	header("location: playerdetails.php?ckey=".urlencode($_GET['playerckey']));
-	die();
+	$playerckey = "'".esc(keytockey($_GET['playerckey']))."'";
+	$sqlwherea[] = "ckey LIKE ".$playerckey;
+	$tpl->setvar('PLAYERCKEY', htmlspecialchars($_GET['playerckey']));
 }
 
 if (isset($_GET['playercid']) && $_GET['playercid']) {
 	$playercid = "'".esc($_GET['playercid'])."'";
-	$sqlwherea[] = "computerid = ".$playercid;
+	$sqlwherea[] = "computerid LIKE ".$playercid;
 	$tpl->setvar('PLAYERCID', htmlspecialchars($_GET['playercid']));
 }
 
 if (isset($_GET['playerip']) && $_GET['playerip']) {
 	$playerip = "'".esc($_GET['playerip'])."'";
-	$sqlwherea[] = "ip = ".$playerip;
+	$sqlwherea[] = "ip LIKE ".$playerip;
 	$tpl->setvar('PLAYERIP', htmlspecialchars($_GET['playerip']));
 }
 
@@ -76,7 +78,7 @@ if (!count($ckeys)) {
 	return;
 }
 
-if (count($ckeys) == 1) {
+if (count($ckeys) == 1 && (!isset($_GET['showres']))) {
 	header("location: playerdetails.php?ckey=".urlencode(array_keys($ckeys)[0]));
 	die();
 }
@@ -85,7 +87,7 @@ $ckeycontablerow = new template("ckeycontablerow");
 $ckeycontablerows = "";
 foreach ($ckeys as $ckey=>$rounds) {
 	$ckeycontablerow->resetvars(array(
-	'CKEY'		=>	'<a href="playerdetails.php?ckey='.urlencode($ckey).'">'.$ckey.'</a>',
+	'CKEY'		=>	crossrefify($ckey,'ckey'),
 	'ROUNDS'	=>	$rounds
 	));
 	$ckeycontablerows .= "\n".$ckeycontablerow->process();

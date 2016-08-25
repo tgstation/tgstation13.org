@@ -1,5 +1,5 @@
 <?php
-
+namespace tgdb;
 class navbar {
 	
 	//format:
@@ -9,13 +9,16 @@ class navbar {
 	static private $items = array(
 		array("index.php", "Home"),
 		array("bans.php", "Ban DB", "ban"),
+		array("notes.php", "Note DB", "note"),
 		array("conndb.php", "Connection DB", "cdb"),
-		//array("player.php", "Player Lookup", "player"),
+		array("player.php", "Player Lookup", "player"),
 	);
 	static private $active = null;
 
 	static public function setactive($name) {
 		foreach (self::$items as $i=>$item) {
+			if (!$item)
+				continue;
 			$item = self::processitem($item);
 			if (trim(strtolower($item[2])) == trim(strtolower($name))) {
 				self::$active = $i;
@@ -26,6 +29,8 @@ class navbar {
 	
 	//fills the item values that were left blank
 	static private function processitem (array $item) {
+		if (!$item)
+				continue;
 		if (count($item) < 1)
 			throw new exception("Processitem called on empty array");
 		if (count($item) < 2) {
@@ -52,6 +57,8 @@ class navbar {
 		
 		$navbars = "";
 		foreach (self::$items as $i=>$item) {
+			if (!$item)
+				continue;
 			$item = self::processitem($item);
 			$tpl->resetvars(array(
 				"URL"		=>	$item[0],

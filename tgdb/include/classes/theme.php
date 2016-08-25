@@ -1,10 +1,10 @@
 <?php
-
+namespace tgdb;
 //requires: include.php/template.php
 
 class theme {
 	private $pagetitle;
-	public function theme($pagetitle = "") {
+	public function __construct($pagetitle = "") {
 		$this->pagetitle = $pagetitle;
 	}
 	public function title($pagetitle) {

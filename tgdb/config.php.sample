@@ -7,18 +7,54 @@
 */
 
 //rename to config.php after you do all that editing stuff
-
+namespace tgdb;
 define ("CONFIG_LOADED", true); //this isn't actually used for anything yet
 
-$config = array();
+$tgdbconfig = array();
 
-//Start MySQL config
-$config['sql'] = array();
-$config['sql']['user'] = "feedback"; //sql username
-$config['sql']['password'] = 'P@$$w0rd'; //sql password
-$config['sql']['db'] = "feedback"; //sql database name
-$config['sql']['tableprefix'] = "erro_"; //prefex all table names with this
-$config['sql']['addr'] = "localhost"; //sql server address/ip (tends to be localhost)
-$config['sql']['port'] = 3456; //sql server port (sock file **should** work fine here, if not, edit include.php to fit)
-//End MySQL config
+//MySQL config
+$tgdbconfig['sql'] = array();
+$tgdbconfig['sql']['user'] = "feedback"; //sql username
+$tgdbconfig['sql']['password'] = 'P@$$w0rd'; //sql password
+$tgdbconfig['sql']['db'] = "feedback"; //sql database name
+$tgdbconfig['sql']['tableprefix'] = "erro_"; //prefex all table names with this
+$tgdbconfig['sql']['addr'] = "localhost"; //sql server address/ip (tends to be localhost)
+$tgdbconfig['sql']['port'] = 3456; //sql server port (sock file **should** work fine here, if not, edit include.php to fit)
+
+//Authorization method:
+//setting this to forum makes it use forum to byond account linking in phpbb
+//	setting it to anything else makes it use ip based detection.
+$tgdbconfig['auth'] = "IP";
+
+//authorization configuration
+$tgdbconfig['authsettings'] = array(); 
+
+//FORUM AUTH: path to the forum's folder from the root of this folder (with trailing slash)
+//$config['authsettings']['forumpath'] = "../phpBB/"; 
+
+//Both auth systems: array of admin ranks to exclude from being seen as an admin (make sure player is in this list if you don't want players to be able to access this) MUST BE LOWER CASE
+$tgdbconfig['authsettings']['excludedranks'] = array();
+$tgdbconfig['authsettings']['excludedranks'][] = "player";
+//$tgdbconfig['authsettings']['excludedranks'][] = "coder";
+//$tgdbconfig['authsettings']['excludedranks'][] = "admin observer";
+
+//ckeys always allowed to see the bandatabase MUST BE LOWER CASE
+$tgdbconfig['authsettings']['whitelistedckeys'] = array();
+$tgdbconfig['authsettings']['whitelistedckeys'][] = "pomf123";
+//$tgdbconfig['authsettings']['whitelistedckeys'][] = "theterbs";
+
+//ckeys blocked from seeing the ban database MUST BE LOWER CASE
+$tgdbconfig['authsettings']['blockedckeys'] = array();
+$tgdbconfig['authsettings']['blockedckeys'][] = "erroage";
+//$tgdbconfig['authsettings']['blockedckeys'][] = "brotemis";
+
+//both auth systems: How recent (in hours) must an admin have logged in to the game be to be seen as still an admin
+//	this should be low for ip auth, but some what high for forum auth. 
+//	(remember, a deadmined admin would still be seen as an admin until their rank is updated the next time they connect to the game)
+//$tgdbconfig['authsettings']['validitytime'][] = 168;//7 days
+$tgdbconfig['authsettings']['validitytime'][] = 24;//1 day
+
+
+//Enable dev messages (defines DEBUG in all templates, put your debug messages between {#ifdef:DEBUG} blocks.)
+//define ("TGDB_DEV", TRUE);
 ?>

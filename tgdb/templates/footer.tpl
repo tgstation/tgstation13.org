@@ -3,7 +3,7 @@
 <script type='text/javascript' src="js/jquery.floatThead._.js"></script>
 <script type='text/javascript' src="js/jquery.floatThead.js"></script>
 <script type='text/javascript' src="js/easyAjaxBSModals.js"></script>
-
+<script type='text/javascript' src="js/typeahead.bundle.min.js"></script>
 <script type='text/javascript'>
 //enables the popover mabober
 
@@ -80,6 +80,48 @@ $("div[id$='Modal']").on('hidden.bs.modal',
 );
 
 
+
+//enables typeahead search suggestions
+$(document).ready(function(){
+	var ckeysearch = new Bloodhound({
+    datumTokenizer: Bloodhound.tokenizers.whitespace,
+    queryTokenizer: Bloodhound.tokenizers.whitespace,
+    remote: {
+		url: 'usersearchsuggestions.php?ckey=%QUERY',
+		wildcard: '%QUERY',
+		sufficient: 15,
+		limit: 15,
+		display: 15,
+		rateLimitWait: 5
+	},
+	sufficient: 15,
+	limit: 15,
+	display: 15
+
+  });
+    $("#usersearch").typeahead({
+			sufficient: 15,
+			limit: 15,
+			hint: false
+		},
+		{
+			name : 'sear',
+			source: ckeysearch.ttAdapter(),
+			sufficient: 15,
+			limit: 15
+		}
+	);
+	$("#usersearch").on('typeahead:selected', function(e,v){
+     e.target.form.submit();
+   });
+});
+	//$('#usersearch').delay(500).attr('autocomplete','off').delay(500).attr('autocomplete','off').delay(500).attr('autocomplete','off');
+	//fixes typeahead breaking enter to search
+	/*$('#usersearch').keydown(function(e) {
+		if (e.keyCode == 13) {
+			$(this).closest('form').submit();
+		}
+	}*/
 </script>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

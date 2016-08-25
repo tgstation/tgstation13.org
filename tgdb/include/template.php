@@ -1,7 +1,6 @@
 <?PHP
-namespace tgdb;
 require_once("include/classes/templateTokens.php");
-use InvalidArgumentException;
+
 //template system
 //supports templates in the webroot/template folder
 //supports template variables in the form of {VARNAME} in the template.
@@ -15,7 +14,7 @@ class template {
 	//name should be the name of a .tpl template file in webroot/template folder
 	//name should be given without the .tpl extension
 	//vars should be an associative array in the form of varname => vardata
-	public function __construct($name, $vars = array()) {
+	public function template($name, $vars = array()) {
 		if (!file_exists('templates/'.$name.'.tpl')) {
 			throw new InvalidArgumentException("No such file for template ".$name);
 			return;
@@ -26,11 +25,8 @@ class template {
 		}
 		$this->file = $name;
 		$this->vars = $vars;
-		if (defined("TGDB_DEV"))
-			$this->setvar("DEBUG", "TRUE");
 		if (isset(self::$tokenSets[$name]))
 			return;
-		
 		self::$tokenSets[$name] = self::makeTokenSet(file_get_contents('templates/'.$name.'.tpl'));
 		//$this->tokenize();
 		
@@ -52,7 +48,7 @@ class template {
 			if ($tplText[$i] == '{') {
 				if ($bracket) { //the innermost open bracket is what counts, no nesting
 					$stringLit .= $bracketTemp;
-					$bracketTemp = '';
+					$bracketTemp = "";
 				}
 				$bracket = true;
 			}
@@ -87,12 +83,6 @@ class template {
 							$tokenGroup[] = (new TIfdef($cvar, self::makeTokenSet($stringLit)));
 						else if ($cType == 7)
 							$tokenGroup[] = (new TIfndef($cvar, self::makeTokenSet($stringLit)));
-						else if ($cType == 8)
-							$tokenGroup[] = (new Tarray($cvar, self::makeTokenSet($stringLit)));
-						else if ($cType == 9)
-							$tokenGroup[] = (new TIfempty($cvar, self::makeTokenSet($stringLit)));
-						else if ($cType == 10)
-							$tokenGroup[] = (new TIfnempty($cvar, self::makeTokenSet($stringLit)));
 						
 						//reset state and continue
 						$bracket = false;
@@ -123,7 +113,7 @@ class template {
 					}
 					
 					//unhandled types, treat as string lit, reset state, and continue;
-					if ($tType <= 5 || $tType > 10) {
+					if ($tType <= 5 || $tType > 7) {
 						$stringLit .= $bracketTemp;
 						$bracketTemp = '';
 						$bracket = false;
@@ -167,12 +157,6 @@ class template {
 				$tokenGroup[] = (new TIfdef($cvar, self::makeTokenSet($stringLit)));
 			else if ($cType == 7)
 				$tokenGroup[] = (new TIfndef($cvar, self::makeTokenSet($stringLit)));
-			else if ($cType == 8)
-				$tokenGroup[] = (new TArray($cvar, self::makeTokenSet($stringLit)));
-			else if ($cType == 9)
-				$tokenGroup[] = (new TIfempty($cvar, self::makeTokenSet($stringLit)));
-			else if ($cType == 10)
-				$tokenGroup[] = (new TIfnempty($cvar, self::makeTokenSet($stringLit)));
 			$stringLit = '';
 		}
 		
@@ -183,35 +167,26 @@ class template {
 	}
 	private static function tokenType($token) {
 		$tType = 0;
-		if ($token[1] == '#') {
+		if ($token[1] == "#") {
 			$bText = (string)substr($token,2,-1);
 			if (strpos($bText, ':') !== false)
 				$bText = (string)substr($bText, 0, strpos($bText, ':'));
 
 			switch ($bText) {
-				case 'ENDIF':
-					$tType = 5;
-					break;
 				case 'IFDEF':
 					$tType = 6;
 					break;
 				case 'IFNDEF':
 					$tType = 7;
 					break;
-				case 'ARRAY':
-					$tType = 8;
-					break;
-				case 'IFEMPTY':
-					$tType = 9;
-					break;
-				case 'IFNEMPTY':
-					$tType = 10;
+				case 'ENDIF':
+					$tType = 5;
 					break;
 			}
 		}
 		return $tType;
 	}
- 
+	
 	
 	public function process() {
 		$variables = $this->vars;
@@ -224,7 +199,6 @@ class template {
 		$tokenSet = self::$tokenSets[$this->file];
 		
 		return join($tokenSet->process($variables));
-		
 	}
 	
 	//reference version of setvarr. used with big data chucks
