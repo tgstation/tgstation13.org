@@ -10,7 +10,7 @@
 	<div class="panel panel-default">
 		<div class="panel-heading" >
 			<h4 class="panel-title" >
-				User Details for {PLAYERCKEY} (<a href="http://www.byond.com/members/{PLAYERCKEY}">Byond account</a>)
+				User Details for {PLAYERCKEY} (<a href="http://www.byond.com/members/{CKEY}">Byond account</a>)
 			</h4>
 		</div>
 		<div class="panel">
