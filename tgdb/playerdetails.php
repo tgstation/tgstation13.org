@@ -29,7 +29,7 @@ $tpl = new template("playerdetails", array(
 
 $row = null;
 $sqlwhere = " WHERE ckey = '".esc(keytockey($_GET['ckey'],FALSE))."'";
-$ckey = keytockey($_GET['ckey'],FALSE));
+$ckey = keytockey($_GET['ckey'],FALSE);
 $res = $mysqli->query("SELECT firstseen, lastseen, ip, computerid, lastadminrank, (SELECT count(ckey) FROM `".fmttable("connection_log")."`".$sqlwhere.")AS connection_count FROM `".fmttable("player")."`".$sqlwhere);
 if (!($row = $res->fetch_assoc())) {
 	$tpl->setvar("ERROR_MSG", "Nobody found for ckey ".$_GET['ckey']);
