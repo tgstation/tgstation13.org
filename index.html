@@ -1,65 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-	
-        <meta http-equiv="content-type" content="text/html; charset=UTF-8"> 
-        <title>Welcome to SpaceStation 13 - /tg/station 13</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-
-        <link href="tg.css" rel="stylesheet">
-        <!--[if lt IE 9]>
-          <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
-        <![endif]-->
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8"> 
+		<title>Welcome to SpaceStation 13 - /tg/station 13</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png?v=vMMm9050Gy">
+		<link rel="apple-touch-icon" sizes="60x60" href="/apple-touch-icon-60x60.png?v=vMMm9050Gy">
+		<link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png?v=vMMm9050Gy">
+		<link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon-76x76.png?v=vMMm9050Gy">
+		<link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png?v=vMMm9050Gy">
+		<link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png?v=vMMm9050Gy">
+		<link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icon-144x144.png?v=vMMm9050Gy">
+		<link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png?v=vMMm9050Gy">
+		<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png?v=vMMm9050Gy">
+		<link rel="icon" type="image/png" href="/favicon-32x32.png?v=vMMm9050Gy" sizes="32x32">
+		<link rel="icon" type="image/png" href="/android-chrome-192x192.png?v=vMMm9050Gy" sizes="192x192">
+		<link rel="icon" type="image/png" href="/favicon-96x96.png?v=vMMm9050Gy" sizes="96x96">
+		<link rel="icon" type="image/png" href="/favicon-16x16.png?v=vMMm9050Gy" sizes="16x16">
+		<link rel="manifest" href="/manifest.json?v=vMMm9050Gy">
+		<link rel="mask-icon" href="/safari-pinned-tab.svg?v=vMMm9050Gy" color="#082338">
+		<link rel="shortcut icon" href="/favicon.ico?v=vMMm9050Gy">
+		<meta name="msapplication-TileColor" content="#082338">
+		<meta name="msapplication-TileImage" content="/mstile-144x144.png?v=vMMm9050Gy">
+		<meta name="theme-color" content="#082338">
+		<link href="tg.css" rel="stylesheet">
+		<!--[if lt IE 9]>
+		  <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
 		
 		<script type="text/javascript">
-		function getCookie(cname) {
-			var name = cname + "=";
-			var ca = document.cookie.split(';');
-			for(var i=0; i<ca.length; i++) {
-				var c = ca[i].trim();
-				if (c.indexOf(name)==0) return c.substring(name.length,c.length);
-			}
-			return "";
-		} 
-		
-		var setup = [false, false, false];
-		
-		function setupreloader (servernum, target) {
-			if (setup[servernum-1])
-				return;
-			setup[servernum-1] = setInterval(function () {reloadimg(servernum, target)}, 11500);
-		}
-		
-		function displayrefreshstatus () {
-			if (getCookie("disablerefresh")) {
-				document.getElementById("refreshstatus").innerHTML="<span style=\"color:red;font-weight:bold;\">Disabled</span>";
-				return;
-			}
-			document.getElementById("refreshstatus").innerHTML="<span style=\"color:green;font-weight:bold;\">Enabled</span>";
-			return;
-		}
-		
-		function refreshtoggleclick () {
-			if (getCookie("disablerefresh")) {
-				document.cookie="disablerefresh=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
-				displayrefreshstatus();
-				return;
-			}
-			document.cookie="disablerefresh=1; expires=Thu, 01 Jan 2027 00:00:00 GMT; path=/";
-			displayrefreshstatus();
-		}
-		function reloadimg (servernum, target) {
-			if (getCookie("disablerefresh")) 
-				return;
+			function getCookie(cname) {
+				var name = cname + "=";
+				var ca = document.cookie.split(';');
+				for(var i=0; i<ca.length; i++) {
+					var c = ca[i].trim();
+					if (c.indexOf(name)==0) return c.substring(name.length,c.length);
+				}
+				return "";
+			} 
 			
-			target.src = "gamebanner.php?servernum=" + servernum + "&rand=" + Math.random();
-		}
+			var setup = [false, false, false];
+			
+			function setupreloader (servernum, target) {
+				if (setup[servernum-1])
+					return;
+				setup[servernum-1] = setInterval(function () {reloadimg(servernum, target)}, Math.floor((Math.random() * 6500) + 11000));
+			}
+			
+			function displayrefreshstatus () {
+				if (getCookie("disablerefresh")) {
+					document.getElementById("refreshstatus").innerHTML="<span style=\"color:red;font-weight:bold;\">Disabled</span>";
+					return;
+				}
+				document.getElementById("refreshstatus").innerHTML="<span style=\"color:green;font-weight:bold;\">Enabled</span>";
+				return;
+			}
+			
+			function refreshtoggleclick () {
+				if (getCookie("disablerefresh")) {
+					document.cookie="disablerefresh=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+					displayrefreshstatus();
+					return;
+				}
+				document.cookie="disablerefresh=1; expires=Thu, 01 Jan 2027 00:00:00 GMT; path=/";
+				displayrefreshstatus();
+			}
+			function reloadimg (servernum, target) {
+				if (getCookie("disablerefresh")) 
+					return;
+				
+				target.src = "gamebanner.php?servernum=" + servernum + "&rand=" + Math.random();
+			}
 		</script>
-
-
-        
-        <style type="text/css">
-            .container {
+		<style type="text/css">
+			.container {
 			  margin: 0 auto;
 			  max-width: 960px;
 			}
@@ -71,141 +85,211 @@
 			.navbar .navbar-collapse {
 			  text-align: center;
 			}
-        </style>
-    </head>
-    
-<body onload="displayrefreshstatus();">
-        
-         
-<div class="navbar navbar-inverse center text-center">
-	<div class="container-fluid center text-center">
-		<ul class="nav navbar-nav center text-center">
-			<li class="active"><a href="index.html">Home</a></li>
-			<li><a href="media.html">Media</a></li>
-			<li><a href="http://singulo.io/tg/">/tg/station Outcasts</a></li>
-			<li><a href="/phpBB">Forum</a></li>
-			<li class="dropdown">
-				<a class="dropdown-toggle" data-toggle="dropdown" href="#">Wiki<b class="caret"></b></a>
-				<ul class="dropdown-menu">
-					<li><a href="/wiki">Main Page</a></li>
-					<li><a href="/wiki/Starter_guide">New Player Tutorial</a></li>
-					<li><a href="/wiki/Rules">Rules</a></li>
-					<li><a href="/wiki/Guides">Guides</a></li>
-					<li><a href="/wiki/Guide_to_chemistry">Guide to Chemistry</a></li>
-					<li><a href="/wiki/Surgery">Guide to Surgery</a></li>
-					<li><a href="/wiki/Guide_to_food_and_drinks">Guide to Food and Drinks</a></li>
-					<li><a href="/wiki/Guide_to_construction">Guide to Construction</a></li>
-					<li><a href="/wiki/Guide_to_advanced_construction">Guide to Advanced Construction</a></li>
-					<li><a href="/wiki/Guide_to_robotics">Guides to Robotics</a></li>
-					<li><a href="/wiki/Guide_to_xenobiology">Guides to Xenobiology</a></li>
-					<li><a href="/wiki/Space_Law">Guide to Space Law</a></li>
-				</ul>
-			</li>
-			<li class = "dropdown">
-				<a class="dropdown-toggle" data-toggle="dropdown" href="#">Development<b class="caret"></b></a>
-				<ul class="dropdown-menu">
-					<li><a href="https://github.com/tgstation/-tg-station">/tg/ Github</a></li>
-					<li><a href="https://github.com/tgstation/tgstation13.org">/tg/station13.org Github</a></li>
-					<li><a href="https://tgstation13.org/findshit.php">/tg/ Github Declaration Finder</a></li>
-				</ul>
-			</li>
-			<li class="dropdown">
-				<a class="dropdown-toggle" data-toggle="dropdown" href="#">IRC Channels<b class="caret"></b></a>
-				<ul class="dropdown-menu">
-					<li><a href="irc://irc.rizon.net/tgstation13">#tgstation13</a></li>
-					<li><a href="irc://irc.rizon.net/devbus">#devbus</a></li>
-					<li><a href="irc://irc.rizon.net/coderbus">#coderbus</a></li>
-					<li><a href="irc://irc.rizon.net/supportbus">#supportbus</a></li>
-				</ul>
-			</li>
-			<li class="dropdown">
-				<a class="dropdown-toggle" data-toggle="dropdown" href="#">Related sites<b class="caret"></b></a>
-				<ul class="dropdown-menu">
-					<li><b>May Mays</b></li>
-					<li><a href="http://boards.4chan.org/tg/">/tg/ (4chan)</a></li>
-					<li><a href="http://boards.4chan.org/vg/">/vg/ (4chan)</a></li>
-					<li><a href="http://reddit.com/r/ss13/">/r/ss13 (le reddit)</a></li>
-					<li><a href="http://singulo.io/tg/">/tg/ (singulo)</a></li>
-					<li><a href="https://8chan.co/spess/">/spess/ (8chan)</a></li>
-					<li><a href="https://8chan.co/tg/">/tg/ (8chan)</a></li>
-					<li><a href="https://8chan.co/vg/">/vg/ (8chan)</a></li>
-					<li><b>Other stations</b></li>
-					<li><a href="http://baystation12.net/">Bay Station</a></li> 
-					<li><a href="http://ss13.nexisonline.net/">/vg/ Station</a></li>
-				</ul>
-			</li>
-		</ul>
-	</div>
-</div>
+			.dropdown-submenu {
+				position:relative;
+			}
+			.dropdown-submenu>.dropdown-menu {
+				top:0;
+				left:100%;
+				margin-top:-6px;
+				margin-left:-1px;
+				-webkit-border-radius:0 6px 6px 6px;
+				-moz-border-radius:0 6px 6px 6px;
+				border-radius:0 6px 6px 6px;
+			}
+			.dropdown-submenu:hover>.dropdown-menu {
+				display:block;
+			}
+			.dropdown-submenu>a:after {
+				display:block;
+				content:" ";
+				float:right;
+				width:0;
+				height:0;
+				border-color:transparent;
+				border-style:solid;
+				border-width:5px 0 5px 5px;
+				border-left-color:#cccccc;
+				margin-top:5px;
+				margin-right:-10px;
+			}
+			.dropdown-submenu:hover>a:after {
+				border-left-color:#ffffff;
+			}
+			.dropdown-submenu.pull-left {
+				float:none;
+			}
+			.dropdown-submenu.pull-left>.dropdown-menu {
+				left:-100%;
+				margin-left:10px;
+				-webkit-border-radius:6px 0 6px 6px;
+				-moz-border-radius:6px 0 6px 6px;
+				border-radius:6px 0 6px 6px;
+			}
+		</style>
+	</head>
 
-<div class="container">
-	<div class="alert alert-info text-center">
-		<strong>Hey! Listen!</strong> This is the official website of /tg/station13. Enjoy your stay!
-	</div>
-	
-	
-<div align="center"><img src="images/tglogo.png" border="0"></div>
-	<div class="jumbotron text-center">
+	<body onload="displayrefreshstatus();">
+		<div class="navbar navbar-inverse center text-center">
+			<div class="container-fluid center text-center">
+				<ul class="nav navbar-nav center text-center">
+					<li class="active"><a href="index.html">Home</a></li>
+					<li><a href="/media.html">Media</a></li>
+					<li><a href="http://singulo.io/tg/">/tg/station Outcasts</a></li>
+					<li><a href="/phpBB">Forum</a></li>
+					<li class="dropdown">
+						<a class="dropdown-toggle" data-toggle="dropdown" href="/wiki">Wiki<b class="caret"></b></a>
+						<ul class="dropdown-menu">
+							<li><a href="/wiki">Main Page</a></li>
+							<li><a href="/wiki/Starter_guide">New Player Tutorial</a></li>
+							<li><a href="/wiki/Rules">Rules</a></li>
+							<li><a href="/wiki/Jobs">Jobs</a></li>
+							<li><a href="/wiki/Objects">Objects</a></li>
+							<li><a href="/wiki/Locations">Locations</a></li>
+							<li><a href="/wiki/Game_Mode">Game Modes</a></li>
+							<li><a href="/wiki/Space_Law">Space Law</a></li>
+							<li class="dropdown-submenu">
+								<a tabindex="-1" href="/wiki/Guides">Guides</a>
+								<ul class="dropdown-menu">
+									<li><a href="/wiki/Guide">Guides</a></li>
+									<li><a href="/wiki/Guide_to_food_and_drinks">Guide to Food and Drinks</a></li>
+									<li><a href="/wiki/Guide_to_construction">Guide to Construction</a></li>
+									<li><a href="/wiki/Guide_to_advanced_construction">Guide to Advanced Construction</a></li>
+									<li><a href="/wiki/Guide_to_medicine">Guide to Medicine</a></li>
+									<li><a href="/wiki/Guide_to_chemistry">Guide to Chemistry</a></li>
+									<li><a href="/wiki/Surgery">Guide to Surgery</a></li>
+									<li><a href="/wiki/Guide_to_genetics">Guide to Genetics</a></li>
+									<li><a href="/wiki/Guide_to_Research_and_Development">Guide to Research</a></li>
+									<li><a href="/wiki/Guide_to_robotics">Guide to Robotics</a></li>
+									<li><a href="/wiki/Guide_to_xenobiology">Guide to Xenobiology</a></li>
+									<li><a href="/wiki/Guide_to_hydroponics">Guide to hydroponics</a></li>
+								</ul>
+							</li>
+						</ul>
+					</li>
+					<li class = "dropdown">
+						<a class="dropdown-toggle" data-toggle="dropdown" href="https://github.com/tgstation/-tg-station">Development<b class="caret"></b></a>
+						<ul class="dropdown-menu">
+							<li><a href="https://github.com/tgstation/-tg-station">/tg/ Github</a></li>
+							<li><a href="https://github.com/tgstation/tgstation13.org">/tg/station13.org Github</a></li>
+							<li><a href="/findshit.php">/tg/ Github Declaration Finder</a></li>
+						</ul>
+					</li>
+					<li class="dropdown">
+						<a class="dropdown-toggle" data-toggle="dropdown" href="#">IRC Channels<b class="caret"></b></a>
+						<ul class="dropdown-menu">
+							<li><a href="irc://irc.rizon.net/tgstation13">#tgstation13</a></li>
+							<li><a href="irc://irc.rizon.net/devbus">#devbus</a></li>
+							<li><a href="irc://irc.rizon.net/coderbus">#coderbus</a></li>
+							<li><a href="irc://irc.rizon.net/supportbus">#supportbus</a></li>
+						</ul>
+					</li>
+					<li class="dropdown">
+						<a class="dropdown-toggle" data-toggle="dropdown" href="#">Related sites<b class="caret"></b></a>
+						<ul class="dropdown-menu">
+							<li><b>May Mays</b></li>
+							<li><a href="http://boards.4chan.org/tg/">/tg/ (4chan)</a></li>
+							<li><a href="http://boards.4chan.org/vg/">/vg/ (4chan)</a></li>
+							<li><a href="http://reddit.com/r/ss13/">/r/ss13 (le reddit)</a></li>
+							<li><a href="http://singulo.io/tg/">/tg/ (singulo)</a></li>
+							<li><a href="https://8ch.net/spess/">/spess/ (8chan)</a></li>
+							<li><a href="https://8ch.net/tg/">/tg/ (8chan)</a></li>
+							<li><a href="https://8ch.net/vg/">/vg/ (8chan)</a></li>
+							<li><b>Other stations</b></li>
+							<li><a href="http://baystation12.net/">Bay Station</a></li> 
+							<li><a href="http://ss13.moe/">/vg/ Station</a></li>
+							<li><a href="http://wiki.ss13.co/Main_Page">Goon Station</a></li>
+							<li><a href="https://www.yogstation.net/">Yog Station</a></li>
+							<li><a href="http://nanotrasen.se/phpBB3/index.php">Paradise Station</a></li>
+							<li><a href="http://www.colonial-marines.com/">Colonial Marines</a></li>
+							<li><a href="http://hippiestation.com/">Hippie Station</a></li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+		</div>
+
+		<!--
+		<div class="alert alert-danger text-center">
+				<strong>Hey! Listen!</strong><br>
+					The latest beta (511.1356) has a bug that breaks interfaces, stick to 511.1355 or the latest stable (510.1347) for the mean time. If you already updated to 511.1356, you may download 511.1355 here: <a href="http://www.byond.com/download/build/511/511.1355_byond.exe">http://www.byond.com/download/build/511/511.1355_byond.exe</a>
+			</div>
+		-->
+
+		<!--
+		<div class="alert alert-warning text-center">
+				<strong>Hey! Listen!</strong> <br> The Almighty StonerOne got high and is messing with the web server's inners. Shit may act odd or go down
+					
+		</div>
+
+		<div class="alert alert-info text-center">
+				<strong>Hey! Listen!</strong> This is the official website of /tg/station13. Enjoy your stay!
+		</div>
+		 -->
+		<div class="container">
+			<!-- alert-* classes: info, warning, danger
+			
+			<div class="alert alert-info text-center">
+				<strong>Hey! Listen!</strong> This is the official website of /tg/station13. Enjoy your stay!
+			</div>
+			-->
+			
+			<div align="center">
+				<small>And now, a word from one of our players:</small><br>
+				<img class="gamebanner" src="gamebanner.php?servernum=0" onload="setupreloader(0, event.target)"/><br>
+				<small><a href="/phpBB/viewtopic.php?f=2&t=3371">Find out how to get your banner up here.</a></small>
+			</div>
+			<P>&nbsp;</p><br>
+			<div align="center">
+				<img src="getlogo.php" border="0">
+			</div>
 		
-		<p class="lead">Already have BYOND? Choose a server below to join!</p>
+			<div class="jumbotron text-center">
+				
+				<p class="lead">Already have BYOND? Choose a server below to join!</p>
 
-		   <a href=byond://game.tgstation13.org:2337><img class="gamebanner" src="gamebanner.php?servernum=1" onload="setupreloader(1, event.target)"></a>
-		   <a href=byond://game.tgstation13.org:1337><img class="gamebanner" src="gamebanner.php?servernum=2" onload="setupreloader(2, event.target)"></a></p>
+				   <a href=byond://game.tgstation13.org:2337><img class="gamebanner" src="gamebanner.php?servernum=1" onload="setupreloader(1, event.target)"></a>
+				   <a href=byond://game.tgstation13.org:1337><img class="gamebanner" src="gamebanner.php?servernum=2" onload="setupreloader(2, event.target)"></a></p>
+				   <a href=byond://game.tgstation13.science:9337><img class="gamebanner" src="gamebanner.php?servernum=5" onload="setupreloader(5, event.target)"></a></p>
 
-		<p align="center">Game Banner Auto Update: <span id='refreshstatus'>Not Supported by Your Browser</span> <a href='#' onclick='refreshtoggleclick();return false;'>(toggle)</a></p>
+				<p align="center">Game Banner Auto Update: <span id='refreshstatus'>Not Supported by Your Browser</span> <a href='#' onclick='refreshtoggleclick();return false;'>(toggle)</a></p>
 
-		<p class="text-success">Sybil and Badger run <a href="https://github.com/tgstation/-tg-station">/tg/station13</a> code.</p>
+				<p class="text-success">Sybil and Badger run <a href="https://github.com/tgstation/-tg-station">/tg/station13</a> code.</p>
 
-		<p><a class="btn btn-primary btn-lg" href="http://www.byond.com/download/" target="ext">Get BYOND</a> 
-		   <a class="btn btn-primary btn-lg" href="/wiki/Downloading_the_source_code#Hosting_a_server" target="ext">Host a Server</a> 
-		   <a class="btn btn-primary btn-lg" href="/wiki/The_history_of_SS13" target="ext">History of SS13</a></p>
-	</div>
-
-
-
-	<div class="jumbotron">
-		<center><h2>What is Space Station 13?</h2></center><br>
-
-		<p>Space Station 13 is a paranoia-laden roleplaying game set against the backdrop of a nonsensical, metal death trap masquerading as a space station. The game is 2D, sprite, and tile-based. It's written in BYOND, which accounts for its atrocious controls and limited graphical capability.</p>
-
-		<p>Despite its shortcomings, it's amazingly fun for what it is. Prepare to lose many hours to it.</p>
-	</div>
-</div>
-
-  <p align="right">Special thanks to Jeb for the site design and game banners</p>
-</div> 
-<!-- /container -->
-        
-        <script type='text/javascript' src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-
-
-        <script type='text/javascript' src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+				<p><a class="btn btn-primary btn-lg" href="http://www.byond.com/download/" target="ext">Get BYOND</a> 
+				   <a class="btn btn-primary btn-lg" href="/wiki/Downloading_the_source_code#Hosting_a_server" target="ext">Host a Server</a>
+				   <a class="btn btn-primary btn-lg" href="/wiki/The_history_of_SS13" target="ext">History of SS13</a></p>
+			</div>
 
 
 
+			<div class="jumbotron">
+				<center><h2>What is Space Station 13?</h2></center><br/>
+				<p>Space Station 13 is a paranoia-laden round-based roleplaying game set against the backdrop of a nonsensical, metal death trap masquerading as a space station, with charming spritework designed to represent the sci-fi setting and its dangerous undertones. Have fun, and survive!</p>
+			</div>
+		</div>
 
+		<p align="right">Special thanks to Jeb! for the site design and game banners</p>
 
-        
-        <!-- JavaScript jQuery code from Bootply.com editor -->
-        
-        <script type='text/javascript'>
-        
-        $(document).ready(function() {
-        
-            
-        
-        });
-        
-        </script>
-        <script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+		<!-- /container -->
 
-  ga('create', 'UA-55954246-1', 'auto');
-  ga('send', 'pageview');
+		<script type='text/javascript' src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+		<script type='text/javascript' src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+		<script type='text/javascript'>
+			
+			$(document).ready(function() {
+				
+			});
+		</script>
+		<script>
+			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+				(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+				m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+			})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-</script>
-    </body>
+			ga('create', 'UA-55954246-1', 'auto');
+			ga('send', 'pageview');
+
+		</script>
+	</body>
 </html>
