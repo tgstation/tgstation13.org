@@ -20,7 +20,7 @@ $tpl = new template('ipv', array(
 function showpolllist() {
 	global $mysqli, $tpl;
 	$thm = new theme('Polls');
-	$res = $mysqli->query('SELECT id, question FROM '.fmttable('poll_question').' WHERE polltype = \'IRV\' ORDER BY id DESC LIMIT 100;');
+	$res = $mysqli->query('SELECT id, question FROM '.fmttable('poll_question').' WHERE NOW() > endtime AND polltype = \'IRV\' ORDER BY id DESC LIMIT 100;');
 	$pollrows = array();
 	while ($row = $res->fetch_assoc()) {
 		$pollrow = array();
@@ -64,10 +64,18 @@ if ($user[1]) {
 		$sqlwherea[] = 'p.firstseen < '.$firstseen;
 		$tpl->setvar('FIRSTSEEN', htmlspecialchars($_GET['firstseen']));
 	}
-	if (isset($_GET['playeronly']) && $_GET['playeronly'] == 'yes') {
-		$sqlwherea[] = 'p.lastadminrank in (\'Player\', \'Coder\')';
-		$tpl->setvar('PLAYERONLYCHECKED', 'checked');
-	}
+	if (isset($_GET['rankfilter'])) {
+		switch ($_GET['rankfilter']) {
+			case 'player':
+				$sqlwherea[] = 'p.lastadminrank IN (\'Player\', \'Coder\')';
+				$tpl->setvar('RANK_PLAYERS', TRUE);
+			break;
+			case 'admin':
+				$sqlwherea[] = 'p.lastadminrank NOT IN (\'Player\', \'Coder\')';
+				$tpl->setvar('RANK_ADMINS', TRUE);
+			break;
+		}
+	} 
 	if (isset($_GET['connectionsstart']) && $_GET['connectionsstart']) {
 		$connectionsstart = '\''.esc($_GET['connectionsstart']).'\'';
 		$tpl->setvar('CONNECTIONSSTART', htmlspecialchars($_GET['connectionsstart']));
