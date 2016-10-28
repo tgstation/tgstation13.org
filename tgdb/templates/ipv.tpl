@@ -52,10 +52,15 @@ Hello {USERCKEY} ({USERRANK}).
 						<label class="control-label" for='connectionsend'>And:</label>
 						<input id='connectionsend' class="form-control input-sm" type='text' placeholder='YYYY-MM-DD' value='{CONNECTIONSEND}' name='connectionsend'/>
 					</div>
-					<div class="form-group col-md-1">
-							<label class="control-label" for="playeronly">Vote:</label><br>
-							<input type="checkbox" id="playeronly" name="playeronly" value="yes" {PLAYERONLYCHECKED}/>Players Only
-						</div>
+					<div class="form-group col-md-2">
+							<label class="control-label" for="playeronly">Limit Ranks:</label><br>
+							{#IFDEF}<input type="radiobutton" id="playeronly" name="playeronly" value="yes" {PLAYERONLYCHECKED}/>Players Only{#ENDIF}
+							<select id="rankfilter" name="rankfilter">
+								<option value="all">All</option>
+								<option {#IFDEF:RANK_PLAYERS}selected="selected"{#ENDIF} value="player">Players Only</option>
+								<option {#IFDEF:RANK_ADMINS}selected="selected"{#ENDIF} value="admin">Admins Only</option>
+							</select>
+					</div>
 					<div class="form-group col-md-1">
 						<label class="control-label" for="filtersubmit">Filter:</label>
 						<button role="submit" id="filtersubmit" type="submit" class="btn btn-sm btn-primary" >GO!</button>
