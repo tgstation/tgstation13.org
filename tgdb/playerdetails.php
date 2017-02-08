@@ -162,7 +162,7 @@ $tpl->setvar('REALBANS', $realbans);
 
 $res->free();
 
-$res = $mysqli->query("SELECT timestamp, notetext, adminckey, server FROM ".fmttable("notes").$sqlwhere." ORDER BY timestamp;");
+$res = $mysqli->query("SELECT timestamp, notetext, adminckey, server FROM ".fmttable("notes").$sqlwhere." ORDER BY timestamp DESC;");
 $notes = array();
 while ($row = $res->fetch_assoc()) {
 	$note = array();
