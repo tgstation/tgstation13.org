@@ -178,7 +178,8 @@ $tpl->setvar('NOTETABLEOPEN', (!count($notes) || count($notes) > 5 ? "collapse" 
 
 $res->free();
 
-$res = $mysqli->query("SELECT timestamp, text, adminckey, type, server FROM".fmttable("messages").$sqlwhere."AND type = 'message' OR type = 'message sent' ORDER BY timestamp DESC;");
+$sqlwhere = " WHERE targetckey = '".esc(keytockey($_GET['ckey'],FALSE))."'";
+$res = $mysqli->query("SELECT timestamp, text, adminckey, type, server FROM ".fmttable("messages").$sqlwhere." AND (type = 'message' OR type = 'message sent') ORDER BY timestamp DESC;");
 $messages = array();
 while ($row = $res->fetch_assoc()) {
 	$message = array();
