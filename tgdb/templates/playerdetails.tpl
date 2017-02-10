@@ -179,7 +179,32 @@
 			</div>
 		</div>
 	</div>
-		<div class="panel panel-default" id="cidtable">
+	<div class="panel panel-default" id="mesagetable">
+		<div class="panel-heading">
+			<h4 class="panel-title">
+				<button class="btn btn-default btn-xs" data-toggle="collapse" data-parent="messagetable" href="#messagetablecollapse" role ="button">View Messages ({MESSAGECOUNT})</button>
+			</h4>
+		</div>
+		<div id="messagetablecollapse" class="panel-collapse {MESSAGETABLEOPEN}">
+			<div class="panel-body">
+				<table class="table table-bordered table-hover table-condensed table-striped floatthead">
+					<thead>
+						<th style="min-width:170px;padding:0px;text-align:center">Details</th>
+						<th style="padding:0px;text-align:center">Message</th>
+					</thead>
+					<tbody>
+						{#ARRAY:MESSAGES}
+							<tr>
+								<td style="text-overflow:nowrap;overflow:nowrap;padding:0px">
+									{DATE}<br/>
+									<b>{ADMIN}</b><br/>
+									{SERVER}<br/>
+									{#IFDEF:READ}Message read{#ENDIF}
+								</td>
+								<td style="padding:0px">{MESSAGE}</td>
+							</tr>
+						{#ENDIF}
+	<div class="panel panel-default" id="cidtable">
 		<div class="panel-heading" >
 			<h4 class="panel-title" >
 				<button class="btn btn-default btn-xs" data-toggle="collapse" data-parent="cidtable" href="#cidtablecollapse" role="button">View Computer IDs ({CIDCOUNT})</button>

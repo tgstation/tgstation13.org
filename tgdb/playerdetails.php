@@ -176,6 +176,27 @@ $tpl->setvar('NOTES', $notes);
 $tpl->setvar('NOTECOUNT', count($notes));
 $tpl->setvar('NOTETABLEOPEN', (!count($notes) || count($notes) > 5 ? "collapse" : "in"));
 
+$res->free();
+
+$res = $mysqli->query("SELECT timestamp, text, adminckey, type, server FROM".fmttable("messages").$sqlwhere."AND type = 'message' OR type = 'message sent' ORDER BY timestamp DESC;");
+$messages = array();
+while ($row = $res->fetch_assoc()) {
+	$message = array();
+	$message['DATE'] = $row['timestamp'];
+	$message['ADMIN'] = $row['adminckey'];
+	$message['SERVER'] = $row['server'];
+	if ($row['type'] == "message sent") {
+		$message['READ'] = $row['type'];
+	}
+	$message['MESSAGE'] = $row['text'];
+	$messages[] = $message;
+}
+$tpl->setvar('MESSAGES', $messages);
+$tpl->setvar('MESSAGECOUNT', count($messages));
+$tpl->setvar('MESSAGETABLEOPEN', (!count($messages) || count($messages) > 5 ? "collapse" : "in"));
+
+$res->free();
+
 $thm->send($tpl);
 
 ?>
