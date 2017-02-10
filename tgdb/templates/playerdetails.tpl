@@ -204,6 +204,11 @@
 								<td style="padding:0px">{MESSAGE}</td>
 							</tr>
 						{#ENDIF}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
 	<div class="panel panel-default" id="cidtable">
 		<div class="panel-heading" >
 			<h4 class="panel-title" >
