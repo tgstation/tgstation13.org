@@ -57,7 +57,7 @@ function fmttable($table) {
 	if (isset($tgdbconfig['sql']['tableprefix']) && !empty($tgdbconfig['sql']['tableprefix']))
 		return $tgdbconfig['sql']['tableprefix'].$table;
 	
-	return $tgdbtable;
+	return $table;
 }
 //Loads up active auth module and attempts to figure out who the user is.
 //option bool to prevent loading the login page on auth failure(only used for login page)
