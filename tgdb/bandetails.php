@@ -66,6 +66,9 @@ if ((int)$id <= (int)0) {
 				case "unbanned_ckey":
 					$value = crossrefify($value,'adminckey');
 					break;
+				case "round_id":
+					$value = crossrefify($value,'round_id');
+					break;
 				default:
 					$value = htmlspecialchars($value);
 					break;
