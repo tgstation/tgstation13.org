@@ -8,7 +8,8 @@
 {#IFDEF:COMMENTHIDEPLZ}
 id
 bantime
-serverip
+server_ip
+round_id
 bantype
 reason
 job
@@ -69,7 +70,12 @@ unbanned_ip
 					{#ENDIF}
 					<tr>
 						<td>Server</td>
-						<td>{SERVERIP}</td>
+						<td>{SERVER_IP}</td>
+					</tr>
+					<tr>
+						<td>Round ID</td>
+						<td>{ROUND_ID}</td>
+					</tr>
 				</table>
 			</div>
 		</div>
