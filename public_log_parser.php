@@ -118,7 +118,7 @@ function parseruntime($runtime, $newpath) {
 function updateconfig($server) {
 	$serverfiles = array('config/game_options.txt', 'config/maps.txt', 'config/unbuyableshuttles.txt', 'config/lavaruinblacklist.txt', 'config/spaceruinblacklist.txt', 'config/awaymissionconfig.txt');
 	$serverfolders = array('data/minimaps', 'data/npc_saves');
-	$filteredfiles = array('config/config.txt');
+	$filteredfiles = array('config/config.txt', 'config/comms.txt'); //todo, remove config.txt
 	$sharedfiles = array('admins.txt', 'admin_ranks.txt');
 	if (!file_exists('parsed-logs/'.$server))
 			mkdir('parsed-logs/'.$server, 0775, true);
