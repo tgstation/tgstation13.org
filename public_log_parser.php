@@ -244,7 +244,7 @@ foreach ($servers as $server) {
 						$basename = basename($logfile);
 						switch ($basename) { //DON'T JUDGE ME OK.
 							case 'game.log':
-								parsegamelog($logfile, $newpath);
+								parsegamelog($logfile, $newpath, TRUE, TRUE);
 								$handle = gzopen($newpath.'/game.txt.gz', 'r');
 								$monthzip[$baseday.'/'.$baseround.'/game.txt'] = $handle;
 								$monthzip[$baseday.'/'.$baseround.'/game.txt']->compress(Phar::BZ2);
@@ -272,6 +272,21 @@ foreach ($servers as $server) {
 								
 								gzclose($handle);
 								break;
+								
+							case 'sql.log':
+								parsegamelog($logfile, $newpath, FALSE, FALSE);
+								$handle = gzopen($newpath.'/sql.txt.gz', 'r');
+								$monthzip[$baseday.'/'.$baseround.'/sql.txt'] = $handle;
+								$monthzip[$baseday.'/'.$baseround.'/sql.txt']->compress(Phar::BZ2);
+								
+								$handle = gzopen($newpath.'/sql.txt.gz', 'r'); //writing a handle consumes it, so we have to re-open this =\
+								$dayzip[$baseround.'/sql.txt'] = $handle;
+								$dayzip[$baseround.'/sql.txt']->compress(Phar::BZ2);
+								$handle = gzopen($newpath.'/sql.txt.gz', 'r');
+								$roundzip['sql.txt'] = $handle;
+								$roundzip['sql.txt']->compress(Phar::BZ2);
+								break;
+								
 							case 'attack.log':
 							case 'qdel.log':
 							case 'initialize.log':
@@ -329,7 +344,7 @@ foreach ($servers as $server) {
 		}
 	}
 }
-function parsegamelog($logfile, $newpath) {
+function parselog($logfile, $newpath, $lineparse, $htmlify) {
 	echo "Parsing logfile: $logfile\n";
 
 	$filename = basename($logfile);
@@ -344,34 +359,42 @@ function parsegamelog($logfile, $newpath) {
 		@fclose($file);
 		return;
 	}
-	$tofilehtml = gzopen($newpath.'/game.html.gz', "wb9");
-	if ($tofilehtml === false) {
+	if (!is_resource($file) || !is_resource($tofile)) {
 		@fclose($file);
 		@fclose($tofile);
 		return;
 	}
-	if (!is_resource($file) || !is_resource($tofilehtml) || !is_resource($tofile)) {
-		@fclose($file);
-		@fclose($tofilehtml);
-		@fclose($tofile);
-		return;
+	
+	$tofilehtml = NULL;
+	if ($htmlify) {
+		$tofilehtml = gzopen($newpath.'/game.html.gz', "wb9");
+		if ($tofilehtml === false || !is_resource($tofilehtml)) {
+			@fclose($file);
+			@fclose($tofile);
+			return;
+		}
+		gzwrite($tofilehtml, '<html><head><title>Log file: '.$newpath.' - /tg/station 13</title><link rel="stylesheet" type="text/css" href="/logfilestyle.css"></head><body>');
 	}
-	gzwrite($tofilehtml, '<html><head><title>Log file: '.$newpath.' - /tg/station 13</title><link rel="stylesheet" type="text/css" href="/logfilestyle.css"></head><body>');
 	
 	while (($line = fgets($file)) !== false) {
 		$rawline = trim($line, "\n\r");
 		$parsedline = parseline($rawline, htmlspecialchars($line));
-		$html = preg_replace('/(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]?|[0-9])/', '<span class="censored">-censored(ip)-</span>', $parsedline[1]);
+		$html = "";
+		if ($htmlify)
+			$html = preg_replace('/(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]?|[0-9])/', '<span class="censored">-censored(ip)-</span>', $parsedline[1]);
 		
 		$line = preg_replace('/(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]?|[0-9])/', '-censored(ip)-', $parsedline[0]); //remove ips
 
 		gzwrite($tofile, $line."\r\n");
-		gzwrite($tofilehtml, $html);
+		if ($htmlify)
+			gzwrite($tofilehtml, $html);
 	}
-	gzwrite($tofilehtml, '</body></html>');
+	if ($htmlify) {
+		gzwrite($tofilehtml, '</body></html>');
+		gzclose($tofilehtml);
+	}
 	fclose($file);
 	gzclose($tofile);
-	gzclose($tofilehtml);
 
 }
 	
