@@ -29,7 +29,7 @@
 		<![endif]-->
 		
 		<script type="text/javascript">
-			function getCookie(cname) {
+			function getCookie (cname) {
 				var name = cname + "=";
 				var ca = document.cookie.split(';');
 				for(var i=0; i<ca.length; i++) {
@@ -39,12 +39,21 @@
 				return "";
 			} 
 			
-			var setup = [false, false, false];
+			var refreshjobs = [];
 			
-			function setupreloader (servernum, target) {
-				if (setup[servernum-1])
-					return;
-				setup[servernum-1] = setInterval(function () {reloadimg(servernum, target)}, Math.floor((Math.random() * 6500) + 11000));
+			function setupreloader (servernum, target, refreshtime) {
+				if (refreshjobs.length <= servernum)
+					refreshjobs.length = servernum+1;
+				if (refreshjobs[servernum])
+					return
+				var refreshjob = {
+					num: servernum,
+					timer: null,
+					target: target,
+					refreshtime: refreshtime
+				};
+				refreshjobs[servernum] = refreshjob;
+				reloadimg(refreshjob);
 			}
 			
 			function displayrefreshstatus () {
@@ -56,26 +65,67 @@
 				return;
 			}
 			
+			function kick_reload_jobs() {
+				var arrayLength = refreshjobs.length;
+				for (var i = 0; i < arrayLength; i++) {
+					var refreshjob = refreshjobs[i];
+					if (refreshjob && refreshjob.timer)
+						reloadimg(refreshjob);
+				}
+			}
+			
 			function refreshtoggleclick () {
 				if (getCookie("disablerefresh")) {
 					document.cookie="disablerefresh=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+					kick_reload_jobs();
 					displayrefreshstatus();
 					return;
 				}
-				document.cookie="disablerefresh=1; expires=Thu, 01 Jan 2027 00:00:00 GMT; path=/";
+				document.cookie="disablerefresh=1; expires=Thu, 2038-01-19 04:14:00 GMT; path=/";
 				displayrefreshstatus();
 			}
-			function reloadimg (servernum, target) {
-				if (getCookie("disablerefresh")) 
-					return;
-				
-				target.src = "gamebanner.php?servernum=" + servernum + "&rand=" + Math.random();
+			
+			function reloadimg (refreshjob) {
+				var target = refreshjob.target;
+				var refreshtime = refreshjob.refreshtime;
+				var servernum = refreshjob.num
+				if (!getCookie("disablerefresh")) 
+					target.src = "gamebanner.php?servernum=" + servernum + "&rand=" + Math.random();
+				else
+					refreshtime = refreshtime*60;
+				if (document.hidden || !iSeeYou)
+					refreshtime = refreshtime*60;
+				if (DevilsWorkshopLvl)
+					refreshtime = refreshtime*DevilsWorkshopLvl;
+				clearTimeout(refreshjob.timer);
+				refreshjob.timer = setTimeout(function () {reloadimg(refreshjob)}, Math.floor((Math.random() * (refreshtime*1.5)) + refreshtime));
 			}
+			
+			var devilInterval = 0;
+			var DevilsWorkshopLvl = 0;
+			document.onmousemove = function () {
+				if (DevilsWorkshopLvl) {
+					kick_reload_jobs();
+				}
+				clearInterval(devilInterval);
+				DevilsWorkshopLvl = 0;
+				devilInterval = setInterval(function(){isDevilsWorkshop++;}, 60000);
+			}
+			var iSeeYou = 1;
+			
+			window.onfocus = function () { 
+				iSeeYou = 1;
+				kick_reload_jobs();
+			};
+			
+			window.onblur = function () { 
+				iSeeYou = 0;
+			}; 
 		</script>
 		<style type="text/css">
 			.container {
 			  margin: 0 auto;
-			  max-width: 960px;
+			  /*max-width: 960px;*/
 			}
 			.navbar .navbar-nav {
 			  display: inline-block;
@@ -125,6 +175,11 @@
 				-webkit-border-radius:6px 0 6px 6px;
 				-moz-border-radius:6px 0 6px 6px;
 				border-radius:6px 0 6px 6px;
+			}
+			.nav > li > a {
+				padding: 17px 7px;
+				min-width: 40px;
+				text-align: center;
 			}
 		</style>
 	</head>
@@ -247,12 +302,15 @@
 			<div class="jumbotron text-center">
 				
 				<p class="lead">Already have BYOND? Choose a server below to join!</p>
-				   <a href=byond://game.tgstation13.org:2337><img class="gamebanner" src="gamebanner.php?servernum=1" onload="setupreloader(1, event.target)"></a>
-				   <a href=byond://game.tgstation13.org:1337><img class="gamebanner" src="gamebanner.php?servernum=2" onload="setupreloader(2, event.target)"></a></p>
-				   <a href=byond://game.tgstation13.science:9337><img class="gamebanner" src="gamebanner.php?servernum=5" onload="setupreloader(5, event.target)"></a></p>
+
+				   <a href=byond://bagil.aws.tgstation13.org:2337><img class="gamebanner" src="gamebanner.php?servernum=1" onload="setupreloader(1, event.target, 1117)"></a>
+				   <a href=byond://sybil.aws.tgstation13.org:1337><img class="gamebanner" src="gamebanner.php?servernum=2" onload="setupreloader(2, event.target, 1117)"></a>
+				   <a href=byond://terry.tgstation13.org:3337><img class="gamebanner" src="gamebanner.php?servernum=6" onload="setupreloader(6, event.target, 3000)"></a></p>
+				   <a href=byond://linuxtest.game.tgstation13.org:9337><img class="gamebanner" src="gamebanner.php?servernum=5" onload="setupreloader(5, event.target, 10000)"></a></p>
+
 				<p align="center">Game Banner Auto Update: <span id='refreshstatus'>Not Supported by Your Browser</span> <a href='#' onclick='refreshtoggleclick();return false;'>(toggle)</a></p>
 
-				<p class="text-success">Sybil and Badger run <a href="https://github.com/tgstation/-tg-station">/tg/station13</a> code.</p>
+				<p class="text-success">Sybil, Bagil, and Terry run <a href="https://github.com/tgstation/-tg-station">/tg/station13</a> code.</p>
 
 				<p><a class="btn btn-primary btn-lg" href="http://www.byond.com/download/" target="ext">Get BYOND</a> 
 				   <a class="btn btn-primary btn-lg" href="/wiki/Downloading_the_source_code#Hosting_a_server" target="ext">Host a Server</a>
