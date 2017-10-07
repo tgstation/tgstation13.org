@@ -32,13 +32,22 @@ $error = false; //if set to true, will update the cache, but sets cachetime to C
 $port = $servers[$server_index]["port"];
 $servername = $servers[$server_index]["servername"];
 $addr = $servers[$server_index]["address"];
+$errortext = "Connection Error!";
+$errortext_override = false;
+if (isset($servers[$server_index]["errortext"])) {
+	$errortext = $servers[$server_index]["errortext"];
+	$errortext_override = true;
+}
+
 
 //Settings for what gets displayed and what doesn't are lower down in the file, in the makeImage() function.
 
 function roundtofive($count) {
-if ($count == 0) return 0;
-if ($count % 5 == 0) return $count;
-return $count + (5-($count % 5));
+	return $count;
+	if ($count == 0) return 0;
+	if ($count < 15) return $count;
+	if ($count % 5 == 0) return $count;
+	return $count + (5-($count % 5));
 }
 
 function debugmsg($message) {
@@ -62,7 +71,6 @@ function fillbg($image, $color) {
 				$bgcolor[] = imagecolorallocate ($image, 0xd8, 0xe7, 0xdc);
 				break;
 			case "blue":
-				blue:
 				$bgcolor[] = imagecolorallocate ($image, 0x26, 0x29, 0x8c);
 				$bgcolor[] = imagecolorallocate ($image, 0x82, 0x82, 0xbb);
 				$bgcolor[] = imagecolorallocate ($image, 0xb0, 0xae, 0xd2);
@@ -135,10 +143,44 @@ function imageerror ($image, $errormsg) {
 function getTop($fontsize, $heightnorm, $heightbig, $printedsmall, $printedbig) {
 	return $printedsmall*$heightnorm + $printedbig*$heightbig + imagefontheight($fontsize);
 }
+function secondsToTime($seconds) {
+	$output = '';
+	if ($seconds >= 86400)
+		$output .= sprintf("%02d", floor($seconds / 86400)).':';
+	
+	if ($seconds >= 3600)
+		$output .= sprintf("%02d", floor($seconds / 3600) % 24) . ':';
+	
+	$output .= sprintf("%02d", floor(($seconds / 60) % 60)) . ':' . sprintf("%02d", $seconds % 60);
+	return $output;
+}
+
+function shuttleTime($shuttlemode, $shuttletime) {
+	
+	switch($shuttlemode){
+		case 'igniting':
+			return 'IGN '.secondsToTime($shuttletime);
+		case 'recall':
+			return 'RCL '.secondsToTime($shuttletime);
+		case 'call':
+			return 'ETA '.secondsToTime($shuttletime);
+		case 'docked':
+			return 'ETD '.secondsToTime($shuttletime);
+		case 'escape':
+			return 'ESC '.secondsToTime($shuttletime);
+		case 'stranded':
+			return 'ERR --:--';
+		case 'endgame: game over':
+			return 'FIN 00:00';
+	}
+	return '';
+	
+}
+
 
 //This function converts the data into an actual image.
 function makeImage($variable_value_array) {
-	global $error,$addr,$port, $servername;
+	global $error,$addr,$port,$servername,$server_index,$errortext,$errortext_override;
 	$image = imagecreatetruecolor(232, 72);
 	$textColor = imagecolorallocate ($image, 0x26, 0x29, 0x8c);
 	$textColorURL = imagecolorallocate ($image, 0xa9, 0xa6, 0xcc);
@@ -148,10 +190,10 @@ function makeImage($variable_value_array) {
 	}
 	
 	if (array_key_exists("ERROR", $variable_value_array)) {
-		if (($restarting = getvar($variable_value_array,"restarting")) && $restarting < 18) {
+		if (($restarting = getvar($variable_value_array,"restarting")) && $restarting < 18 && $errortext_override === false) {
 			return imageerror($image, "Server Restarting");
 		}
-		return imageerror($image, "Connection Error!");
+		return imageerror($image, "$errortext");
 	}
 	
 	$fontsmaller = 2;
@@ -168,7 +210,7 @@ function makeImage($variable_value_array) {
 	$printurl = 1;
 	$printadmins = 0;
 	$printhost = 0;
-	$printrevision = 0;
+	$printrevision = 1;
 	$printversion = 1;
 	$printmode = 1;
 	$printmap = 1;
@@ -254,12 +296,13 @@ function makeImage($variable_value_array) {
 		return imageerror($image, "Invalid Config!");
 	}
 	
-	if (!validvar($host) || !validvar($players) || !validvar($mode)) {
-		if ($restarting = getvar($variable_value_array,"restarting") && $restarting < 18) {
+	if (!validvar($players) || !validvar($mode)) {
+		$restarting = getvar($variable_value_array,"restarting");
+		if ($restarting && $restarting < 18) {
 			return imageerror($image, "Server Restarting");
 		}
 
-		return imageerror($image, "Connection Error!");
+		return imageerror($image, "$errortext");
 	}
 	$bgcolor = "blue";
 	
@@ -276,23 +319,40 @@ function makeImage($variable_value_array) {
 		//if we have a revision date, parse it and print
 		$revision_date_f = "v" . str_replace("-", ".", $revision_date);
 		$string = "$addr:$port $revision_date_f";
-		imagestring ($image, 2, 6, 0,  $string, $textColorURL);
+		imagestring ($image, 2, 4, 0,  $string, $textColorURL);
 	} else if ($printurl) {
 		//If we don't have a revision date, but want to print the url, print it.
 		$string = "$addr:$port";
-		imagestring ($image, 2, 6, 0,  $string, $textColorURL);
+		if ($printrevision && validvar($revision))
+			$string .= " ".substr($revision,0,10);
+		imagestring ($image, 2, 4, 0,  $string, $textColorURL);
 	}
 	
 	//If we have a server name, print it.
 	if (validvar($servername)) {
 		$string = "$servername";
-		imagestring ($image, $fontbig, 6, 13,  $string, $textColor);
+		imagestring ($image, $fontbig, 4, 13,  $string, $textColor);
 	}
 	
 	//Lets properly print the players shall we.
 	if ($printplayers) {
-		$string = roundtofive($players)." online.";
-		imagestring ($image, $fontsmall, 6, 55,  $string, $textColor);
+		$string = '';
+		if ($server_index < 2)
+			$string = $players."/90";
+		else
+			$string = $players." online";
+		$offset = 0;
+		$cachetime = getvar($variable_value_array, "cachetime");
+		if (validvar($cachetime))
+			$offset = time() - $cachetime;
+		$roundTime = getvar($variable_value_array, "round_duration");
+		if (validvar($roundTime))
+			$string .= ' '.secondsToTime($roundTime+$offset);
+		$shuttleMode = getvar($variable_value_array, "shuttle_mode");
+		$shuttleTimer = getvar($variable_value_array, "shuttle_timer");
+		if (validvar($shuttleMode) && validvar($shuttleTimer))
+			$string .= ' '.shuttleTime($shuttleMode, $shuttleTimer - $offset);
+		imagestring ($image, $fontsmall, 4, 55,  $string, $textColor);
 		$printedsmall++;
 	}
 
@@ -300,36 +360,26 @@ function makeImage($variable_value_array) {
 	if ($printmode) {
 		// I'm too lazy to escape shit in the image code, so version is hardcoded here
 		$string = "playing " . urldecode($version) . " mode \"" . $mode . "\"";
-		imagestring ($image, $fontsmaller, 6, 28, $string, $textColor);
+		imagestring ($image, $fontsmaller, 4, 28, $string, $textColor);
 		$printedsmaller++;
 	}
 
 	//Someone set us up the map
 	if ($printmap) {
 		$string = "the map is: $map_name";
-		imagestring ($image, $fontsmaller, 6, 42, $string, $textColor);
+		imagestring ($image, $fontsmaller, 4, 42, $string, $textColor);
 		$printedsmall++;
 	}
-	
-	//If we have data about admins
-	if ($printadmins && validvar($admins)) {
-		//If we have more than one admin online (let's not display "0 admins online")
-		if ($admins > 0) {
-			$string = "$admins admins online";
-			if ($admins == 1){
-				$string = "$admins admin online";
-			}
-			imagestring ($image, $fontsmall, 10, getTop($fontsmall, $heightnorm, $heightbig, $printedsmall, $printedbig),  $string, $textColor);
-			$printedsmall++;
-		}
-	}
+
 	
 	//Print the revision (works terribly with git, but perfectly with svn)
+	/*
 	if($printrevision && validvar($revision)) {
-		$string = "Using /tg/ code r$revision";
+		$string = substr($revision,0,7);
 		imagestring ($image, 2, 11, getTop($fontsmall, $heightnorm,$heightbig, $printedsmall, $printedbig),  $string, $textColor);
 		$printedsmall++;
 	}
+	*/
 	
 	
 	
