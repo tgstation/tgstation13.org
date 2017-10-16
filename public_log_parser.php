@@ -291,6 +291,7 @@ foreach ($servers as $server) {
 							case 'qdel.log':
 							case 'initialize.log':
 							case 'pda.log':
+							case 'manifest.log':
 								compressfile($logfile, $newpath.'/'.basename($basename, ".log").'.txt');
 								
 								$handle = gzopen($newpath.'/'.basename($basename, ".log").'.txt.gz', 'r');
