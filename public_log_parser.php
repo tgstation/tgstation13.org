@@ -317,6 +317,7 @@ foreach ($servers as $server) {
 							case 'supermatter.html':
 							case 'botany.html':
 							case 'telesci.html':
+							case 'round_end_data.json':
 								compressfile($logfile, $newpath.'/'.$basename);
 								$handle = gzopen($newpath.'/'.$basename.'.gz', 'r');
 								$monthzip[$baseday.'/'.$baseround.'/'.$basename] = $handle;
