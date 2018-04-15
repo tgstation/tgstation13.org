@@ -68,12 +68,12 @@ if ($user[1]) {
 	if (isset($_GET['rankfilter'])) {
 		switch ($_GET['rankfilter']) {
 			case 'player':
-				$sqlwherea[] = 'WHERE a.ckey IS NULL';
-				$sqladminjoin = ' LEFT JOIN '.fmttable('admin').' AS a ON (v.key = a.ckey)'
+				$sqlwherea[] = 'a.ckey IS NULL';
+				$sqladminjoin = ' LEFT JOIN '.fmttable('admin').' AS a ON (v.ckey = a.ckey)'
 				$tpl->setvar('RANK_PLAYERS', TRUE);
 			break;
 			case 'admin':
-				$sqladminjoin = ' RIGHT JOIN '.fmttable('admin').' AS a ON (v.key = a.ckey)'
+				$sqladminjoin = ' RIGHT JOIN '.fmttable('admin').' AS a ON (v.ckey = a.ckey)'
 				$tpl->setvar('RANK_ADMINS', TRUE);
 			break;
 		}
