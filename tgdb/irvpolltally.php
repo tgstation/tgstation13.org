@@ -57,6 +57,7 @@ $connectionsend = null;
 $playeronly = null;
 $sqlwherea = array();
 $sqlwhere = "";
+$sqladminjoin = null;
 if ($user[1]) {
 	
 	if (isset($_GET['firstseen']) && $_GET['firstseen']) {
@@ -67,11 +68,12 @@ if ($user[1]) {
 	if (isset($_GET['rankfilter'])) {
 		switch ($_GET['rankfilter']) {
 			case 'player':
-				$sqlwherea[] = 'p.lastadminrank IN (\'Player\', \'Coder\')';
+				$sqlwherea[] = 'a.ckey IS NULL';
+				$sqladminjoin = ' LEFT JOIN '.fmttable('admin').' AS a ON (v.ckey = a.ckey)'
 				$tpl->setvar('RANK_PLAYERS', TRUE);
 			break;
 			case 'admin':
-				$sqlwherea[] = 'p.lastadminrank NOT IN (\'Player\', \'Coder\')';
+				$sqladminjoin = ' RIGHT JOIN '.fmttable('admin').' AS a ON (v.ckey = a.ckey)'
 				$tpl->setvar('RANK_ADMINS', TRUE);
 			break;
 		}
@@ -108,7 +110,7 @@ if ($user[1]) {
 }
 
 
-$res = $mysqli->query('SELECT v.id, v.optionid, v.ckey, o.text FROM '.fmttable('poll_vote').' AS v LEFT JOIN '.fmttable('poll_option').' AS o ON (v.optionid = o.id) LEFT JOIN '.fmttable('player').' AS p ON (v.ckey = p.ckey) WHERE v.pollid = '.$id.$sqlwhere.' ORDER BY v.id;');
+$res = $mysqli->query('SELECT v.id, v.optionid, v.ckey, o.text FROM '.fmttable('poll_vote').' AS v LEFT JOIN '.fmttable('poll_option').' AS o ON (v.optionid = o.id) LEFT JOIN '.fmttable('player').' AS p ON (v.ckey = p.ckey)'.$sqladminjoin.' WHERE v.pollid = '.$id.$sqlwhere.' ORDER BY v.id;');
 if (!$res) {
     die('Errormessage: '.$mysqli->error);
 }
