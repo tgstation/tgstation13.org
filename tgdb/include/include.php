@@ -71,7 +71,7 @@ function auth ($required = true) {
 
 function auth_ip($required = true) {
 	global $mysqli;
-	$res = $mysqli->query("SELECT ckey,lastadminrank FROM `".fmttable("player")."` where lastadminrank != 'player' and lastseen > DATE_SUB(CURDATE(),INTERVAL 1 DAY) and ip = '".esc($_SERVER['REMOTE_ADDR'])."'");
+	$res = $mysqli->query("SELECT ckey,lastadminrank FROM `".fmttable("player")."` where lastadminrank != 'player' and lastseen > DATE_SUB(CURDATE(),INTERVAL 1 DAY) and ip = '".esc(ip2long($_SERVER['REMOTE_ADDR']))."'");
 	
 	if (!$res) {
 		die ("Failed to authenticate (" . $mysqli->errno . ") " . $mysqli->error);
