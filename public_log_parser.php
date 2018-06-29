@@ -341,6 +341,7 @@ foreach ($servers as $server) {
 							case 'portals.html':
 							case 'hallucinations.html':
 							case 'circuit.html':
+							case 'nanites.html':
 							case 'newscaster.json':
 							case 'round_end_data.json'
 								$fullnewpath = $newpath.'/'.$basename;
