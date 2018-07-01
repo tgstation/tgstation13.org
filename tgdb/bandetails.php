@@ -60,7 +60,13 @@ if ((int)$id <= (int)0) {
 					$value = crossrefify($value,'cid');
 					break;
 				case "ip":
-					$value = crossrefify($value,'ip');
+					$value = crossrefify(long2ip($value),'ip');
+					break;
+				case "server_ip":
+					$value = long2ip($value);
+					break;
+				case "a_ip":
+					$value = long2ip($value);
 					break;
 				case "a_ckey":
 				case "unbanned_ckey":

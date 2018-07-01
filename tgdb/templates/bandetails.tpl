@@ -69,7 +69,12 @@ unbanned_ip
 					{#ENDIF}
 					<tr>
 						<td>Server</td>
-						<td>{SERVERIP}</td>
+						<td>{SERVER_IP}:{SERVER_PORT}</td>
+					</tr>
+					<tr>
+						<td>Round</td>
+						<td>{ROUND_ID}</td>
+					</tr>
 				</table>
 			</div>
 		</div>

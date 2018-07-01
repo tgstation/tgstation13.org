@@ -43,7 +43,7 @@ if (isset($_GET['playercid']) && $_GET['playercid']) {
 
 if (isset($_GET['playerip']) && $_GET['playerip']) {
 	$playerip = "'".esc($_GET['playerip'])."'";
-	$playersearcha[] = "ip LIKE ".$playerip;
+	$playersearcha[] = "INET_NTOA(ip) LIKE ".$playerip;
 	$tpl->setvar('PLAYERIP', htmlspecialchars($_GET['playerip']));
 }
 
@@ -91,7 +91,7 @@ while ($row = $res->fetch_assoc()) {
 	if ($row['computerid'])
 		$banrow['BANNED_CID'] = crossrefify($row['computerid'],'cid');
 	if ($row['ip'])
-		$banrow['BANNED_IP'] = crossrefify($row['ip'],'ip');
+		$banrow['BANNED_IP'] = crossrefify(long2ip($row['ip']),'ip');
 
 	if ($row['job'])
 		$banrow['BAN_JOB'] = $row['job'];

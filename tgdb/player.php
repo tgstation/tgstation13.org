@@ -40,7 +40,7 @@ if (isset($_GET['playercid']) && $_GET['playercid']) {
 
 if (isset($_GET['playerip']) && $_GET['playerip']) {
 	$playerip = "'".esc($_GET['playerip'])."'";
-	$sqlwherea[] = "ip LIKE ".$playerip;
+	$sqlwherea[] = "INET_NTOA(ip) LIKE ".$playerip;
 	$tpl->setvar('PLAYERIP', htmlspecialchars($_GET['playerip']));
 }
 

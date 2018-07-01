@@ -7,7 +7,7 @@ use InvalidArgumentException;
 //supports template variables in the form of {VARNAME} in the template.
 class template {
 	private static $tokenSets = array();
-	private $vars;
+	public $vars;
 	private $file;
 	
 

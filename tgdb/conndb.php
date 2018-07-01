@@ -102,7 +102,7 @@ if (isset($_GET['playercid']) && $_GET['playercid']) {
 
 if (isset($_GET['playerip']) && $_GET['playerip']) {
 	$playerip = "'".esc($_GET['playerip'])."'";
-	$sqlwherea[] = "ip LIKE ".$playerip;
+	$sqlwherea[] = "INET_NTOA(ip) LIKE ".$playerip;
 	$tpl->setvar('PLAYERIP', htmlspecialchars($_GET['playerip']));
 }
 $sqlwheresep = "OR";
@@ -127,7 +127,7 @@ if (count($sqlwherea)) {
 }
 $limit = "";
 $t = timing::gettime();
-$res = $mysqli->query("SELECT DATE(datetime) AS `day`, serverip, ckey, ip, computerid, count(id) AS `count` FROM `".fmttable("connection_log")."`".$sqlwhere." GROUP BY day,serverip,ckey,ip,computerid ORDER BY day,ckey,ip ".$orderby." ".$limit);
+$res = $mysqli->query("SELECT DATE(datetime) AS `day`, CONCAT(server_ip, ':', server_port), ckey, INET_NTOA(ip), computerid, count(id) AS `count` FROM `".fmttable("connection_log")."`".$sqlwhere." GROUP BY day, server_ip, server_port, ckey,ip,computerid ORDER BY day,ckey,ip ".$orderby." ".$limit) or trigger_error($mysqli->error, E_USER_ERROR);
 timing::tracktime("conndbSQL", $t);
 
 //group same dates, then ckeys, then ips

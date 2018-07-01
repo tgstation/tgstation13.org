@@ -45,7 +45,7 @@ do {
 	}
 
 	//wait at most 0.5 seconds for all of those queries to return results.
-	mysqli_poll($readlinks, $erroredlinks, $rejectedlinks, 0, 50000);
+	mysqli_poll($readlinks, $erroredlinks, $rejectedlinks, 0, 5000);
 
 	//process the ones that returned results.
 	foreach ($readlinks as $link) {
@@ -76,7 +76,7 @@ do {
 	foreach ($alllinks as $link)
 		$totalcount += count($link[1]);
 
-} while ($loopcount < 10 && $processed < count($alllinks) && $totalcount < 20);
+} while ($loopcount < 100 && $processed < count($alllinks) && $totalcount < 20);
 
 //loop thru the queries's data and sort it into $ckeys
 foreach ($alllinks as $link)

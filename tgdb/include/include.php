@@ -41,7 +41,7 @@ function get_new_mysqli() {
 		unset($tgdbconfig['sql']['password']);
 	}
 	$mysqli = new \mysqli();
-	$mysqli->real_connect('p:'.$tgdbconfig['sql']['addr'], $tgdbconfig['sql']['user'], $tgdbpassword, $tgdbconfig['sql']['db'], (is_int($tgdbconfig['sql']['port']) ? $tgdbconfig['sql']['port'] : null), (!is_int($tgdbconfig['sql']['port']) ? $tgdbconfig['sql']['port'] : null), MYSQLI_CLIENT_COMPRESS);
+	$mysqli->real_connect($tgdbconfig['sql']['addr'], $tgdbconfig['sql']['user'], $tgdbpassword, $tgdbconfig['sql']['db'], (is_int($tgdbconfig['sql']['port']) ? $tgdbconfig['sql']['port'] : null), (!is_int($tgdbconfig['sql']['port']) ? $tgdbconfig['sql']['port'] : null));
 	return $mysqli;
 }
 //escapes a string for mysql, mainly used for shortening reasons
@@ -222,6 +222,7 @@ function crossrefify ($item, $type, $vars = array()) {
 		case 'ip':
 			$tpl = new template('crossrefip', $vars);
 			$tpl->setvar('ITEM', $item);
+			$tpl->setvar('ITEM_SPLIT', implode('/', explode('.', $item)));
 		break;
 	}
 	

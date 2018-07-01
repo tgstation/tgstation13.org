@@ -28,15 +28,16 @@ $tpl = new template("playerdetails", array(
 	));
 
 $row = null;
-$sqlwhere = " WHERE ckey = '".esc(keytockey($_GET['ckey'],FALSE))."'";
 $ckey = keytockey($_GET['ckey'],FALSE);
-$res = $mysqli->query("SELECT firstseen, lastseen, ip, computerid, lastadminrank, (SELECT count(ckey) FROM `".fmttable("connection_log")."`".$sqlwhere.")AS connection_count FROM `".fmttable("player")."`".$sqlwhere);
+$sqlwhere = " WHERE ckey = '".esc($ckey)."'";
+$res = $mysqli->query("SELECT firstseen, lastseen, INET_NTOA(ip) AS ip, computerid, lastadminrank, (SELECT count(ckey) FROM `".fmttable("connection_log")."`".$sqlwhere.")AS connection_count FROM `".fmttable("player")."`".$sqlwhere);
 if (!($row = $res->fetch_assoc())) {
-	$tpl->setvar("ERROR_MSG", "Nobody found for ckey ".$_GET['ckey']);
+	$tpl->setvar("ERROR_MSG", "Nobody found for ckey ".$ckey);
 	$thm->send($tpl);
 	exit;
 }
 
+$tpl->setvar('CKEY', $ckey);
 $tpl->setvar("FIRSTSEEN",$row['firstseen']);
 $tpl->setvar("LASTSEEN",$row['lastseen']);
 $tpl->setvar("LASTCOMPUTERID",crossrefify($row['computerid'],'cid'));
@@ -61,9 +62,9 @@ $tpl->setvar('CIDTABLEOPEN', (!count($cids) || count($cids) > 5 ? "collapse" : "
 $res->free();
 
 $ips = array();
-$res = $mysqli->query("SELECT ip, count(ip) AS count FROM `".fmttable("connection_log")."`".$sqlwhere." GROUP BY ip ORDER BY count DESC");
+$res = $mysqli->query("SELECT INET_NTOA(ip) AS ip2, count(ip) AS count FROM `".fmttable("connection_log")."`".$sqlwhere." GROUP BY ip ORDER BY count DESC");
 while ($row = $res->fetch_assoc()) {
-	$ips[] = array('IP' => crossrefify($row['ip'],ip), 'ROUNDS' => $row['count']);
+	$ips[] = array('IP' => crossrefify($row['ip2'],ip), 'ROUNDS' => $row['count']);
 }
 
 $tpl->setvar('IPS', $ips);
@@ -146,7 +147,6 @@ while ($row = $res->fetch_assoc()) {
 	$bans[] = $ban;
 	
 }
-$tpl->setvar('CKEY', $ckey);
 $tpl->setvar('BANS', $bans);
 $tpl->setvar('BANCOUNT', count($bans));
 $tpl->setvar('BANTABLEOPEN', (!count($bans) || count($bans) > 5 ? "collapse" : "in"));
@@ -162,7 +162,7 @@ $tpl->setvar('REALBANS', $realbans);
 
 $res->free();
 
-$res = $mysqli->query("SELECT timestamp, notetext, adminckey, server FROM ".fmttable("notes").$sqlwhere." ORDER BY timestamp;");
+$res = $mysqli->query("SELECT timestamp, notetext, adminckey, server FROM ".fmttable("notes").$sqlwhere." ORDER BY timestamp desc;");
 $notes = array();
 while ($row = $res->fetch_assoc()) {
 	$note = array();
@@ -176,6 +176,25 @@ $tpl->setvar('NOTES', $notes);
 $tpl->setvar('NOTECOUNT', count($notes));
 $tpl->setvar('NOTETABLEOPEN', (!count($notes) || count($notes) > 5 ? "collapse" : "in"));
 
+$res->free();
+$sqlwhere = " WHERE targetckey = '".esc(keytockey($_GET['ckey'],FALSE))."'";
+$res = $mysqli->query("SELECT timestamp, text, adminckey, type, server FROM ".fmttable("messages").$sqlwhere." AND (type = 'message' OR type = 'message sent') ORDER BY timestamp DESC;");
+$messages = array();
+while ($row = $res->fetch_assoc()) {
+	$message = array();
+	$message['DATE'] = $row['timestamp'];
+	$message['ADMIN'] = $row['adminckey'];
+	$message['SERVER'] = $row['server'];
+	if ($row['type'] == "message sent") {
+		$message['READ'] = $row['type'];
+	}
+	$message['MESSAGE'] = $row['text'];
+	$messages[] = $message;
+}
+$tpl->setvar('MESSAGES', $messages);
+$tpl->setvar('MESSAGECOUNT', count($messages));
+$tpl->setvar('MESSAGETABLEOPEN', (!count($messages) || count($messages) > 5 ? "collapse" : "in"));
+$res->free();
 $thm->send($tpl);
 
 ?>
