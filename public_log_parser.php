@@ -314,6 +314,7 @@ foreach ($servers as $server) {
 							case 'qdel.log':
 							case 'initialize.log':
 							case 'pda.log':
+							case 'telecomms.log':
 							case 'overlay.log':
 							case 'manifest.log':
 							case 'job_debug.log':
