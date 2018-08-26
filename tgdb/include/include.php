@@ -70,24 +70,24 @@ function auth ($required = true) {
 }
 
 function auth_ip($required = true) {
-	global $mysqli;
+    global $mysqli;
 
-	$res = $mysqli->query("SELECT admin.ckey, admin.rank as lastadminrank FROM `".fmttable("admin")."` INNER JOIN `".fmttable("player")."` ON admin.ckey = player.ckey WHERE player.lastseen > DATE_SUB(CURDATE(),INTERVAL 1 DAY) AND player.ip = '".esc(ip2long($_SERVER['REMOTE_ADDR']))."'");
-	
-	if (!$res) {
-		die ("Failed to authenticate (" . $mysqli->errno . ") " . $mysqli->error);
-	}
-	
-	if ($row = $res->fetch_row()) {
-		$user = array($row[0],$row[1]);
-		return $user;
-	}
-	
-	if ($required) {
-		include("login.php");
-		die();
-	}
-	return array("", "");
+    $res = $mysqli->query("SELECT a.ckey, a.rank as lastadminrank FROM `".fmttable("admin")."` AS `a` INNER JOIN `".fmttable("player")."` AS `p` ON a.ckey = p.ckey WHERE p.lastseen > DATE_SUB(CURDATE(),INTERVAL 1 DAY) AND p.ip = '".esc(ip2long($_SERVER['REMOTE_ADDR']))."'");
+    
+    if (!$res) {
+        die ("Failed to authenticate (" . $mysqli->errno . ") " . $mysqli->error);
+    }
+    
+    if ($row = $res->fetch_row()) {
+        $user = array($row[0],$row[1]);
+        return $user;
+    }
+    
+    if ($required) {
+        include("login.php");
+        die();
+    }
+    return array("", "");
 }
 function auth_forums($required) {
 	global $tgdbconfig, $mysqli;
