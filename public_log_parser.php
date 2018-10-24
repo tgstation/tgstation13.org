@@ -344,7 +344,7 @@ foreach ($servers as $server) {
 							case 'circuit.html':
 							case 'nanites.html':
 							case 'newscaster.json':
-							case 'round_end_data.json'
+							case 'round_end_data.json':
 								$fullnewpath = $newpath.'/'.$basename;
 								
 								compressfile($logfile, $fullnewpath);
