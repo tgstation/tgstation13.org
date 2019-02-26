@@ -318,6 +318,7 @@ foreach ($servers as $server) {
 							case 'overlay.log':
 							case 'manifest.log':
 							case 'job_debug.log':
+							case 'virus.log':
 								$basefilename = basename($basename, '.log');
 								$fullnewpath = $newpath.'/'.$basefilename.'.txt';
 								
