@@ -82,6 +82,20 @@ function compressfile($file, $target = null) {
 	}
 }
 
+function scrub_file($infile, $outfile, $patterns) {
+	$content = file_get_contents($infile);
+	$content = str_replace("\r\n", "\n", $content);
+	$lines = explode("\n", $content);
+	$lines = array_map(function ($line) use ($patterns) {
+		foreach ($patterns as $pattern) {
+			$line = preg_replace($pattern, '[redacted]', $line);
+		}
+		return $line;
+	}, $lines);
+	$content = implode("\n", $lines);
+	file_put_contents($outfile, $content);
+}
+
 function condense_runtimes($infile, $outfile) {
 	echo "Condensing runtime: $infile -> $outfile\n";
 	chdir('rc');
@@ -326,7 +340,17 @@ foreach ($servers as $server) {
 								
 								fillzips($fullnewpath.'.gz', $basefilename.'.txt', $monthzip, $dayzip, $roundzip, $baseday, $baseround);
 								break;
-							
+							case 'tgui.log':
+								$basefilename = basename($basename, '.log');
+								$fullnewpath = $newpath.'/'.$basefilename.'.txt';
+								$tmpfilename = $logfile.'.tmp';
+
+								scrub_file($logfile, $tmpfilename, ['/user agent.*$/i']);
+								compressfile($tmpfilename, $fullnewpath);
+								unlink($tmpfilename);
+								
+								fillzips($fullnewpath.'.gz', $basefilename.'.txt', $monthzip, $dayzip, $roundzip, $baseday, $baseround);
+								break;
 							case 'kudzu.html':
 							case 'wires.html':
 							case 'atmos.html':
