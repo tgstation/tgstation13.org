@@ -17,7 +17,9 @@ function export($addr, $port, $str) {
 	
 	/* --- Create a socket and connect it to the server --- */
 	$server = socket_create(AF_INET,SOCK_STREAM,SOL_TCP) or exit("ERROR");
-	socket_set_option($server, SOL_SOCKET, SO_SNDTIMEO, array('sec' => 2, 'usec' => 0)); //sets connect and send timeout to 2 seconds
+	stream_set_timeout($server, 2);
+	socket_set_option($server, SOL_SOCKET, SO_RCVTIMEO, array('sec'=>2, 'usec'=>0));
+	socket_set_option($server, SOL_SOCKET, SO_SNDTIMEO, array('sec'=>2, 'usec'=>0));
 	if(!socket_connect($server,$addr,$port)) {
 		$error = true;
 		return "ERROR";
@@ -80,6 +82,7 @@ if (file_exists($file)) {
 	
 }
 //loop thru the servers and get all the data we can.
+//TODO use socket_select here for speed
 $serverinfo = array();
 $n = 0;
 foreach ($servers as $server) {

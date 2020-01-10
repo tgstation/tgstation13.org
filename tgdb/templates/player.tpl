@@ -6,6 +6,7 @@
 			<h4 class="panel-title" >
 				<button class="btn btn-default btn-xs" data-toggle="collapse" data-parent="searchpanel" href="#collapseOne" role="button">Search Panel</button>
 			</h4>
+			(use % to match any character as a wild card)
 		</div>
 		<div id="collapseOne" class="panel-collapse {PANELOPEN}">
 			<div class="panel-body">

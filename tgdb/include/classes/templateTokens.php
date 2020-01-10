@@ -1,6 +1,14 @@
 <?php
+namespace tgdb;
 
-
+function myErrorHandler($errno, $errstr, $errfile, $errline) {
+  if ( E_RECOVERABLE_ERROR===$errno ) {
+    echo "'catched' catchable fatal error\n";
+	return true;
+  }
+  return false;
+}
+set_error_handler('tgdb\myErrorHandler');
 
 //base class
 abstract class templateToken {
@@ -18,7 +26,7 @@ abstract public function process();
 class TStringLiteral extends templateToken {
 	private $stringLiteral;
 	
-	public function TStringLiteral ($stringLiteral = '') {
+	public function __construct($stringLiteral = '') {
 		$this->stringLiteral = $stringLiteral;
 	}
 	public function getRequestedVars() {
@@ -38,10 +46,10 @@ class TVariable extends templateToken {
 	private $variable;
 	private $set = false;
 	private $value = '';
-	public function TVariable ($variable) {
+	public function __construct($variable) {
 		$variable = trim($variable);
 		if (!$variable || empty($variable))
-			throw new InvalidArgumentException('argument must not be empty or consist of only whitespace');
+			throw new InvalidArgumentException('Argument must not be empty or consist of only whitespace');
 		$this->variable = $variable;
 	}
 	
@@ -72,12 +80,11 @@ class TVariable extends templateToken {
 abstract class Tconditional extends templateToken {
 	protected $variable;
 	protected $value = '';
-	private $confirmedFail = false;
-	private $tokenSet;
-	private $varSet = array();
-	private $valueSet = array();
+	protected $tokenSet;
+	protected $varSet = array();
+	protected $valueSet = array();
 	
-	public function Tconditional($variable, $tokenSet) {
+	public function __construct($variable, $tokenSet) {
 		$this->variable = $variable;
 		$this->tokenSet = $tokenSet;
 		$this->varSet = $this->tokenSet->listRequestedVars();
@@ -89,25 +96,16 @@ abstract class Tconditional extends templateToken {
 	public function setVar($variable, $value = null) {
 		if ($variable == $this->variable) {
 			$this->value = $value;
-			//if (!$this->checkCondition())
-				//$this->confirmedFail = true;
 		}
-		if ($this->confirmedFail)
-			return;//we already know the condition fails, so no need to varSet.
 		$this->valueSet[$variable] = $value;
 	}
 	public function process() {
 		//copy over state
-		if ($this->confirmedFail)
-			$check = false;
-		else
-			$check = $this->checkCondition();
-		
+		$check = $this->checkCondition();
 		$valueSet = $this->valueSet;
 		
 		//reset state
 		$this->value = '';
-		$this->confirmedFail = false;
 		$this->valueSet = array();
 		
 		//do stuff
@@ -138,13 +136,68 @@ class TIfndef extends Tconditional {
 		return false;	
 	}
 }
+class TIfempty extends Tconditional {
+	protected function checkCondition() {
+		if (!$this->variable)
+			return true;
+		if (!$this->value)
+			return true;
+		if (!is_array($this->value) || count($this->value) <= 0)
+			return true;
+		return false;	
+	}
+}
+class TIfnempty extends Tconditional {
+	protected function checkCondition() {
+		if (!$this->variable)
+			return false;
+		if (!$this->value)
+			return false;
+		if (!is_array($this->value) || count($this->value) <= 0)
+			return false;
+		return true;
+	}
+}
+class TArray extends TIfnempty {
+	public function setVar($variable, $value = null) {
+		if (!is_array($value))
+			return;
+		if ($variable == $this->variable) {
+			$this->value = $value;
+		}
+	}
+	public function getRequestedVars() {
+		return array($this->variable);
+	}
+	public function process() {
+		//copy over state
+		$check = $this->checkCondition();
+		$arr = $this->value;
+		//reset state
+		$this->value = '';
+		$this->valueSet = array();
+		
+		//do stuff
+		if (!$check)
+			return '';
+		$res = '';
+
+		foreach ($arr as $valueSet) {
+			foreach ($valueSet as $name=>$data)
+				if ($data instanceof template) 
+					$valueSet[$name] = $data->process();
+			$res .= join($this->tokenSet->process($valueSet));
+		}
+		return $res;
+	}
+}
 
 class tokenSet {
 	private $tokens = array();
 	//private $vars = array();
 	private $tokenVarMappings = array(array());
 	
-	public function tokenSet ($tset) {
+	public function __construct($tset) {
 		if ((array)$tset !== $tset)
 			throw new InvalidArgumentException('Token set must be an array');
 		foreach ($tset as $token) {

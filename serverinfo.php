@@ -15,6 +15,7 @@
     game.mysite.com is the address and 1234 the port
     "servername": is just a string that gets written on the image. Can be
     pretty much anything
+	errortext, when defined, replaces the "connection failed" error with the string given
      
     //My Server
     $servers[1] = Array();
@@ -31,19 +32,22 @@
     $servers[0]["address"] = "game.tgstation13.org";
     $servers[0]["port"] = 2337;
     $servers[0]["servername"] = "SS13: Server 1 (Badger)";
-     
+    //$servers[0]["errortext"] = "KEVIN!!!!!!!!!!!.";
+
     //Sybil
     $servers[1] = Array();
     $servers[1]["address"] = "game.tgstation13.org";
     $servers[1]["port"] = 1337;
     $servers[1]["servername"] = "SS13: Server 2 (Sybil)";
+	//$servers[1]["errortext"] = "Blame cyberboss.";
      
     //Artyom
-    /*$servers[2] = Array();
+    $servers[2] = Array();
     $servers[2]["address"] = "game.tgstation13.org";
     $servers[2]["port"] = 3337;
-    $servers[2]["servername"] = "SS13: Artyom";*/
-	
+    $servers[2]["servername"] = "SS13: Artyom";
+	$servers[2]["errortext"] = "Closed due to aids.";
+
  ///\/ you see this shit right here, that closing php tag, it better be the last thing in the file
 		//If there is even a space or a newline after that tag, shit will break
 ?>

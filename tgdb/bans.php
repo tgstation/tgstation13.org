@@ -1,4 +1,6 @@
 <?php
+namespace tgdb;
+use DateTime;
 require_once("include/include.php");
 navbar::setactive("ban");
 
@@ -55,58 +57,59 @@ if (count($sqlwherea)) {
 	$tpl->setvar('PANELOPEN', 'in');
 	$sqlwhere = " WHERE ".join(" AND ", $sqlwherea);
 }
+$limit = 200;
+if (isset($_GET['limit']))
+	$limit = 0+$_GET['limit']+0;
+$res = $mysqli->query("SELECT id, bantime, ckey, computerid, ip, bantype, reason, job, a_ckey, expiration_time, unbanned, unbanned_datetime, unbanned_ckey FROM ".fmttable("ban").$sqlwhere." ORDER BY id DESC LIMIT ".$limit.";");
 
-$res = $mysqli->query("SELECT id, bantime, ckey, computerid, ip, bantype, reason, job, a_ckey, expiration_time, unbanned, unbanned_datetime, unbanned_ckey FROM ".fmttable("ban").$sqlwhere." ORDER BY id DESC LIMIT 250;");
-
-$banrowtpl = new template("banrow");
-$banrows = "";
+$banrows = array();
 while ($row = $res->fetch_assoc()) {
 	$bantime = new DateTime($row['bantime']);
 	$banexpires = new DateTime($row['expiration_time']);
 	
 	$banlen = generateDurationFromDates($bantime, $banexpires);
-	
-	$banrowtpl->setvar('BAN_STATUS', ($row['unbanned'] ? 'Unbanned':'Active'));
+	$banrow = array();
+	$banrow['BAN_STATUS'] = ($row['unbanned'] ? 'Unbanned':'Active');
 	
 	//Stuff we only do when the ban isn't a permaban
 	if (strpos($row['bantype'],"PERMA") === FALSE) {
 		if (!$row['unbanned'] && $banexpires < (New DateTime()))
-			$banrowtpl->setvar('BAN_STATUS', 'Expired');
+			$banrow['BAN_STATUS'] = 'Expired';
 			
-		$banrowtpl->setvar('EXPIRE_TIME', $row['expiration_time']);
-		$banrowtpl->setvar('BAN_LENGTH', $banlen." Minute".($banlen==1?"":"s"));
+		$banrow['EXPIRE_TIME'] = $row['expiration_time'];
+		$banrow['BAN_LENGTH'] = $banlen." Minute".($banlen==1?"":"s");
 	}
 	
 	if ($row['unbanned']) {
-		$banrowtpl->setvar('UNBANNED', $row['unbanned']);		
-		$banrowtpl->setvar('UNBANNING_ADMIN', crossrefify($row['unbanned_ckey'], "adminckey"));
-		$banrowtpl->setvar('UNBAN_TIME', $row['unbanned_datetime']);
+		$banrow['UNBANNED'] = $row['unbanned'];		
+		$banrow['UNBANNING_ADMIN'] = crossrefify($row['unbanned_ckey'], "adminckey");
+		$banrow['UNBAN_TIME'] = $row['unbanned_datetime'];
 	}
 	
 	if ($row['ckey'])
-		$banrowtpl->setvar('BANNED_CKEY', crossrefify($row['ckey'],'ckey'));
+		$banrow['BANNED_CKEY'] = crossrefify($row['ckey'],'ckey');
 	if ($row['computerid'])
-		$banrowtpl->setvar('BANNED_CID', crossrefify($row['computerid'],'cid'));
+		$banrow['BANNED_CID'] = crossrefify($row['computerid'],'cid');
 	if ($row['ip'])
-		$banrowtpl->setvar('BANNED_IP', crossrefify($row['ip'],'ip'));
+		$banrow['BANNED_IP'] = crossrefify($row['ip'],'ip');
 
 	if ($row['job'])
-		$banrowtpl->setvar('BAN_JOB', $row['job']);
+		$banrow['BAN_JOB'] = $row['job'];
 		
-	$banrowtpl->setvar('BAN_REASON', htmlspecialchars($row['reason']));
+	$banrow['BAN_REASON'] = htmlspecialchars($row['reason']);
 	
 	
 	
-	$banrowtpl->setvar('BANNING_ADMIN', crossrefify($row['a_ckey'],"adminckey"));
+	$banrow['BANNING_ADMIN'] = crossrefify($row['a_ckey'],"adminckey");
 	
-	$banrowtpl->setvar('BAN_DATE', $row['bantime']);
+	$banrow['BAN_DATE'] = $row['bantime'];
 	
-	$banrowtpl->setvar('BAN_ID', $row['id']);
+	$banrow['BAN_ID'] = $row['id'];
 	
-	$banrows .= $banrowtpl->process();
+	$banrows[] = $banrow;
 }
 
-$bantabletpl = new template("bantable", array("BAN_ROWS" => $banrows));
+$tpl->setvar("BAN_ROWS", $banrows);
 $tpl->setvar('BANTABLE', $bantabletpl);
 $thm->send($tpl);
 ?>

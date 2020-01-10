@@ -1,5 +1,5 @@
 <?php
-
+namespace tgdb;
 require_once("include/include.php");
 navbar::setactive("cdb");
 $user = auth();
@@ -119,7 +119,7 @@ if (count($sqlwherea)) {
 	//show the search panel
 	$tpl->setvar('PANELOPEN', 'in');
 	$sqlwhere = " WHERE ".join(" ".$sqlwheresep." ", $sqlwherea);
-	$limit = "1000";
+	$limit = "LIMIT 1000";
 	$orderby = "asc";
 } else if (!isset($_GET['showallconnections'])) {
 	$thm->send($tpl);

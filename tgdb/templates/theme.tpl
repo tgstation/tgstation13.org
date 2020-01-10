@@ -4,6 +4,7 @@
 	<title>{PAGE_TITLE}</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="format-detection" content="telephone=no" /> <!-- stop cids from being treated as phone numbers -->
 	<!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
@@ -70,7 +71,20 @@
 			display:inline-block;
 			padding:10px;
 		}
-
+		.tt-menu {
+			background-color: white;
+			width: 100%;
+			margin: 5px;
+			padding: 5px;
+			z-index: 9001;
+		}
+		.tt-hint {
+			color: lightgray;
+			font-weight: lighter;
+		}
+		.tt-input {
+			color: black;
+		}
 	</style>
 </head>
 <body>
@@ -79,7 +93,7 @@
 	{#IFNDEF:DEBUG}
 	<div class="alert alert-info">
 			<strong>Hey! Listen!</strong>
-				Please report any bugs or display quirks <a href="https://github.com/MrStonedOne/tgstation13-website/issues/new">here</a>
+				Please report any bugs or display quirks <a href="https://github.com/tgstation/tgstation13.org/issues/new">here</a>
 		</div>{#ENDIF}
 	{CONTENT}
 	</div>
