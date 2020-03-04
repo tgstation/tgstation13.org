@@ -160,7 +160,19 @@ function updateconfig($server) {
 	foreach ($filteredfiles as $serverfile) {
 		filterconfig($server, $serverfile);
 	}
-		
+	//Paintings
+	$painting_categories = getfoldersinfolder('server-gamedata/'.$server.'data/paintings')
+	foreach ($painting_categories as $category) {
+		$target_dir = 'parsed-logs/'.$server.'/data/paintings/'.$category;
+		if (!file_exists(dirname($target)))
+			mkdir(dirname($target), 0775, true);
+		foreach (getfilesinfolder('server-gamedata/'.$server.'data/paintings/'.$category) as $file) {
+			$target = $target_dir.'/'.basename($file);
+			if (!file_exists(dirname($target)))
+				mkdir(dirname($target), 0775, true);
+			@compressfile($file, $target);
+		}
+	}
 }
 function filterconfig($server, $configfile) {
 	echo "filtering $configfile";
