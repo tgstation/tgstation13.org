@@ -161,7 +161,7 @@ function updateconfig($server) {
 		filterconfig($server, $serverfile);
 	}
 	//Paintings
-	$painting_categories = getfoldersinfolder('server-gamedata/'.$server.'data/paintings')
+	$painting_categories = getfoldersinfolder('server-gamedata/'.$server.'/data/paintings')
 	foreach ($painting_categories as $category) {
 		$target_dir = 'parsed-logs/'.$server.'/data/paintings/'.$category;
 		if (!file_exists(dirname($target)))
