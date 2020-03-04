@@ -166,7 +166,7 @@ function updateconfig($server) {
 		$target_dir = 'parsed-logs/'.$server.'/data/paintings/'.$category;
 		if (!file_exists(dirname($target)))
 			mkdir(dirname($target), 0775, true);
-		foreach (getfilesinfolder('server-gamedata/'.$server.'data/paintings/'.$category) as $file) {
+		foreach (getfilesinfolder('server-gamedata/'.$server.'/data/paintings/'.$category) as $file) {
 			$target = $target_dir.'/'.basename($file);
 			if (!file_exists(dirname($target)))
 				mkdir(dirname($target), 0775, true);
