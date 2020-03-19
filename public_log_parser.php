@@ -161,14 +161,15 @@ function updateconfig($server) {
 		filterconfig($server, $serverfile);
 	}
 	//Paintings
-	$painting_categories = getfoldersinfolder('server-gamedata/'.$server.'/data/paintings')
+	$painting_categories = getfoldersinfolder('server-gamedata/'.$server.'/data/paintings');
 	foreach ($painting_categories as $category) {
 		$target_dir = 'parsed-logs/'.$server.'/data/paintings/'.basename($category);
 		if (!file_exists($target_dir))
 			mkdir($target_dir, 0775, true);
 		foreach (getfilesinfolder($category) as $file) {
 			$target = $target_dir.'/'.basename($file);
-			@compressfile($file, $target);
+			if (!file_exists($target.'.gz'))
+				@compressfile($file, $target);
 		}
 	}
 }
