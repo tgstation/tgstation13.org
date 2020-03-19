@@ -163,13 +163,11 @@ function updateconfig($server) {
 	//Paintings
 	$painting_categories = getfoldersinfolder('server-gamedata/'.$server.'/data/paintings')
 	foreach ($painting_categories as $category) {
-		$target_dir = 'parsed-logs/'.$server.'/data/paintings/'.$category;
-		if (!file_exists(dirname($target)))
-			mkdir(dirname($target), 0775, true);
-		foreach (getfilesinfolder('server-gamedata/'.$server.'/data/paintings/'.$category) as $file) {
+		$target_dir = 'parsed-logs/'.$server.'/data/paintings/'.basename($category);
+		if (!file_exists($target_dir))
+			mkdir($target_dir, 0775, true);
+		foreach (getfilesinfolder($category) as $file) {
 			$target = $target_dir.'/'.basename($file);
-			if (!file_exists(dirname($target)))
-				mkdir(dirname($target), 0775, true);
 			@compressfile($file, $target);
 		}
 	}
