@@ -122,7 +122,7 @@ function parseruntime($runtime, $newpath, $monthruntimes, $dayruntimes) {
 }
 
 function updateconfig($server) {
-	$serverfiles = array('config/game_options.txt', 'config/maps.txt', 'config/unbuyableshuttles.txt', 'config/lavaruinblacklist.txt', 'config/spaceruinblacklist.txt', 'config/awaymissionconfig.txt');
+	$serverfiles = array('config/game_options.txt', 'config/maps.txt', 'config/unbuyableshuttles.txt', 'config/lavaruinblacklist.txt', 'config/spaceruinblacklist.txt', 'config/awaymissionconfig.txt', 'data/paintings.json');
 	$serverfolders = array('data/minimaps', 'data/npc_saves', 'data/Diagnostics/Resources');
 	$filteredfiles = array('config/config.txt');
 	$sharedfiles = array('admins.txt', 'admin_ranks.txt');
