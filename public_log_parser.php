@@ -359,6 +359,7 @@ foreach ($servers as $server) {
 							case 'newscaster.json':
 							case 'dynamic.json':
 							case 'round_end_data.json':
+							case ((substr($basename, 0, 5) == 'perf-') ? $basename : !$basename):
 								$fullnewpath = $newpath.'/'.$basename;
 								
 								compressfile($logfile, $fullnewpath);
