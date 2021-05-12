@@ -206,20 +206,17 @@ function makeImage($variable_value_array) {
 
 	//Settings for what we want to print.
 	$printplayers = 1;
-	$printmode = 1;
 	$printurl = 1;
 	$printadmins = 0;
 	$printhost = 0;
 	$printrevision = 1;
 	$printversion = 1;
-	$printmode = 1;
 	$printmap = 1;
 
 	//Move variables from the array into easier to use variables
 	//^^^ WHY???? todo: remove all of this and make shit use the array -mrstonedone
 	
 	$version = getvar($variable_value_array,"version");
-	$mode = getvar($variable_value_array,"mode");
 	$respawn = getvar($variable_value_array,"respawn");
 	$entering = getvar($variable_value_array,"enter");
 	$voting = getvar($variable_value_array,"vote");
@@ -296,7 +293,7 @@ function makeImage($variable_value_array) {
 		return imageerror($image, "Invalid Config!");
 	}
 	
-	if (!validvar($players) || !validvar($mode)) {
+	if (!validvar($players)) {
 		$restarting = getvar($variable_value_array,"restarting");
 		if ($restarting && $restarting < 18) {
 			return imageerror($image, "Server Restarting");
@@ -354,14 +351,6 @@ function makeImage($variable_value_array) {
 			$string .= ' '.shuttleTime($shuttleMode, $shuttleTimer - $offset);
 		imagestring ($image, $fontsmall, 4, 55,  $string, $textColor);
 		$printedsmall++;
-	}
-
-	//Guess we can also rip off erro some more, mimic modo go!
-	if ($printmode) {
-		// I'm too lazy to escape shit in the image code, so version is hardcoded here
-		$string = "playing " . urldecode($version) . " mode \"" . $mode . "\"";
-		imagestring ($image, $fontsmaller, 4, 28, $string, $textColor);
-		$printedsmaller++;
 	}
 
 	//Someone set us up the map
@@ -436,7 +425,6 @@ $variable_value_array[%key%] = %value%:
 
 %key%				%value%
 "version"			codebase name (servers based on our code read "/tg/Station13". Hardcoded in game code)
-"mode"				game mode name (example: "secret")
 "respawn"			respawn enabled (1/0)
 "enter"				entering enabled (1/0)
 "vote"				voding allowed (1/0)
