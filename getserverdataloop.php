@@ -9,9 +9,10 @@ $endtime = time()+60;
 
 while (time() < $endtime) {
 	$starttime = time();
-	exec("php getserverdata.php");
- 	if (1-(time()-$starttime) > 0)
-		sleep(1-(time()-$starttime));
+	exec("php getserverdataasync.php");
+	$sleeptime = 4-(max(time()-$starttime, 4));
+ 	if ($sleeptime > 0)
+		sleep($sleeptime);
 	
  
 }
