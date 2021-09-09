@@ -5813,7 +5813,6 @@ button.close {
 .navbar-nav > li > a,
 .navbar-nav > li > a:hover {
   padding-top: 17px;
-  padding-bottom: 13px;
   -webkit-transition: color ease-in-out 0.2s;
   transition: color ease-in-out 0.2s;
 }
