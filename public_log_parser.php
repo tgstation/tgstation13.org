@@ -10,33 +10,7 @@ $servers = array('sybil', 'basil');
 
 if (php_sapi_name() != "cli")
 	exit;
-$stop = TRUE;
-$overwrite = FALSE;
-$configonly = FALSE;
-$options = getopt("doc", array("diff", "overwrite", "configonly"));
 
-if (isset($options["diff"]) || isset($options["d"]))
-	$stop = FALSE;
-if (isset($options["overwrite"]) || isset($options["o"]))
-	$overwrite = TRUE;
-if (isset($options["configonly"]) || isset($options["c"]))
-	$configonly = TRUE;
-/*
-for ($argv as $argn=>$arg)
-	if ($argn > 0)
-		switch ($arg) {
-			case "-d":
-			case "--diff":
-				$stop = FALSE;
-				break;
-			case "-o":
-			case "--overwrite":
-				$overwrite = TRUE;
-				break;
-		}
-if ($argc >= 2 && $argv[1] === "-diff")
-	$stop = FALSE;
-*/
 proc_nice(19);
 function getfoldersinfolder($folder) {
 	$results = scandir($folder);
@@ -106,7 +80,6 @@ function compressfile($file, $target = null) {
 		echo "compressing file:$file\n";
 		exec('gzip -f9 "'.$file.'"');
 	}
-	usleep(100000);
 }
 
 function condense_runtimes($infile, $outfile) {
@@ -114,12 +87,11 @@ function condense_runtimes($infile, $outfile) {
 	chdir('rc');
 	exec('gunzip -kc ../"'.$infile.'" | ./rc -s | gzip -c9 > ../"'.$outfile.'"');
 	chdir('..');
-	usleep(100000);
 }
 
 function parseruntime($runtime, $newpath, $monthruntimes, $dayruntimes) {
 	echo "parsing runtime: $runtime -> $newpath/runtime.log\n";
-
+	
 	$file = fopen($runtime, 'rb');
 	if ($file === false)
 		return;
@@ -147,15 +119,13 @@ function parseruntime($runtime, $newpath, $monthruntimes, $dayruntimes) {
 
 	//compressfile($newfilename.'-condensed.txt');
 	echo "Parse finished on runtime: $runtime\n";
-	usleep(100000);
 }
 
 function updateconfig($server) {
-	$serverfiles = array('config/maps.txt', 'config/server_overrides.txt', 'data/paintings.json');
-	$serverfolders = array('data/minimaps', 'data/npc_saves', 'data/engravings');
-	$diffedfolders = array('data/Diagnostics/Resources');
-	$filteredfiles = array('config.txt', 'game_options.txt', 'mrp_shared_overrides.txt');
-	$sharedfiles = array('admins.txt', 'admin_nicknames.json', 'admin_nicknames.txt', 'admin_ranks.txt', 'awaymissionconfig.txt', 'dynamic.json', 'lavaruinblacklist.txt', 'motd.txt', 'mrp_motd.txt', 'policy.json', 'resources.txt', 'sillytips.txt', 'spaceruinblacklist.txt', 'tips.txt', 'unbuyableshuttles.txt', 'server_side_modifications.dm' => 'server_side_modifications.dm');
+	$serverfiles = array('config/game_options.txt', 'config/maps.txt', 'config/unbuyableshuttles.txt', 'config/lavaruinblacklist.txt', 'config/spaceruinblacklist.txt', 'config/awaymissionconfig.txt', 'data/paintings.json');
+	$serverfolders = array('data/minimaps', 'data/npc_saves', 'data/Diagnostics/Resources');
+	$filteredfiles = array('config/config.txt');
+	$sharedfiles = array('admins.txt', 'admin_ranks.txt');
 	if (!file_exists('parsed-logs/'.$server))
 			mkdir('parsed-logs/'.$server, 0775, true);
 	foreach ($serverfolders as $serverfolder) {
@@ -169,41 +139,6 @@ function updateconfig($server) {
 			@compressfile($file, $target);
 		}
 	}
-	
-	foreach ($diffedfolders as $difffolder) {
-		if (!file_exists('server-gamedata/'.$server.'/'.$difffolder))
-			continue;
-		$stop = false;
-		foreach (array_reverse(getfilesinfolder('server-gamedata/'.$server.'/'.$difffolder)) as $file) {
-			if (!ctype_digit(substr(basename($file), 0, 1)))
-				continue;
-			$target = 'parsed-logs/'.$server.'/'.$difffolder.'/'.basename($file);
-			if (!file_exists(dirname($target)))
-				mkdir(dirname($target), 0775, true);
-			echo "$file -> $target\n";
-			if (file_exists($target.'.gz'))
-				$stop = true;
-			//@copy($file, $target);
-			@compressfile($file, $target);
-			if ($stop)
-				break;
-		}
-	}
-	
-	foreach ($sharedfiles as $source => $target) {
-		if (is_numeric($source)) {
-			$source = $target;
-			$target = 'config/'.$target;
-		}
-		if (!file_exists('server-gamedata/shared/'.$source))
-			continue;
-		$target = 'parsed-logs/'.$server.'/'.$target;
-		if (!file_exists(dirname($target)))
-			mkdir(dirname($target), 0775, true);
-		compressfile('server-gamedata/shared/'.$source, $target);
-		//compressfile('parsed-logs/'.$server.'/config/'.$serverfile);
-	}
-	
 	foreach ($serverfiles as $serverfile) {
 		if (!file_exists('server-gamedata/'.$server.'/'.$serverfile))
 			continue;
@@ -213,11 +148,18 @@ function updateconfig($server) {
 		compressfile('server-gamedata/'.$server.'/'.$serverfile, $target);
 		//compressfile('parsed-logs/'.$server.'/config/'.$serverfile);
 	}
-	
+	foreach ($sharedfiles as $serverfile) {
+		if (!file_exists('server-gamedata/shared/'.$serverfile))
+			continue;
+		$target = 'parsed-logs/'.$server.'/config/'.$serverfile;
+		if (!file_exists(dirname($target)))
+			mkdir(dirname($target), 0775, true);
+		compressfile('server-gamedata/shared/'.$serverfile, $target);
+		//compressfile('parsed-logs/'.$server.'/config/'.$serverfile);
+	}
 	foreach ($filteredfiles as $serverfile) {
 		filterconfig($server, $serverfile);
 	}
-	
 	//Paintings
 	$painting_categories = getfoldersinfolder('server-gamedata/'.$server.'/data/paintings');
 	foreach ($painting_categories as $category) {
@@ -230,15 +172,14 @@ function updateconfig($server) {
 				@compressfile($file, $target);
 		}
 	}
-		
 }
 function filterconfig($server, $configfile) {
-	echo "filtering $configfile\n";
-	$filteredconfigs = array('COMMS_KEY', 'MEDAL_HUB_PASSWORD', 'DISCORD_TOKEN');
-	$file = fopen('server-gamedata/shared/'.$configfile, 'rb');
+	echo "filtering $configfile";
+	$filteredconfigs = array('COMMS_KEY', 'MEDAL_HUB_PASSWORD');
+	$file = fopen('server-gamedata/'.$server.'/'.$configfile, 'rb');
 	if ($file === false)
 		return;
-	$newfile = gzopen('parsed-logs/'.$server.'/config/'.$configfile.'.gz', 'wb9');
+	$newfile = gzopen('parsed-logs/'.$server.'/'.$configfile.'.gz', 'wb9');
 	if ($newfile === false) {
 		fclose($file);
 		return;
@@ -250,12 +191,10 @@ function filterconfig($server, $configfile) {
 
 		gzwrite($newfile, $line);
 	}
-	echo "done filtering $configfile\n";
-	usleep(100000);
+	echo "done filtering $configfile";
 }
 
 function fillzips($file, $basename, $monthzip, $dayzip, $roundzip, $day, $round) {
-	return;
 	$handle = gzopen($file, 'r');
 	
 	$monthzip[$day.'/'.$round.'/'.$basename] = $handle;
@@ -272,32 +211,13 @@ function fillzips($file, $basename, $monthzip, $dayzip, $roundzip, $day, $round)
 	$roundzip[$basename]->compress(Phar::BZ2);
 
 	gzclose($handle);
-	usleep(100000);
-}
-
-function fill_round_zip($file, $basename, &$roundzip, $day, $round) {
-	if (!($roundzip instanceof PharData)) {
-		$roundzip = new PharData($roundzip, Phar::CURRENT_AS_FILEINFO | Phar::KEY_AS_FILENAME, null, Phar::ZIP);
-		$roundzip->startBuffering();
-	}
-	$handle = gzopen($file, 'r');
-	
-	$roundzip[$basename] = $handle;
-	$roundzip[$basename]->compress(Phar::BZ2);
-
-	gzclose($handle);
-	usleep(100000);
 }
 
 echo "Starting up\n";
-$servers = array('sybil', 'basil', 'terry', 'event-hall', 'manuel', 'event-hall-us');
+$servers = array('sybil', 'basil');
 foreach ($servers as $server) {
 	echo "Loading $server\n";
 	updateconfig($server);
-	copy_pictures($server);
-	if ($configonly)
-		continue;
-	
 	//parseruntimes($server);
 	//continue;
 	echo "Parsing logs files\n";
@@ -305,7 +225,6 @@ foreach ($servers as $server) {
 	$first = true;
 	$last = false;
 	$years = array_reverse(getfoldersinfolder('server-gamedata/'.$server.'/data/logs'));
-	$dozips = false;
 	
 	foreach ($years as $year) {
 		$baseyear = basename($year);
@@ -320,24 +239,19 @@ foreach ($servers as $server) {
 				continue;
 			if (!file_exists("$basenewpath/$baseyear/$basemonth"))
 				mkdir("$basenewpath/$baseyear/$basemonth", 0775, true);
-			if ($dozips) {
-				$monthzip = new PharData("$basenewpath/$baseyear/month.$baseyear-$basemonth.zip", Phar::CURRENT_AS_FILEINFO | Phar::KEY_AS_FILENAME, null, Phar::ZIP);
-				$monthzip->startBuffering();
-			}
-			if ($stop)
-				$monthruntimes = gzopen("$basenewpath/$baseyear/$basemonth/$baseyear-$basemonth.runtime.txt.gz", "ab9");
+			
+			$monthzip = new PharData("$basenewpath/$baseyear/month.$baseyear-$basemonth.zip", Phar::CURRENT_AS_FILEINFO | Phar::KEY_AS_FILENAME, null, Phar::ZIP);
+			$monthzip->startBuffering();
+			$monthruntimes = gzopen("$basenewpath/$baseyear/$basemonth/$baseyear-$basemonth.runtime.txt.gz", "ab9");
 			$days = array_reverse(getfoldersinfolder($month));
 			foreach ($days as $day) {
 				$baseday = basename($day);
 				$wroteday = false;
 				if (!file_exists("$basenewpath/$baseyear/$basemonth/$baseday"))
 					mkdir("$basenewpath/$baseyear/$basemonth/$baseday", 0775, true);
-				if ($dozips) {
-					$dayzip = new PharData("$basenewpath/$baseyear/$basemonth/day.$baseyear-$basemonth-$baseday.zip", Phar::CURRENT_AS_FILEINFO | Phar::KEY_AS_FILENAME, null, Phar::ZIP);
-					$dayzip->startBuffering();
-				}
-				if ($stop)
-					$dayruntimes = gzopen("$basenewpath/$baseyear/$basemonth/$baseday/$baseyear-$basemonth-$baseday.runtime.txt.gz", "ab9");
+				$dayzip = new PharData("$basenewpath/$baseyear/$basemonth/day.$baseyear-$basemonth-$baseday.zip", Phar::CURRENT_AS_FILEINFO | Phar::KEY_AS_FILENAME, null, Phar::ZIP);
+				$dayzip->startBuffering();
+				$dayruntimes = gzopen("$basenewpath/$baseyear/$basemonth/$baseday/$baseyear-$basemonth-$baseday.runtime.txt.gz", "ab9");
 				$rounds = array_reverse(getfoldersinfolder($day));
 				foreach ($rounds as $round) {
 					$baseround = basename($round);
@@ -357,11 +271,9 @@ foreach ($servers as $server) {
 					
 					if (!file_exists($newpath)) {
 						mkdir($newpath,0775,true);
-					} else if ($stop) {
-						if ($dozips) {
-							$dayzip->stopBuffering();
-							$monthzip->stopBuffering();
-						}
+					} else {
+						$dayzip->stopBuffering();
+						$monthzip->stopBuffering();
 						gzclose($monthruntimes);
 						condense_runtimes("$basenewpath/$baseyear/$basemonth/$baseyear-$basemonth.runtime.txt.gz", "$basenewpath/$baseyear/$basemonth/$baseyear-$basemonth.runtime.condensed.txt.gz");
 						gzclose($dayruntimes);
@@ -369,68 +281,44 @@ foreach ($servers as $server) {
 
 						break 4;
 					}
-					$roundzip = $newpath.'.zip';
+					$roundzip = new PharData($newpath.'.zip', Phar::CURRENT_AS_FILEINFO | Phar::KEY_AS_FILENAME, null, Phar::ZIP);
+					$roundzip->startBuffering();
 					
 					$logfiles = getfilesinfolder($round);
 					foreach ($logfiles as $logfile) {
 						$basename = basename($logfile);
 						switch ($basename) {
 							case 'game.log':
+								parselog($logfile, $newpath, TRUE, TRUE);
 								$basefilename = basename($basename, '.log');
 								$fullnewpath = $newpath.'/'.$basefilename.'.txt';
 								
-								if (!$overwrite && file_exists($fullnewpath.'.gz'))
-									continue;
-								
-								parselog($logfile, $newpath, TRUE, TRUE);
-								if ($dozips)
-									fillzips($fullnewpath.'.gz', $basefilename.'.txt', $monthzip, $dayzip, $roundzip, $baseday, $baseround);
-								else
-									fill_round_zip($fullnewpath.'.gz', $basefilename.'.txt', $roundzip, $baseday, $baseround);
+								fillzips($fullnewpath.'.gz', $basefilename.'.txt', $monthzip, $dayzip, $roundzip, $baseday, $baseround);
 								
 								$fullnewpath = $newpath.'/'.$basefilename.'.html';
-								if ($dozips)
-									fillzips($fullnewpath.'.gz', $basefilename.'.html', $monthzip, $dayzip, $roundzip, $baseday, $baseround);
-								else
-									fill_round_zip($fullnewpath.'.gz', $basefilename.'.html', $roundzip, $baseday, $baseround);
+								
+								fillzips($fullnewpath.'.gz', $basefilename.'.html', $monthzip, $dayzip, $roundzip, $baseday, $baseround);
 								break;
 							
 							case 'runtime.log':
+								parseruntime($logfile, $newpath, $monthruntimes, $dayruntimes);
 								$basefilename = basename($basename, '.log');
 								$fullnewpath = $newpath.'/'.$basefilename.'.txt';
 								
-								if (!$overwrite && file_exists($fullnewpath.'.gz'))
-									continue;
-								
-								parseruntime($logfile, $newpath, $monthruntimes, $dayruntimes);
-								
-								if ($dozips)
-									fillzips($fullnewpath.'.gz', $basefilename.'.txt', $monthzip, $dayzip, $roundzip, $baseday, $baseround);
-								else
-									fill_round_zip($fullnewpath.'.gz', $basefilename.'.txt', $roundzip, $baseday, $baseround);
+								fillzips($fullnewpath.'.gz', $basefilename.'.txt', $monthzip, $dayzip, $roundzip, $baseday, $baseround);
 								
 								$fullnewpath = $newpath.'/'.$basefilename.'.condensed.txt';
 								
-								if ($dozips)
-									fillzips($fullnewpath.'.gz', $basefilename.'.condensed.txt', $monthzip, $dayzip, $roundzip, $baseday, $baseround);
-								else
-									fill_round_zip($fullnewpath.'.gz', $basefilename.'.condensed.txt', $roundzip, $baseday, $baseround);
+								fillzips($fullnewpath.'.gz', $basefilename.'.condensed.txt', $monthzip, $dayzip, $roundzip, $baseday, $baseround);
 								
 								break;
 							
 							case 'sql.log':
+								parselog($logfile, $newpath, FALSE, FALSE);
 								$basefilename = basename($basename, '.log');
 								$fullnewpath = $newpath.'/'.$basefilename.'.txt';
 								
-								if (!$overwrite && file_exists($fullnewpath.'.gz'))
-									continue;
-								
-								parselog($logfile, $newpath, FALSE, FALSE);
-								
-								if ($dozips)
-									fillzips($fullnewpath.'.gz', $basefilename.'.txt', $monthzip, $dayzip, $roundzip, $baseday, $baseround);
-								else
-									fill_round_zip($fullnewpath.'.gz', $basefilename.'.txt', $roundzip, $baseday, $baseround);
+								fillzips($fullnewpath.'.gz', $basefilename.'.txt', $monthzip, $dayzip, $roundzip, $baseday, $baseround);
 								
 								break;
 							case 'attack.log':
@@ -442,28 +330,13 @@ foreach ($servers as $server) {
 							case 'manifest.log':
 							case 'job_debug.log':
 							case 'virus.log':
-							case 'econ.log':
 							case 'shuttle.log':
-							case 'mecha.log':
-							case 'asset.log':
-							case 'map_errors.log':
-							case 'cloning.log':
-							case 'uplink.log':
-							case 'paper.log':
-							case 'harddel.log':
 								$basefilename = basename($basename, '.log');
 								$fullnewpath = $newpath.'/'.$basefilename.'.txt';
 								
-								if (!$overwrite && file_exists($fullnewpath.'.gz'))
-									continue;
-								
 								compressfile($logfile, $fullnewpath);
 								
-								if ($dozips)
-									fillzips($fullnewpath.'.gz', $basefilename.'.txt', $monthzip, $dayzip, $roundzip, $baseday, $baseround);
-								else
-									fill_round_zip($fullnewpath.'.gz', $basefilename.'.txt', $roundzip, $baseday, $baseround);
-									
+								fillzips($fullnewpath.'.gz', $basefilename.'.txt', $monthzip, $dayzip, $roundzip, $baseday, $baseround);
 								break;
 							
 							case 'kudzu.html':
@@ -476,42 +349,29 @@ foreach ($servers as $server) {
 							case 'experimentor.html':
 							case 'supermatter.html':
 							case 'botany.html':
-							case 'presents.html':
 							case 'telesci.html':
 							case 'research.html':
 							case 'radiation.html':
 							case 'portals.html':
 							case 'hallucinations.html':
-							case 'hypertorus.html':
-							case 'circuit.html':	
+							case 'circuit.html':
 							case 'nanites.html':
 							case 'newscaster.json':
 							case 'dynamic.json':
 							case 'round_end_data.json':
-							case 'round_end_data.html':
-							case 'profiler.json':
-							case 'sendmaps.json':
-							case 'id_card_changes.html':
 							case ((substr($basename, 0, 5) == 'perf-') ? $basename : !$basename):
 								$fullnewpath = $newpath.'/'.$basename;
 								
-								if (!$overwrite && file_exists($fullnewpath.'.gz'))
-									continue;
-								
 								compressfile($logfile, $fullnewpath);
 								
-								if ($dozips)
-									fillzips($fullnewpath.'.gz', $basename, $monthzip, $dayzip, $roundzip, $baseday, $baseround);
-								else
-									fill_round_zip($fullnewpath.'.gz', $basename, $roundzip, $baseday, $baseround);
+								fillzips($fullnewpath.'.gz', $basename, $monthzip, $dayzip, $roundzip, $baseday, $baseround);
 								break;
 							
 							case 'config_error.log':
 							case 'hrefs.html':
-							case 'hrefs.log':
 								break;
 							default:
-								echo "!!(default) $logfile\n";
+								echo "(default) $logfile => $newpath/$basename\n";
 								break;
 						}
 					}
@@ -528,10 +388,7 @@ foreach ($servers as $server) {
 									
 									copy($picturefile, $fullnewpath);
 									
-									if ($dozips)
-										fillzips($fullnewpath, 'photos/'.$basename, $monthzip, $dayzip, $roundzip, $baseday, $baseround);
-									else
-										fill_round_zip($fullnewpath, 'photos/'.$basename, $roundzip, $baseday, $baseround);
+									fillzips($fullnewpath, 'photos/'.$basename, $monthzip, $dayzip, $roundzip, $baseday, $baseround);
 								}
 							break;
 							default:
@@ -540,22 +397,15 @@ foreach ($servers as $server) {
 						}
 						
 					}
-					if ($roundzip instanceof PharData)
-						$roundzip->stopBuffering();
+					$roundzip->stopBuffering();
 				}
-				if ($dozips)
-					$dayzip->stopBuffering();
-				if ($stop) {
-					gzclose($dayruntimes);
-					condense_runtimes("$basenewpath/$baseyear/$basemonth/$baseday/$baseyear-$basemonth-$baseday.runtime.txt.gz", "$basenewpath/$baseyear/$basemonth/$baseday/$baseyear-$basemonth-$baseday.runtime.condensed.txt.gz");
-				}
+				$dayzip->stopBuffering();
+				gzclose($dayruntimes);
+				condense_runtimes("$basenewpath/$baseyear/$basemonth/$baseday/$baseyear-$basemonth-$baseday.runtime.txt.gz", "$basenewpath/$baseyear/$basemonth/$baseday/$baseyear-$basemonth-$baseday.runtime.condensed.txt.gz");
 			}
-			if ($dozips)
-				$monthzip->stopBuffering();
-			if ($stop) {
-				gzclose($monthruntimes);
-				condense_runtimes("$basenewpath/$baseyear/$basemonth/$baseyear-$basemonth.runtime.txt.gz", "$basenewpath/$baseyear/$basemonth/$baseyear-$basemonth.runtime.condensed.txt.gz");
-			}
+			$monthzip->stopBuffering();
+			gzclose($monthruntimes);
+			condense_runtimes("$basenewpath/$baseyear/$basemonth/$baseyear-$basemonth.runtime.txt.gz", "$basenewpath/$baseyear/$basemonth/$baseyear-$basemonth.runtime.condensed.txt.gz");
 		}
 	}
 }
@@ -569,7 +419,7 @@ function parselog($logfile, $newpath, $lineparse, $htmlify) {
 	$file = fopen($logfile, "rb");
 	if ($file === false)
 		return;
-	$tofile = gzopen($newpath.'/'.basename($filename, '.log').'.txt.gz', "wb9");
+	$tofile = gzopen($newpath.'/game.txt.gz', "wb9");
 	if ($tofile === false) {
 		@fclose($file);
 		return;
@@ -612,7 +462,7 @@ function parselog($logfile, $newpath, $lineparse, $htmlify) {
 	}
 	fclose($file);
 	gzclose($tofile);
-	usleep(100000);
+
 }
 	
 	
@@ -622,29 +472,18 @@ function parseline ($line, $html) {
 		return array('-censored(misc)-','<p class="censored">-censored(misc)-</p>');
 	if ($line[0] != '[')
 		return array('-censored(misc)-','<p class="censored">-censored(misc)-</p>');
-	
 	$words = explode(' ', $line);
 	$htmlwords = explode(' ', $html);
 	
-	$logtype = explode(']',$words[0]);
-	
-	if (count($logtype) < 2) {
-		$logtype = $words[2];
-		$words[0] .= ' '.$words[1].' '.$words[2];
-		$htmlwords[0] .= ' '.$htmlwords[1].' '.$htmlwords[2];
-		array_splice($words, 1, 2);
-		//echo "$words[0]|||$words[1]|||$words[2]|||$logtype\n";
-	} else {
-		$logtype = $logtype[1];
-	}
+	$logtype = (explode(']',$words[0])[1]);
 	switch ($logtype) {
 		case 'ACCESS:':
 			if ($words[1] == 'Login:') {
 				$words[count($words)-4] = '-censored(ip/cid)-';
-				$htmlwords[count($htmlwords)-4] = '<span class="censored">-censored(ip/cid)-</span>';
+				$htmlwords[count($words)-4] = '<span class="censored">-censored(ip/cid)-</span>';
 			}
 			if ($words[1] == 'Failed')
-				return censor('invalid connection data');
+				return '-censored(invalid connection data)-';
 			break;
 		case 'ADMIN:':
 			if ($words[1] == 'HELP:')
@@ -663,8 +502,6 @@ function parseline ($line, $html) {
 				return censor('asay/apm/ahelp/notes/etc');
 			if (preg_match('/ADMIN: .*\\/\\(.*\\) has edited /', $line))
 				return censor('asay/apm/ahelp/notes/etc');
-			if (preg_match('/ADMIN: [^:]*\\/\\(.*\\) ".*"/', $line))
-				return censor('asay/apm/ahelp');
 			/*if (preg_match('/ADMIN: .*\\/\\(.*\\) has created a /', $line))
 				return censor('asay/apm/ahelp/notes/etc');
 			if (preg_match('/ADMIN: .*\\/\\(.*\\) has removed a /', $line))
@@ -703,70 +540,6 @@ function parseline ($line, $html) {
 
 function censor($reason) {
 	return array('-censored('.$reason.')-','<p class="censored">-censored('.$reason.')-</p>');
-}
-
-function copy_pictures($server) {
-	global $stop, $overwrite;
-	echo "Parsing picture log files\n";
-	$basenewpath = 'parsed-logs/'.$server.'/data/picture_logs';
-	$first = true;
-	$last = false;
-	$years = array_reverse(getfoldersinfolder('server-gamedata/'.$server.'/data/picture_logs'));
-	$dozips = false;
-	
-	foreach ($years as $year) {
-		$baseyear = basename($year);
-		if (!is_numeric($baseyear))
-			continue;
-		
-		$months = array_reverse(getfoldersinfolder($year));
-		foreach ($months as $month) {
-			$basemonth = basename($month);
-			if (!is_numeric($basemonth))
-				continue;
-			if (!file_exists("$basenewpath/$baseyear/$basemonth"))
-				mkdir("$basenewpath/$baseyear/$basemonth", 0775, true);
-			
-			$days = array_reverse(getfoldersinfolder($month));
-			foreach ($days as $day) {
-				$baseday = basename($day);
-				if (!file_exists("$basenewpath/$baseyear/$basemonth/$baseday"))
-					mkdir("$basenewpath/$baseyear/$basemonth/$baseday", 0775, true);
-				$rounds = array_reverse(getfoldersinfolder($day));
-				foreach ($rounds as $round) {
-					$baseround = basename($round);
-					$roundid = (int) substr($baseround, 6);
-					//echo "$round => $roundid\n";
-					if ($roundid < 2)
-						continue;
-
-					if ($first) {
-						$first = false;
-						continue;
-					}
-
-					$roundA = explode('/', $round);
-					$roundA[0] = 'parsed-logs';
-					$newpath = implode('/', $roundA);
-					
-					if (!file_exists($newpath)) {
-						mkdir($newpath,0775,true);
-					} else if ($stop) {
-						break 4;
-					}
-					
-					$pictures = getfilesinfolder($round);
-					foreach ($pictures as $picture) {
-						$basename = basename($picture);
-						$fullnewpath = $newpath.'/'.$basename;
-						if (!$overwrite && file_exists($fullnewpath))
-							continue;
-						copy($picture, $newpath.'/'.$basename);
-					}
-				}
-			}
-		}
-	}
 }
 
 ?>

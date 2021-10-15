@@ -1,9 +1,26 @@
 <!DOCTYPE html>
+<!--
+ monarchmra on reddit is MrStonedOne, /tg/station13's host.
+ @MrStonedOne#9498 on discord is MrStonedOne, /tg/station13's host.
+ @MrStonedOne on twitter is MrStonedOne, /tg/station13's host.
+ Kyle Spier-Swenson
+ kyle.spier@gmail.com
+ @TGStation13 is the Official /tg/Station twitter.
+ @Poly_the_Parrot is the Official twitter account for Poly, one of /tg/'s mascots
+ -->
 <html lang="en">
 	<head>
 		<meta http-equiv="content-type" content="text/html; charset=UTF-8"> 
 		<title>Welcome to SpaceStation 13 - /tg/station 13</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="prefetch" href="/dynamicimages/serverinfo.json" as="fetch">
+		<link rel="prefetch" href="/fonts/google-inconsolata.css" as="style">
+		<link rel="prefetch" href="/fonts/QldKNThLqRwH-OJ1UHjlKGlZ5qg.woff2" as="font" type="font/woff2" crossorigin>
+		<link rel="prefetch" href="/fonts/QldXNThLqRwH-OJ1UHjlKGHiw71p5_w.woff2" as="font" type="font/woff2" crossorigin>
+		<link rel="preload" href="/dynamicimages/serverinfo.json" as="fetch">
+		<link rel="preload" href="/fonts/google-inconsolata.css" as="style">
+		<link rel="preload" href="/fonts/QldKNThLqRwH-OJ1UHjlKGlZ5qg.woff2" as="font" type="font/woff2" crossorigin>
+		<link rel="preload" href="/fonts/QldXNThLqRwH-OJ1UHjlKGHiw71p5_w.woff2" as="font" type="font/woff2" crossorigin>
 		<link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png?v=vMMm9050Gy">
 		<link rel="apple-touch-icon" sizes="60x60" href="/apple-touch-icon-60x60.png?v=vMMm9050Gy">
 		<link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png?v=vMMm9050Gy">
@@ -17,112 +34,29 @@
 		<link rel="icon" type="image/png" href="/android-chrome-192x192.png?v=vMMm9050Gy" sizes="192x192">
 		<link rel="icon" type="image/png" href="/favicon-96x96.png?v=vMMm9050Gy" sizes="96x96">
 		<link rel="icon" type="image/png" href="/favicon-16x16.png?v=vMMm9050Gy" sizes="16x16">
-		<link rel="manifest" href="/manifest.json?v=vMMm9050Gy">
+		<link rel="manifest" href="/dynamicimages/manifest.json?v=vMMm9050Gy">
 		<link rel="mask-icon" href="/safari-pinned-tab.svg?v=vMMm9050Gy" color="#082338">
 		<link rel="shortcut icon" href="/favicon.ico?v=vMMm9050Gy">
 		<meta name="msapplication-TileColor" content="#082338">
 		<meta name="msapplication-TileImage" content="/mstile-144x144.png?v=vMMm9050Gy">
 		<meta name="theme-color" content="#082338">
-		<link href="tg.css" rel="stylesheet">
+		<link href="/tg.css" rel="stylesheet">
+		<link href="/fa/css/font-awesome.min.css" rel="stylesheet">
+		<link href="/fonts/google-inconsolata.css" rel="stylesheet">
+		
 		<!--[if lt IE 9]>
 		  <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
+		<script type='text/javascript' src="/jquery-1.12.4.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="/banners.css?v=16" />
+									  <script src="/gamebanner.js?v=66"></script>
 		
-		<script type="text/javascript">
-			function getCookie (cname) {
-				var name = cname + "=";
-				var ca = document.cookie.split(';');
-				for(var i=0; i<ca.length; i++) {
-					var c = ca[i].trim();
-					if (c.indexOf(name)==0) return c.substring(name.length,c.length);
-				}
-				return "";
-			} 
-			
-			var refreshjobs = [];
-			
-			function setupreloader (servernum, target, refreshtime) {
-				if (refreshjobs.length <= servernum)
-					refreshjobs.length = servernum+1;
-				if (refreshjobs[servernum])
-					return
-				var refreshjob = {
-					num: servernum,
-					timer: null,
-					target: target,
-					refreshtime: refreshtime
-				};
-				refreshjobs[servernum] = refreshjob;
-				reloadimg(refreshjob);
-			}
-			
-			function displayrefreshstatus () {
-				if (getCookie("disablerefresh")) {
-					document.getElementById("refreshstatus").innerHTML="<span style=\"color:red;font-weight:bold;\">Disabled</span>";
-					return;
-				}
-				document.getElementById("refreshstatus").innerHTML="<span style=\"color:green;font-weight:bold;\">Enabled</span>";
-				return;
-			}
-			
-			function kick_reload_jobs() {
-				var arrayLength = refreshjobs.length;
-				for (var i = 0; i < arrayLength; i++) {
-					var refreshjob = refreshjobs[i];
-					if (refreshjob && refreshjob.timer)
-						reloadimg(refreshjob);
-				}
-			}
-			
-			function refreshtoggleclick () {
-				if (getCookie("disablerefresh")) {
-					document.cookie="disablerefresh=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
-					kick_reload_jobs();
-					displayrefreshstatus();
-					return;
-				}
-				document.cookie="disablerefresh=1; expires=Thu, 2038-01-19 04:14:00 GMT; path=/";
-				displayrefreshstatus();
-			}
-			
-			function reloadimg (refreshjob) {
-				var target = refreshjob.target;
-				var refreshtime = refreshjob.refreshtime;
-				var servernum = refreshjob.num
-				if (!getCookie("disablerefresh")) 
-					target.src = "gamebanner.php?servernum=" + servernum + "&rand=" + Math.random();
-				else
-					refreshtime = refreshtime*60;
-				if (document.hidden || !iSeeYou)
-					refreshtime = refreshtime*60;
-				if (DevilsWorkshopLvl)
-					refreshtime = refreshtime*DevilsWorkshopLvl;
-				clearTimeout(refreshjob.timer);
-				refreshjob.timer = setTimeout(function () {reloadimg(refreshjob)}, Math.floor((Math.random() * (refreshtime*1.5)) + refreshtime));
-			}
-			
-			var devilInterval = 0;
-			var DevilsWorkshopLvl = 0;
-			document.onmousemove = function () {
-				if (DevilsWorkshopLvl) {
-					kick_reload_jobs();
-				}
-				clearInterval(devilInterval);
-				DevilsWorkshopLvl = 0;
-				devilInterval = setInterval(function(){isDevilsWorkshop++;}, 60000);
-			}
-			var iSeeYou = 1;
-			
-			window.onfocus = function () { 
-				iSeeYou = 1;
-				kick_reload_jobs();
-			};
-			
-			window.onblur = function () { 
-				iSeeYou = 0;
-			}; 
-		</script>
+				
 		<style type="text/css">
+		img.gamebannerplaceholder {
+			width: 240px;
+			height: 80px;
+		}
 			.container {
 			  margin: 0 auto;
 			  /*max-width: 960px;*/
@@ -181,16 +115,20 @@
 				min-width: 40px;
 				text-align: center;
 			}
+			.jumbotron p {
+				margin-bottom: 1px;
+			}
 		</style>
+		
+		
+
 	</head>
 
 	<body onload="displayrefreshstatus();">
 		<div class="navbar navbar-inverse center text-center">
 			<div class="container-fluid center text-center">
 				<ul class="nav navbar-nav center text-center">
-					<li class="active"><a href="index.html">Home</a></li>
-					<li><a href="/media.html">Media</a></li>
-					<li><a href="http://singulo.io/tg/">/tg/station Outcasts</a></li>
+					<li class="active"><a class="fa fa-home" style="height:100%" href="index.html"></a></li>
 					<li><a href="/phpBB">Forum</a></li>
 					<li class="dropdown">
 						<a class="dropdown-toggle" data-toggle="dropdown" href="/wiki">Wiki<b class="caret"></b></a>
@@ -222,16 +160,35 @@
 							</li>
 						</ul>
 					</li>
+					
 					<li class = "dropdown">
-						<a class="dropdown-toggle" data-toggle="dropdown" href="https://github.com/tgstation/tgstation">Development<b class="caret"></b></a>
+						<a class="dropdown-toggle" data-toggle="dropdown" href="https://www.patreon.com/tgstation"><b>Patreon</b><b class="caret"></b></a>
+						<ul class="dropdown-menu">
+							<li><a href="https://www.patreon.com/tgstation"><b>/tg/ Server Patreon</b></a></li>
+							<li><b>Coder/Spriter/Misc Patreons:</b></li>
+							<li><a href="https://www.patreon.com/spacestationart">Auros's Spessmen Art Patreon</a></li>
+							<li><a href="https://www.patreon.com/incoming">Incoming's Patreon</a></li>
+							<li><a href="https://www.patreon.com/BYOND">BYOND's Patreon</a></li>
+						</ul>
+					</li>
+					<li class = "dropdown">
+						<a class="dropdown-toggle" data-toggle="dropdown" href="https://shop.spreadshirt.com/tgstation13/">Cool Shit<b class="caret"></b></a>
+						<ul class="dropdown-menu">
+							<li><a href="https://shop.spreadshirt.com/tgstation13/">Gear</a></li>
+							<li><a href="https://sb.atlantaned.space">Game Stats</a></li>
+						</ul>
+					</li>
+					<li><a href="https://status.tgstation13.org">Status</a></li>
+					<li class = "dropdown">
+						<a class="dropdown-toggle" data-toggle="dropdown" href="https://github.com/tgstation/tgstation">Dev<b class="caret"></b></a>
 						<ul class="dropdown-menu">
 							<li><a href="https://github.com/tgstation/tgstation">/tg/ Github</a></li>
 							<li><a href="https://github.com/tgstation/tgstation13.org">/tg/station13.org Github</a></li>
-							<li><a href="/findshit.php">/tg/ Github Declaration Finder</a></li>
+							<li><a href="https://lzimann.org/icon_searcher/index.php?state=&icon=">/tg/ Github Icon Searcher</a></li>
 						</ul>
 					</li>
 					<li class="dropdown">
-						<a class="dropdown-toggle" data-toggle="dropdown" href="#">IRC Channels<b class="caret"></b></a>
+						<a class="dropdown-toggle" data-toggle="dropdown" href="#">IRC<b class="caret"></b></a>
 						<ul class="dropdown-menu">
 							<li><a href="irc://irc.rizon.net/tgstation13">#tgstation13</a></li>
 							<li><a href="irc://irc.rizon.net/devbus">#devbus</a></li>
@@ -239,79 +196,80 @@
 							<li><a href="irc://irc.rizon.net/supportbus">#supportbus</a></li>
 						</ul>
 					</li>
+					<li><a href="https://tgstation13.org/phpBB/viewforum.php?f=60">Discord</a></li>
 					<li class="dropdown">
 						<a class="dropdown-toggle" data-toggle="dropdown" href="#">Related sites<b class="caret"></b></a>
 						<ul class="dropdown-menu">
 							<li><b>May Mays</b></li>
 							<li><a href="http://boards.4chan.org/tg/">/tg/ (4chan)</a></li>
 							<li><a href="http://boards.4chan.org/vg/">/vg/ (4chan)</a></li>
-							<li><a href="http://reddit.com/r/ss13/">/r/ss13 (le reddit)</a></li>
-							<li><a href="http://singulo.io/tg/">/tg/ (singulo)</a></li>
-							<li><a href="https://8ch.net/spess/">/spess/ (8chan)</a></li>
-							<li><a href="https://8ch.net/tg/">/tg/ (8chan)</a></li>
-							<li><a href="https://8ch.net/vg/">/vg/ (8chan)</a></li>
+							<li><a href="http://reddit.com/r/ss13/">/r/ss13 (reddit)</a></li>
+							<li><a href="https://singulo.io/tg/">/tg/ (singulo)</a></li>
 							<li><b>Other stations</b></li>
-							<li><a href="http://baystation12.net/">Bay Station</a></li> 
-							<li><a href="http://wiki.ss13.co/Main_Page">Goon Station</a></li>
-							<li><a href="https://www.yogstation.net/">Yog Station</a></li>
 							<li><a href="https://www.paradisestation.org/">Paradise Station</a></li>
 							<li><a href="http://www.colonial-marines.com/">Colonial Marines</a></li>
-							<li><a href="http://hippiestation.com/">Hippie Station</a></li>
+							<li><a href="http://baystation12.net/">Bay Station</a></li>
+							<li><a href="https://www.yogstation.net/">Yog Station</a></li>
 						</ul>
 					</li>
+					<li><a class="fa fa-twitter" style="height:100%" href="https://twitter.com/Poly_the_Parrot"></a></li>
 				</ul>
 			</div>
 		</div>
 
-		<!--
-		<div class="alert alert-danger text-center">
-				<strong>Hey! Listen!</strong><br>
-					The latest beta (511.1356) has a bug that breaks interfaces, stick to 511.1355 or the latest stable (510.1347) for the mean time. If you already updated to 511.1356, you may download 511.1355 here: <a href="http://www.byond.com/download/build/511/511.1355_byond.exe">http://www.byond.com/download/build/511/511.1355_byond.exe</a>
-			</div>
-		-->
 
-		<!--
-		<div class="alert alert-warning text-center">
-				<strong>Hey! Listen!</strong> <br> The Almighty StonerOne got high and is messing with the web server's inners. Shit may act odd or go down
-					
-		</div>
 
-		<div class="alert alert-info text-center">
-				<strong>Hey! Listen!</strong> This is the official website of /tg/station13. Enjoy your stay!
-		</div>
-		 -->
+
 		<div class="container">
-			<!-- alert-* classes: info, warning, danger
+			<!-- alert-* classes: info, warning, danger, success -->
 			
-			<div class="alert alert-info text-center">
-				<strong>Hey! Listen!</strong> This is the official website of /tg/station13. Enjoy your stay!
-			</div>
-			-->
+			<!--<div class="alert alert-info text-center">
+				<strong>Hey! Listen!</strong><br>
+					<p>/tg/Station 13 servers require BYOND beta version 513.</p>
+					<p><a href="http://www.byond.com/download/">Download here</a></p>
+			</div>-->
 			
 			<div align="center">
 				<small>And now, a word from one of our players:</small><br>
-				<img class="gamebanner" src="gamebanner.php?servernum=0" onload="setupreloader(0, event.target)"/><br>
+				<img class="gamebanner" src="dynamicimages/50buck.php"/><br>
 				<small><a href="/phpBB/viewtopic.php?f=2&t=3371">Find out how to get your banner up here.</a></small>
 			</div>
-			<P>&nbsp;</p><br>
 			<div align="center">
-				<img src="getlogo.php" border="0">
+				<img src="dynamicimages/getlogo.php" border="0">
 			</div>
 		
 			<div class="jumbotron text-center">
-				
+				<!-- <sup style="position: relative;top: -50px;"><a href="link">text</a></sup> -->
 				<p class="lead">Already have BYOND? Choose a server below to join!</p>
-
-				   <a href=byond://bagil.aws.tgstation13.org:2337><img class="gamebanner" src="gamebanner.php?servernum=1" onload="setupreloader(1, event.target, 1117)"></a>
-				   <a href=byond://sybil.aws.tgstation13.org:1337><img class="gamebanner" src="gamebanner.php?servernum=2" onload="setupreloader(2, event.target, 1117)"></a>
-				   <a href=byond://terry.tgstation13.org:3337><img class="gamebanner" src="gamebanner.php?servernum=6" onload="setupreloader(6, event.target, 3000)"></a></p>
-				   <a href=byond://linuxtest.game.tgstation13.org:9337><img class="gamebanner" src="gamebanner.php?servernum=5" onload="setupreloader(5, event.target, 10000)"></a></p>
-
+					<sup>Standard Servers:</sup>
+				   <p>
+					   <a href="byond://bagil.tgstation13.org:2337"><noscript><img class="gamebanner" src="dynamicimages/gamebanner.php?server=bagil" loading="lazy"></noscript><span class="gamebannerplaceholder" data-gamebannerserver="bagil"></span></a>
+					   <a href="byond://sybil.tgstation13.org:1337"><noscript><img class="gamebanner" src="dynamicimages/gamebanner.php?server=sybil" loading="lazy"></noscript><span class="gamebannerplaceholder" data-gamebannerserver="sybil"></span></a>
+					   <a href="byond://terry.tgstation13.org:3336"><noscript><img class="gamebanner" src="dynamicimages/gamebanner.php?server=terry" loading="lazy"></noscript><span class="gamebannerplaceholder" data-gamebannerserver="terry"></span></a>
+					   
+				   </p>
+				   <sup>Themed Servers:</sup>
+				   <p>
+						<a href="byond://sybil.tgstation13.org:1448"><noscript><img class="gamebanner" src="dynamicimages/gamebanner.php?server=sybil2" loading="lazy"></noscript><span class="gamebannerplaceholder" data-gamebannerserver="sybil2"></span></a>
+						<a href="byond://tgmc.tgstation13.org:5337"><noscript><img class="gamebanner" src="dynamicimages/gamebanner.php?server=dmca" loading="lazy"></noscript><span class="gamebannerplaceholder" data-gamebannerserver="dmca"></span></a>
+						<a href="byond://campbell.tgstation13.org:6337"><noscript><img class="gamebanner" src="dynamicimages/gamebanner.php?server=campbell" loading="lazy"></noscript><span class="gamebannerplaceholder" data-gamebannerserver="campbell"></span></a>
+				   </p>
+				   <sup>Special Servers:</sup>
+				   <div>
+						<a href="byond://bagil.tgstation13.org:4447"><noscript><img class="gamebanner" src="dynamicimages/gamebanner.php?server=eventhallus" loading="lazy"></noscript><span class="gamebannerplaceholder" data-gamebannerserver="eventhallus"></span></a>
+						<a href="byond://eurobeat.tgstation13.org:42069"><noscript><img class="gamebanner" src="dynamicimages/gamebanner.php?server=ftl13" loading="lazy"></noscript><span class="gamebannerplaceholder" data-gamebannerserver="ftl13"></span></a>
+						<a href="byond://138.201.56.145:4337"><noscript><img class="gamebanner" src="dynamicimages/gamebanner.php?server=eventhall" loading="lazy"></noscript><span class="gamebannerplaceholder" data-gamebannerserver="eventhall"></span></a>
+					   
+					   
+					   
+				   </div>
+				   
+				
+				<p align="center"><sup>Green = New round lobby, Blue = Round in progress, Red = Round over or error</sup></p>
+				<p align="center"><span class="bannerusercount"></span></p>
 				<p align="center">Game Banner Auto Update: <span id='refreshstatus'>Not Supported by Your Browser</span> <a href='#' onclick='refreshtoggleclick();return false;'>(toggle)</a></p>
 
-				<p class="text-success">Sybil, Bagil, Terry, and Manuel run <a href="https://github.com/tgstation/tgstation">/tg/station13</a> code.</p>
-
-				<p><a class="btn btn-primary btn-lg" href="http://www.byond.com/download/" target="ext">Get BYOND</a> 
+				<p><a class="btn btn-primary btn-lg" href="https://secure.byond.com/download/?invite=Tgstation" target="ext">Get BYOND</a> 
 				   <a class="btn btn-primary btn-lg" href="/wiki/Downloading_the_source_code#Hosting_a_server" target="ext">Host a Server</a>
 				   <a class="btn btn-primary btn-lg" href="/wiki/The_history_of_SS13" target="ext">History of SS13</a></p>
 			</div>
@@ -322,21 +280,17 @@
 				<center><h2>What is Space Station 13?</h2></center><br/>
 				<p>Space Station 13 is a paranoia-laden round-based roleplaying game set against the backdrop of a nonsensical, metal death trap masquerading as a space station, with charming spritework designed to represent the sci-fi setting and its dangerous undertones. Have fun, and survive!</p>
 			</div>
-			<p align="right">Special thanks to Jeb! for the site design and game banners</p>
+			<p style="float:right" align="right">Special thanks to Jeb! for the site design and game banners</p>
+			<p style="float:left">Btc: 1Jyt1yyR91x8g1LbnsJ3Zn5NNSJ2MFczj</p>
 		</div>
 
-
+		
+		
 
 		<!-- /container -->
 
-		<script type='text/javascript' src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+		
 		<script type='text/javascript' src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
-		<script type='text/javascript'>
-			
-			$(document).ready(function() {
-				
-			});
-		</script>
 		<script>
 			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 				(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -347,5 +301,13 @@
 			ga('send', 'pageview');
 
 		</script>
+		<script src="/instantpage.js" type="module"></script>
+		<noscript>
+		<style>
+			.gamebannerplaceholder {
+				display: none;
+			}
+		</style>
+		</noscript>
 	</body>
 </html>
