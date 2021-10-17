@@ -10,7 +10,7 @@
  -->
 <html lang="en">
 	<head>
-		<meta http-equiv="content-type" content="text/html; charset=UTF-8"> 
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 		<title>Welcome to SpaceStation 13 - /tg/station 13</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="prefetch" href="/dynamicimages/serverinfo.json" as="fetch">
@@ -43,192 +43,36 @@
 		<link href="/tg.css" rel="stylesheet">
 		<link href="/fa/css/font-awesome.min.css" rel="stylesheet">
 		<link href="/fonts/google-inconsolata.css" rel="stylesheet">
-		
+
 		<!--[if lt IE 9]>
 		  <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
 		<script type='text/javascript' src="/jquery-1.12.4.min.js"></script>
-		<link rel="stylesheet" type="text/css" href="/banners.css?v=16" />
+		<link rel="stylesheet" type="text/css" href="css/banners.css?v=16" />
 									  <script src="/gamebanner.js?v=66"></script>
-		
-				
+
+
 		<style type="text/css">
 		img.gamebannerplaceholder {
 			width: 240px;
 			height: 80px;
 		}
-			.container {
-			  margin: 0 auto;
-			  /*max-width: 960px;*/
-			}
-			.navbar .navbar-nav {
-			  display: inline-block;
-			  float: none;
-			}
-
-			.navbar .navbar-collapse {
-			  text-align: center;
-			}
-			.dropdown-submenu {
-				position:relative;
-			}
-			.dropdown-submenu>.dropdown-menu {
-				top:0;
-				left:100%;
-				margin-top:-6px;
-				margin-left:-1px;
-				-webkit-border-radius:0 6px 6px 6px;
-				-moz-border-radius:0 6px 6px 6px;
-				border-radius:0 6px 6px 6px;
-			}
-			.dropdown-submenu:hover>.dropdown-menu {
-				display:block;
-			}
-			.dropdown-submenu>a:after {
-				display:block;
-				content:" ";
-				float:right;
-				width:0;
-				height:0;
-				border-color:transparent;
-				border-style:solid;
-				border-width:5px 0 5px 5px;
-				border-left-color:#cccccc;
-				margin-top:5px;
-				margin-right:-10px;
-			}
-			.dropdown-submenu:hover>a:after {
-				border-left-color:#ffffff;
-			}
-			.dropdown-submenu.pull-left {
-				float:none;
-			}
-			.dropdown-submenu.pull-left>.dropdown-menu {
-				left:-100%;
-				margin-left:10px;
-				-webkit-border-radius:6px 0 6px 6px;
-				-moz-border-radius:6px 0 6px 6px;
-				border-radius:6px 0 6px 6px;
-			}
-			.nav > li > a {
-				padding: 17px 7px;
-				min-width: 40px;
-				text-align: center;
-			}
-			.jumbotron p {
-				margin-bottom: 1px;
-			}
 		</style>
-		
-		
+
+
 
 	</head>
 
 	<body onload="displayrefreshstatus();">
-		<div class="navbar navbar-inverse center text-center">
-			<div class="container-fluid center text-center">
-				<ul class="nav navbar-nav center text-center">
-					<li class="active"><a class="fa fa-home" style="height:100%" href="index.html"></a></li>
-					<li><a href="/phpBB">Forum</a></li>
-					<li class="dropdown">
-						<a class="dropdown-toggle" data-toggle="dropdown" href="/wiki">Wiki<b class="caret"></b></a>
-						<ul class="dropdown-menu">
-							<li><a href="/wiki">Main Page</a></li>
-							<li><a href="/wiki/Starter_guide">New Player Tutorial</a></li>
-							<li><a href="/wiki/Rules">Rules</a></li>
-							<li><a href="/wiki/Jobs">Jobs</a></li>
-							<li><a href="/wiki/Objects">Objects</a></li>
-							<li><a href="/wiki/Locations">Locations</a></li>
-							<li><a href="/wiki/Game_Mode">Game Modes</a></li>
-							<li><a href="/wiki/Space_Law">Space Law</a></li>
-							<li class="dropdown-submenu">
-								<a tabindex="-1" href="/wiki/Guides">Guides</a>
-								<ul class="dropdown-menu">
-									<li><a href="/wiki/Guide">Guides</a></li>
-									<li><a href="/wiki/Guide_to_food_and_drinks">Guide to Food and Drinks</a></li>
-									<li><a href="/wiki/Guide_to_construction">Guide to Construction</a></li>
-									<li><a href="/wiki/Guide_to_advanced_construction">Guide to Advanced Construction</a></li>
-									<li><a href="/wiki/Guide_to_medicine">Guide to Medicine</a></li>
-									<li><a href="/wiki/Guide_to_chemistry">Guide to Chemistry</a></li>
-									<li><a href="/wiki/Surgery">Guide to Surgery</a></li>
-									<li><a href="/wiki/Guide_to_genetics">Guide to Genetics</a></li>
-									<li><a href="/wiki/Guide_to_Research_and_Development">Guide to Research</a></li>
-									<li><a href="/wiki/Guide_to_robotics">Guide to Robotics</a></li>
-									<li><a href="/wiki/Guide_to_xenobiology">Guide to Xenobiology</a></li>
-									<li><a href="/wiki/Guide_to_hydroponics">Guide to hydroponics</a></li>
-								</ul>
-							</li>
-						</ul>
-					</li>
-					
-					<li class = "dropdown">
-						<a class="dropdown-toggle" data-toggle="dropdown" href="https://www.patreon.com/tgstation"><b>Patreon</b><b class="caret"></b></a>
-						<ul class="dropdown-menu">
-							<li><a href="https://www.patreon.com/tgstation"><b>/tg/ Server Patreon</b></a></li>
-							<li><b>Coder/Spriter/Misc Patreons:</b></li>
-							<li><a href="https://www.patreon.com/spacestationart">Auros's Spessmen Art Patreon</a></li>
-							<li><a href="https://www.patreon.com/incoming">Incoming's Patreon</a></li>
-							<li><a href="https://www.patreon.com/BYOND">BYOND's Patreon</a></li>
-						</ul>
-					</li>
-					<li class = "dropdown">
-						<a class="dropdown-toggle" data-toggle="dropdown" href="https://shop.spreadshirt.com/tgstation13/">Cool Shit<b class="caret"></b></a>
-						<ul class="dropdown-menu">
-							<li><a href="https://shop.spreadshirt.com/tgstation13/">Gear</a></li>
-							<li><a href="https://sb.atlantaned.space">Game Stats</a></li>
-						</ul>
-					</li>
-					<li><a href="https://status.tgstation13.org">Status</a></li>
-					<li class = "dropdown">
-						<a class="dropdown-toggle" data-toggle="dropdown" href="https://github.com/tgstation/tgstation">Dev<b class="caret"></b></a>
-						<ul class="dropdown-menu">
-							<li><a href="https://github.com/tgstation/tgstation">/tg/ Github</a></li>
-							<li><a href="https://github.com/tgstation/tgstation13.org">/tg/station13.org Github</a></li>
-							<li><a href="https://lzimann.org/icon_searcher/index.php?state=&icon=">/tg/ Github Icon Searcher</a></li>
-						</ul>
-					</li>
-					<li class="dropdown">
-						<a class="dropdown-toggle" data-toggle="dropdown" href="#">IRC<b class="caret"></b></a>
-						<ul class="dropdown-menu">
-							<li><a href="irc://irc.rizon.net/tgstation13">#tgstation13</a></li>
-							<li><a href="irc://irc.rizon.net/devbus">#devbus</a></li>
-							<li><a href="irc://irc.rizon.net/coderbus">#coderbus</a></li>
-							<li><a href="irc://irc.rizon.net/supportbus">#supportbus</a></li>
-						</ul>
-					</li>
-					<li><a href="https://tgstation13.org/phpBB/viewforum.php?f=60">Discord</a></li>
-					<li class="dropdown">
-						<a class="dropdown-toggle" data-toggle="dropdown" href="#">Related sites<b class="caret"></b></a>
-						<ul class="dropdown-menu">
-							<li><b>May Mays</b></li>
-							<li><a href="http://boards.4chan.org/tg/">/tg/ (4chan)</a></li>
-							<li><a href="http://boards.4chan.org/vg/">/vg/ (4chan)</a></li>
-							<li><a href="http://reddit.com/r/ss13/">/r/ss13 (reddit)</a></li>
-							<li><a href="https://singulo.io/tg/">/tg/ (singulo)</a></li>
-							<li><b>Other stations</b></li>
-							<li><a href="https://www.paradisestation.org/">Paradise Station</a></li>
-							<li><a href="http://www.colonial-marines.com/">Colonial Marines</a></li>
-							<li><a href="http://baystation12.net/">Bay Station</a></li>
-							<li><a href="https://www.yogstation.net/">Yog Station</a></li>
-						</ul>
-					</li>
-					<li><a class="fa fa-twitter" style="height:100%" href="https://twitter.com/Poly_the_Parrot"></a></li>
-				</ul>
-			</div>
-		</div>
-
-
-
-
 		<div class="container">
 			<!-- alert-* classes: info, warning, danger, success -->
-			
+
 			<!--<div class="alert alert-info text-center">
 				<strong>Hey! Listen!</strong><br>
 					<p>/tg/Station 13 servers require BYOND beta version 513.</p>
 					<p><a href="http://www.byond.com/download/">Download here</a></p>
 			</div>-->
-			
+
 			<div align="center">
 				<small>And now, a word from one of our players:</small><br>
 				<img class="gamebanner" src="dynamicimages/50buck.php"/><br>
@@ -237,7 +81,7 @@
 			<div align="center">
 				<img src="dynamicimages/getlogo.php" border="0">
 			</div>
-		
+
 			<div class="jumbotron text-center">
 				<!-- <sup style="position: relative;top: -50px;"><a href="link">text</a></sup> -->
 				<p class="lead">Already have BYOND? Choose a server below to join!</p>
@@ -246,7 +90,7 @@
 					   <a href="byond://bagil.tgstation13.org:2337"><noscript><img class="gamebanner" src="dynamicimages/gamebanner.php?server=bagil" loading="lazy"></noscript><span class="gamebannerplaceholder" data-gamebannerserver="bagil"></span></a>
 					   <a href="byond://sybil.tgstation13.org:1337"><noscript><img class="gamebanner" src="dynamicimages/gamebanner.php?server=sybil" loading="lazy"></noscript><span class="gamebannerplaceholder" data-gamebannerserver="sybil"></span></a>
 					   <a href="byond://terry.tgstation13.org:3336"><noscript><img class="gamebanner" src="dynamicimages/gamebanner.php?server=terry" loading="lazy"></noscript><span class="gamebannerplaceholder" data-gamebannerserver="terry"></span></a>
-					   
+
 				   </p>
 				   <sup>Themed Servers:</sup>
 				   <p>
@@ -259,17 +103,17 @@
 						<a href="byond://bagil.tgstation13.org:4447"><noscript><img class="gamebanner" src="dynamicimages/gamebanner.php?server=eventhallus" loading="lazy"></noscript><span class="gamebannerplaceholder" data-gamebannerserver="eventhallus"></span></a>
 						<a href="byond://eurobeat.tgstation13.org:42069"><noscript><img class="gamebanner" src="dynamicimages/gamebanner.php?server=ftl13" loading="lazy"></noscript><span class="gamebannerplaceholder" data-gamebannerserver="ftl13"></span></a>
 						<a href="byond://138.201.56.145:4337"><noscript><img class="gamebanner" src="dynamicimages/gamebanner.php?server=eventhall" loading="lazy"></noscript><span class="gamebannerplaceholder" data-gamebannerserver="eventhall"></span></a>
-					   
-					   
-					   
+
+
+
 				   </div>
-				   
-				
+
+
 				<p align="center"><sup>Green = New round lobby, Blue = Round in progress, Red = Round over or error</sup></p>
 				<p align="center"><span class="bannerusercount"></span></p>
 				<p align="center">Game Banner Auto Update: <span id='refreshstatus'>Not Supported by Your Browser</span> <a href='#' onclick='refreshtoggleclick();return false;'>(toggle)</a></p>
 
-				<p><a class="btn btn-primary btn-lg" href="https://secure.byond.com/download/?invite=Tgstation" target="ext">Get BYOND</a> 
+				<p><a class="btn btn-primary btn-lg" href="https://secure.byond.com/download/?invite=Tgstation" target="ext">Get BYOND</a>
 				   <a class="btn btn-primary btn-lg" href="/wiki/Downloading_the_source_code#Hosting_a_server" target="ext">Host a Server</a>
 				   <a class="btn btn-primary btn-lg" href="/wiki/The_history_of_SS13" target="ext">History of SS13</a></p>
 			</div>
@@ -284,12 +128,12 @@
 			<p style="float:left">Btc: 1Jyt1yyR91x8g1LbnsJ3Zn5NNSJ2MFczj</p>
 		</div>
 
-		
-		
+
+
 
 		<!-- /container -->
 
-		
+
 		<script type='text/javascript' src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
 		<script>
 			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
