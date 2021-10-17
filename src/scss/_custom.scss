@@ -21,6 +21,10 @@ a {
 	font-size: inherit;
 }
 // Navbar override
+#navbarLogo {
+	min-width: 574px;
+	min-height: 70px;
+}
 .nav-link:hover,
 .nav-link:focus {
 	text-decoration: underline;
@@ -136,8 +140,14 @@ section#alerts {
 }
 
 section#userbanner img {
-	width: 728px;
-	height: 90px;
+	min-width: 728px;
+	min-height: 90px;
+	background-color: $dark-500;
+}
+
+section#servers .server-banner {
+	min-width: 232px;
+	min-height: 72px;
 	background-color: $dark-500;
 }
 

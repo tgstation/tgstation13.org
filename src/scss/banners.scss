@@ -3,7 +3,7 @@ img.gamebannerplaceholder {
 	height: 80px;
 }
 span.gamebanner {
-	font-family: 'Inconsolata', monospace;
+	font-family: "Inconsolata", monospace;
 	display: inline-block;
 	width: 232px;
 	height: 72px;
@@ -14,46 +14,33 @@ span.gamebanner {
 	padding-left: 1px;
 	text-align: left;
 	white-space: nowrap;
-	
 }
 span.gamebannerhidden {
 	display: none;
 }
 span.statusinprogress {
-	box-shadow: 
-		0 0 0 1px #dedbea,
-		0 0 0 2px #b0aed2,
-		0 0 0 3px #8282bb,
+	box-shadow: 0 0 0 1px #dedbea, 0 0 0 2px #b0aed2, 0 0 0 3px #8282bb,
 		0 0 0 4px #26298c;
 	background-color: #dedbea;
 	color: #26298c;
 }
 
 span.statuslobby {
-	box-shadow: 
-		0 0 0 1px #d8e7dc,
-		0 0 0 2px #abd0b0,
-		0 0 0 3px #7fba85,
+	box-shadow: 0 0 0 1px #d8e7dc, 0 0 0 2px #abd0b0, 0 0 0 3px #7fba85,
 		0 0 0 4px #268c2f;
 	background-color: #d8e7dc;
 	color: #268c2f;
 }
 
 span.statusroundend {
-	box-shadow: 
-		0 0 0 1px #e9dddb,
-		0 0 0 2px #d1aeae,
-		0 0 0 3px #ba8183,
+	box-shadow: 0 0 0 1px #e9dddb, 0 0 0 2px #d1aeae, 0 0 0 3px #ba8183,
 		0 0 0 4px #8c262c;
 	background-color: #e9dddb;
 	color: #8c262c;
 }
 
 span.statuserror {
-	box-shadow: 
-		0 0 0 1px #e9dddb,
-		0 0 0 2px #d1aeae,
-		0 0 0 3px #ba8183,
+	box-shadow: 0 0 0 1px #e9dddb, 0 0 0 2px #d1aeae, 0 0 0 3px #ba8183,
 		0 0 0 4px #8c262c;
 	background-color: #e9dddb;
 	color: #8c262c;
@@ -61,17 +48,14 @@ span.statuserror {
 
 /*statusevent intentionally overrides statuserror, to allow us to announce future events on servers that are down.*/
 span.statusevent {
-	box-shadow: 
-		0 0 0 1px #e9ebde,
-		0 0 0 2px #d2d3b0,
-		0 0 0 3px #bbba82,
+	box-shadow: 0 0 0 1px #e9ebde, 0 0 0 2px #d2d3b0, 0 0 0 3px #bbba82,
 		0 0 0 4px #8c8826;
 	background-color: #e9ebde;
 	color: #8c8826;
 }
 
 span.gamebanner span.gamebannerline {
-	line-height: 1.1em;
+	line-height: 1.05em;
 	margin: 0px;
 	padding: 0px;
 	text-align: left;
@@ -83,7 +67,6 @@ span.gamebanner span.gamebannericons {
 	float: right;
 }
 
-
 span.gamebanner span.gamebanneraddrline {
 	vertical-align: super;
 	font-size: 11px;
@@ -91,20 +74,21 @@ span.gamebanner span.gamebanneraddrline {
 	color: #a9a6cc;
 }
 span.gamebanner span.gamebannername {
+	letter-spacing: -0.0125em;
 	font-size: 18px;
 	transform: scaleY(0.9);
 	font-weight: bold;
 }
 span.gamebanner span.gamebannermode {
-	font-size: 12px;
+	font-size: 11px;
 	transform: scaleY(1.1);
 }
 span.gamebanner span.gamebannermap {
-	font-size: 12px;
+	font-size: 11px;
 	transform: scaleY(1.1);
 }
 span.gamebanner span.gamebannerttl {
-	font-size: 14px;
+	font-size: 13px;
 	transform: scaleY(1.1);
 }
 span.gamebanner span.gamebannererror {
@@ -117,28 +101,34 @@ span.gamebanner span.gamebannererror {
 }
 
 .gamebannerloader {
-    position: absolute;
-    border: 8px solid rgba(255,255,255,0.15);
-    border-radius: 50%;
-    border-top: 8px solid rgba(0,0,0,.125);
-    width: 35px;
-    height: 35px;
-    left: 100px;
-    top: 22px;
-    -webkit-animation: spin 3s linear infinite;
-    animation: spin 3s linear infinite;
-    display: inline;
-	
+	position: absolute;
+	border: 8px solid rgba(255, 255, 255, 0.15);
+	border-radius: 50%;
+	border-top: 8px solid rgba(0, 0, 0, 0.125);
+	width: 35px;
+	height: 35px;
+	left: 100px;
+	top: 22px;
+	-webkit-animation: spin 3s linear infinite;
+	animation: spin 3s linear infinite;
+	display: inline;
 }
-
 
 /* Safari */
 @-webkit-keyframes spin {
-  0% { -webkit-transform: rotate(0deg); }
-  100% { -webkit-transform: rotate(360deg); }
+	0% {
+		-webkit-transform: rotate(0deg);
+	}
+	100% {
+		-webkit-transform: rotate(360deg);
+	}
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
 }
