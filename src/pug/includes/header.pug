@@ -1,0 +1,44 @@
+//- declared in config.pug
+	-
+		let navigation = [
+			{
+				href: "#",
+				text: "Top-level link",
+			},
+			{
+				text: "Dropdown Menu Header",
+				dropdownId: "navbarDropdown", // must be unique
+				children: [
+					{ href: "#", text: "Link" },
+					{ type: "div" },
+					{ type: "text", text: "Just some Text" },
+				],
+			},
+		];
+header
+	nav.navbar.navbar-expand-md
+		.container-fluid
+			button.navbar-toggler(type="button", data-bs-toggle="collapse", data-bs-target="#navbarSupportedContent")
+				.navbar-dark
+					span.navbar-toggler-icon
+			#navbarSupportedContent.collapse.navbar-collapse
+				ul.navbar-nav.me-auto.mb-2.mb-md-0.w-100.justify-content-center
+					each navItem of navigation || []
+						if navItem.dropdownId
+							li.nav-item.dropdown
+								a.nav-link.dropdown-toggle(id=navItem.dropdownId, href="#", role="button", data-bs-toggle="dropdown")= navItem.text
+								ul.dropdown-menu.dropdown-menu-dark.border.border-secondary
+									each dropdownItem of navItem.children
+										case dropdownItem.type
+											when "div"
+												li
+													hr.dropdown-divider
+											when "text"
+												li
+													p.mb-0.px-3.py-1.font-monospace.fs-link.text-body= dropdownItem.text
+											default
+												li
+													a.dropdown-item(href=dropdownItem.href)= dropdownItem.text
+						else
+							li.nav-item
+								a.nav-link(href=navItem.href)= navItem.text

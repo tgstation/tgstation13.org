@@ -1,0 +1,163 @@
+/* -------------------------------------------------------------------------- */
+/*                               Custom styling                               */
+/* -------------------------------------------------------------------------- */
+
+// Import fonts
+@import "fonts";
+// Import space background
+
+@import "space-bg";
+
+// Link formatting
+a {
+	font-family: $font-family-monospace;
+	font-size: 0.875rem;
+}
+.fs-link {
+	font-size: 0.875rem !important;
+}
+.link-inline {
+	font-family: inherit;
+	font-size: inherit;
+}
+// Navbar override
+.nav-link:hover,
+.nav-link:focus {
+	text-decoration: underline;
+}
+// Dropdown override
+a.dropdown-item:hover,
+a.dropdown-item:focus {
+	text-decoration: underline;
+}
+
+.bg-dark-500 {
+	background-color: $dark-500 !important;
+}
+.bg-dark-850 {
+	background-color: $dark-850 !important;
+}
+
+.card {
+	min-width: 296px;
+}
+
+.card-title {
+	background-color: $primary;
+	display: inline-block;
+	box-shadow: 2px 2px rgba(0, 0, 0, 0.25);
+}
+
+.card-title-before {
+	width: 10px;
+	content: "";
+	display: inline-block;
+	background: linear-gradient(
+		to bottom right,
+		transparent 0%,
+		transparent 50%,
+		green 50%,
+		green 100%
+	) !important;
+	height: 1em;
+}
+
+.card-body {
+	position: relative;
+}
+
+.custom-title {
+	position: absolute;
+	left: 1rem;
+	top: 0;
+	transform: translateY(-50%);
+	display: flex;
+	width: max-content;
+
+	> * {
+		filter: drop-shadow(2px 2px rgba(0, 0, 0, 0.25));
+	}
+}
+.triangle-before {
+	background: linear-gradient(
+		to bottom right,
+		transparent 0%,
+		transparent 45%,
+		$primary 55%,
+		$primary 100%
+	) !important;
+	width: 6px;
+}
+.title {
+	background-color: $primary;
+	margin: 0;
+	padding: 0.1em 0.3em;
+}
+.triangle-after {
+	background: linear-gradient(
+		to top left,
+		transparent 0%,
+		transparent 45%,
+		$primary 55%,
+		$primary 100%
+	) !important;
+	width: 6px;
+}
+
+small,
+.small {
+	font-size: 0.6rem;
+	opacity: 0.5;
+}
+
+.custom-close {
+	background-image: url("../img/close.svg");
+	position: absolute;
+	right: 0.5rem;
+	top: 0;
+	transform: translateY(-50%);
+	opacity: 1;
+
+	&:hover,
+	&:focus {
+		color: inherit;
+		opacity: inherit;
+
+		outline: 1px solid red;
+	}
+}
+
+section#alerts {
+	text-align: center;
+
+	> div:first-of-type {
+		margin-top: 2rem !important;
+	}
+}
+
+section#userbanner img {
+	width: 728px;
+	height: 90px;
+	background-color: $dark-500;
+}
+
+#toggleBgAnimationOverriddenPRM {
+	display: none;
+}
+@media (prefers-reduced-motion) {
+	#toggleBgAnimation,
+	label[for="toggleBgAnimation"] {
+		opacity: 0.5;
+
+		&:active {
+			pointer-events: none;
+		}
+
+		&:hover {
+			cursor: not-allowed;
+		}
+	}
+	#toggleBgAnimationOverriddenPRM {
+		display: block;
+	}
+}

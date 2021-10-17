@@ -1,0 +1,92 @@
+// based on a codepen https://codepen.io/saransh/pen/BKJun by @screenshake
+
+// Generates $n amount of box-shadows ("stars") of $color with random position
+@function multiple-box-shadow($n, $color: #fff) {
+	$value: "#{random(2000)}px #{random(2000)}px #{$color}";
+	@for $i from 2 through $n {
+		$value: "#{$value}, #{random(2000)}px #{random(2000)}px #{$color}";
+	}
+	@return unquote($value);
+}
+
+@mixin generate-space-bg($size, $animation-time, $box-shadow) {
+	width: $size;
+	height: $size;
+	animation: animStar $animation-time linear infinite;
+	box-shadow: $box-shadow;
+
+	&::after {
+		width: $size;
+		height: $size;
+		box-shadow: $box-shadow;
+	}
+}
+
+/* -------------------------------------------------------------------------- */
+
+// Generate re-usable box shadow styling
+$space-1: multiple-box-shadow(700);
+$space-2: multiple-box-shadow(200);
+$space-2-blue: multiple-box-shadow(250, #b7e7ec75);
+$space-2-red: multiple-box-shadow(12, rgba(255, 0, 0, 0.445));
+$space-2-black: multiple-box-shadow(18, rgba(0, 0, 0, 0.486));
+$space-2-yellow: multiple-box-shadow(30, rgba(255, 255, 0, 0.384));
+$space-3: multiple-box-shadow(100);
+
+.pause .bg-space {
+	animation-play-state: paused;
+}
+.bg-space {
+	position: fixed;
+	background: transparent;
+	border-radius: 100%;
+	z-index: -700;
+
+	&::after {
+		content: " ";
+		position: fixed;
+		top: 2000px;
+		background: transparent;
+		border-radius: 100%;
+		z-index: -700;
+	}
+
+	/* Stop the star-flow if user prefers reduced motion */
+	@media (prefers-reduced-motion) {
+		animation-play-state: paused !important;
+	}
+}
+
+.space-1 {
+	@include generate-space-bg(1px, 50s, $space-1);
+}
+
+.space-2 {
+	@include generate-space-bg(2px, 100s, $space-2);
+}
+
+.space-2-blue {
+	@include generate-space-bg(4px, 100s, $space-2-blue);
+}
+.space-2-black {
+	@include generate-space-bg(4px, 80s, $space-2-black);
+}
+.space-2-red {
+	@include generate-space-bg(4px, 110s, $space-2-red);
+}
+.space-2-yellow {
+	@include generate-space-bg(4px, 70s, $space-2-yellow);
+}
+
+.space-3 {
+	@include generate-space-bg(3px, 150s, $space-3);
+}
+
+@keyframes animStar {
+	from {
+		transform: translateY(0px);
+	}
+	to {
+		transform: translateY(-2000px);
+	}
+}

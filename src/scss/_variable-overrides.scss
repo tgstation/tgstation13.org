@@ -1,0 +1,72 @@
+/* -------------------------------------------------------------------------- */
+/*                        Bootstrap defaults overrides                        */
+/* -------------------------------------------------------------------------- */
+
+// Colors
+$primary: #2c328e;
+$secondary: #f9ad48;
+$dark: #232628;
+$dark-500: rgba($dark, 0.5);
+$dark-850: rgba($dark, 0.85);
+$light: #eff3f6;
+
+$body-bg: #151515;
+$body-color: #fff;
+
+$input-bg: white;
+
+$link-color: $secondary;
+$link-shade-percentage: 0%;
+
+// Un-round
+// $enable-rounded: false; // Doesn't unround everything (e.g. cards)
+$border-radius: 0;
+$border-radius-sm: 0;
+$border-radius-lg: 0;
+$border-radius-pill: 0;
+
+// No link decoration
+$link-decoration: none;
+$link-hover-decoration: underline;
+
+// Border
+$border-width: 2px;
+$border-color: $primary;
+
+// Negative margin
+$enable-negative-margins: true;
+
+// Dropdown
+$dropdown-padding-y: 0.25rem;
+$dropdown-dark-color: $secondary;
+$dropdown-dark-bg: $dark-850;
+$dropdown-dark-link-hover-color: $secondary;
+hr.dropdown-divider {
+	opacity: 1;
+}
+// $dropdown-dark-divider-bg: $secondary;
+
+// Offcanvas
+$offcanvas-bg-color: $dark-850;
+$offcanvas-border-color: $primary;
+$component-active-bg: $secondary;
+// $form-check-input-checked-bg-color: $secondary;
+// $form-check-input-checked-border-color: $secondary;
+
+// Fonts with default Bootstrap fallbacks
+$font-family-sans-serif: "Open Sans", system-ui, -apple-system, "Segoe UI",
+	Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif,
+	"Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+$font-family-monospace: "Source Code Pro", SFMono-Regular, Menlo, Monaco,
+	Consolas, "Liberation Mono", "Courier New", monospace;
+
+// Container width
+$container-max-widths: (
+	sm: 540px,
+	md: 720px,
+	lg: 800px,
+	// lg: 960px,
+	// xl: 1140px,
+	// xxl: 1320px,,,,,,,,,,,,,,
+);
+

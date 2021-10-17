@@ -1,0 +1,21 @@
+//- declared in config.pug
+	-
+		let alerts = [
+			{
+				type: "warning", // contextual class https://getbootstrap.com/docs/5.1/components/alerts/#examples
+				text: "This is an important announcement", // Body text
+				// If it should be dismissable, this must be a unique ID. If permanent, remove property
+				dismissibleId: "test-announcement"
+			},
+		];
+section#alerts
+	noscript
+		.alert.alert-danger.border.border-danger.mb-n3(role="alert" style="margin-top: 2rem;")
+			| <strong>Warning:</strong> JavaScript is disabled in your browser – some functions will not
+			| work.
+			br
+			a.btn.btn-sm.btn-success.mt-2.link-inline(href="https://enable-javascript.com/" target="_blank") Enabling JavaScript
+	each alert of alerts || []
+		div(class=`alert alert-${alert.type} border border-${alert.type} position-relative` role="alert" id=alert.dismissibleId)= alert.text
+			if alert.dismissibleId
+				button#dismiss.btn-close.custom-close.top-50(type="button", aria-label="Close", data-close-target=alert.dismissibleId)
