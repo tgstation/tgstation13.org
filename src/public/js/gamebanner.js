@@ -21,7 +21,7 @@ function setupreloader(server, target) {
 	$(target).removeAttr("src");
 	var gamebannerspan = $('<span class="gamebanner statuserror"></span>');
 	gamebannerspan.append(
-		'<span class="gamebannerline gamebanneraddrline"><span class="gamebanneraddr"></span><span class="gamebannericons"><span class="gamebannericon gamebannerbunker"> <i title="This server is not accepting connections from new players (Panic Bunker)" class="fa fa-shield"></i></span><span class="gamebannericon gamebannernoenter"><i title="Spectate only, Entry into the round has been disabled." class="fa fa-glasses"></i></span><span class="gamebannericon gamebannerhub"><i title="This server is on the BYOND hub" class="fa fa-globe"></i></span></span></span>',
+		'<span class="gamebannerline gamebanneraddrline"><span class="gamebanneraddr"></span><span class="gamebannericons"><span class="gamebannericon gamebannerbunker"> <i title="This server is not accepting connections from new players (Panic Bunker)" class="bi bi-shield"></i></span><span class="gamebannericon gamebannernoenter"><i title="Spectate only, Entry into the round has been disabled." class="bi bi-eyeglasses"></i></span><span class="gamebannericon gamebannerhub"><i title="This server is on the BYOND hub" class="bi bi-globe"></i></span></span></span>',
 		'<span class="gamebannerline gamebannername"></span>',
 		'<span class="gamebannerline gamebannermode"></span>',
 		'<span class="gamebannerline gamebannermap"></span>',
