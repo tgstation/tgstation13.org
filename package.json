@@ -4,13 +4,14 @@
 	"description": "The landing page for tgstation13",
 	"main": "index.js",
 	"scripts": {
-		"dev": "gulp watch"
+		"dev": "gulp watch",
+		"build": "gulp"
 	},
 	"keywords": [
 		"ss13",
 		"tgstation"
 	],
-	"author": "mozi_h",
+	"author": "tgstation",
 	"license": "GPL-2.0 License",
 	"devDependencies": {
 		"@babel/core": "^7.15.8",

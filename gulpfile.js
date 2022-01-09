@@ -1,7 +1,7 @@
 /*
 	TODO: build tasks for minified, (babeled?) and non-sourcemapped building
 */
-var { series, src, dest, watch } = require("gulp");
+var { series, parallel, src, dest, watch } = require("gulp");
 const pug = require("gulp-pug-3");
 // var babel = require("gulp-babel");
 var sass = require("gulp-sass")(require("sass"));
@@ -51,5 +51,5 @@ module.exports = {
 		watch("./src/pug/**/*.pug", { ignoreInitial: false }, buildHTML);
 		watch("./src/scss/**/*.scss", { ignoreInitial: false }, buildStylesDev);
 	},
-	default: series(clean, copyPublic, buildStylesDev),
+	default: series(clean, parallel(copyPublic, buildHTML, buildStylesDev)),
 };
