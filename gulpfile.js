@@ -7,10 +7,24 @@ const pug = require("gulp-pug-3");
 var sass = require("gulp-sass")(require("sass"));
 var sourcemaps = require("gulp-sourcemaps");
 var del = require("del");
+var uglify = require("gulp-uglify");
 
 function clean() {
 	return del("./dist");
 }
+
+let copyVendors = async () => {
+	// Bootstrap (js)
+	await src("./node_modules/bootstrap/dist/js/**").pipe(
+		dest("./dist/vendor/bootstrap")
+	);
+	// Bootstrap Icons
+	await src("./node_modules/bootstrap-icons/font/**").pipe(
+		dest("./dist/vendor/bootstrap-icons")
+	);
+	// jQuery
+	await src("./node_modules/jquery/dist/**").pipe(dest("./dist/vendor/jquery"));
+};
 
 function copyPublic() {
 	return src("./src/public/**").pipe(dest("./dist"));
@@ -19,16 +33,12 @@ function copyPublic() {
 function buildHTML() {
 	return src("./src/pug/index.pug")
 		.pipe(sourcemaps.init())
-		.pipe(
-			pug({
-				// Your options.
-			})
-		)
+		.pipe(pug())
 		.pipe(sourcemaps.write())
 		.pipe(dest("./dist"));
 }
 
-function buildStylesDev() {
+function buildStyles() {
 	return src("./src/scss/**/*.scss")
 		.pipe(sourcemaps.init())
 		.pipe(
@@ -40,16 +50,26 @@ function buildStylesDev() {
 		.pipe(dest("./dist/css"));
 }
 
+function uglifyJS() {
+	return src(["./dist/**/*.js", "!./dist/vendor"])
+		.pipe(uglify())
+		.pipe(dest("./dist/js"));
+}
+
 module.exports = {
 	clean,
+	copyVendors,
 	copyPublic,
 	buildHTML,
-	buildStylesDev,
-	watch: function () {
-		clean();
+	buildStyles,
+	watch: series(clean, copyVendors, () => {
 		watch("./src/public/**", { ignoreInitial: false }, copyPublic);
 		watch("./src/pug/**/*.pug", { ignoreInitial: false }, buildHTML);
-		watch("./src/scss/**/*.scss", { ignoreInitial: false }, buildStylesDev);
-	},
-	default: series(clean, parallel(copyPublic, buildHTML, buildStylesDev)),
+		watch("./src/scss/**/*.scss", { ignoreInitial: false }, buildStyles);
+	}),
+	default: series(
+		clean,
+		parallel(copyPublic, copyVendors, buildHTML, buildStyles),
+		uglifyJS
+	),
 };
