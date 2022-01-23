@@ -7,6 +7,7 @@
 			},
 			{
 				text: "Dropdown Menu Header",
+				href: "#", // only reachable via Mouse 3 (open in new tab)!
 				dropdownId: "navbarDropdown", // must be unique
 				children: [
 					{ href: "#", text: "Link" },
@@ -26,7 +27,7 @@ header
 					each navItem of navigation || []
 						if navItem.dropdownId
 							li.nav-item.dropdown
-								a.nav-link.dropdown-toggle(id=navItem.dropdownId, href="#", role="button", data-bs-toggle="dropdown")= navItem.text
+								a.nav-link.dropdown-toggle(id=navItem.dropdownId, href=navItem.href, role="button", data-bs-toggle="dropdown")= navItem.text
 								ul.dropdown-menu.dropdown-menu-dark.border.border-secondary
 									each dropdownItem of navItem.children
 										case dropdownItem.type
