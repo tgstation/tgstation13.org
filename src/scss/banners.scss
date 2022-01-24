@@ -2,6 +2,9 @@ img.gamebannerplaceholder {
 	width: 240px;
 	height: 80px;
 }
+.server-banner.watch .gamebannername {
+	color: var(--bs-secondary);
+}
 span.gamebanner {
 	font-family: "Inconsolata", monospace;
 	display: inline-block;

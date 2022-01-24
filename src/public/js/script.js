@@ -119,6 +119,60 @@ settingsHandler.bgAnimation = {
 };
 settingsHandler.bgAnimation.initialize();
 
+// Auto-join server on next round (Shift-Click)
+autoJoinServer = {
+	initialize: function () {
+		document.querySelectorAll(".server-banner").forEach((banner) => {
+			banner.addEventListener("click", function (event) {
+				// Shift-click a server
+				if (!event.shiftKey) return;
+
+				event.preventDefault();
+
+				let sound;
+				// Toggle "watch" class, for styling and tracking
+				if (banner.classList.toggle("watch")) {
+					sound = "./sound/sound_machines_terminal_prompt_confirm.ogg";
+				} else {
+					sound = "./sound/sound_machines_terminal_error.ogg";
+				}
+
+				// Play on / off sound
+				sound = new Audio(sound);
+				sound.volume = 0.2;
+				sound.play();
+			});
+		});
+
+		// In the future, this should be tied-in with the gamebanner updates and not run on an interval
+		setInterval(this.check.bind(this), 12000);
+	},
+	check: function () {
+		// Is there a watched server in roundend or lobby status?
+		let serverToJoin = document.querySelector(
+			".server-banner.watch .statusroundend, .server-banner.watch .statuslobby" //.statuslobby
+		);
+		if (!serverToJoin) return;
+
+		this.reset();
+
+		// Play sound
+		let sound = new Audio("./sound/sound_effects_ghost2.ogg");
+		sound.volume = 0.2;
+		sound.play();
+
+		// Join game
+		serverToJoin.parentElement.click();
+	},
+	reset: function () {
+		// Remove the "watch" class from all server banners
+		document.querySelectorAll(".server-banner.watch").forEach((banner) => {
+			banner.classList.remove("watch");
+		});
+	},
+};
+autoJoinServer.initialize();
+
 // resetLocalStorage
 document
 	.getElementById("resetLocalStorage")
