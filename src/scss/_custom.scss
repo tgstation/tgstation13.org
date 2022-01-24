@@ -126,6 +126,12 @@ section#alerts {
 	> div:first-of-type {
 		margin-top: 2rem !important;
 	}
+
+	i.bi {
+		position: absolute;
+		left: 1rem;
+		transform: translateY(-50%);
+	}
 }
 
 section#servers .server-banner {

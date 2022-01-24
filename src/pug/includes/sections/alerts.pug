@@ -4,8 +4,9 @@
 			{
 				type: "warning", // contextual class https://getbootstrap.com/docs/5.1/components/alerts/#examples
 				text: "This is an important announcement", // Body text
+				icon: "exclamation-circle", // icon from https://icons.getbootstrap.com/ (optional)
 				// If it should be dismissable, this must be a unique ID. If permanent, remove property
-				dismissibleId: "test-announcement"
+				dismissibleId: "test-announcement",
 			},
 		];
 section#alerts
@@ -16,6 +17,9 @@ section#alerts
 			br
 			a.btn.btn-sm.btn-success.mt-2.link-inline(href="https://enable-javascript.com/" target="_blank") Enabling JavaScript
 	each alert of alerts || []
-		div(class=`alert alert-${alert.type} border border-${alert.type} position-relative` role="alert" id=alert.dismissibleId)= alert.text
+		div(class=`alert alert-${alert.type} border border-${alert.type} position-relative px-4` role="alert" id=alert.dismissibleId)
+			if alert.icon
+				i(class=`bi bi-${alert.icon} fs-5 top-50`)
+			= alert.text
 			if alert.dismissibleId
 				button#dismiss.btn-close.custom-close.top-50(type="button", aria-label="Close", data-close-target=alert.dismissibleId)
