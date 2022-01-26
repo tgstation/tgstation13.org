@@ -8,8 +8,9 @@ The landing page must be built in order to get its static parts compiled.
 
 ### Docker
 
-- Clone
-- Build docker image: `docker build -t tgstation .`
+- Clone, Build docker image: `docker build -t tgstation .`
+- Or download it instead `docker pull ghcr.io/tgstation.org/tgstation-web:master`
+
 - Start container: `docker-compose up`
   The webserver is available at ports 80 and 443
 
