@@ -1,0 +1,9 @@
+version: "3"
+services:
+  tgstation-webserver:
+    image: tgstation
+    ports:
+      - 80:80
+      - 443:443
+    environment:
+      - PUG_CONFIG=./src/pug/config.json
