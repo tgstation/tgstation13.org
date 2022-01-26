@@ -1,9 +1,10 @@
 /*
 	TODO: build tasks for minified, (babeled?) and non-sourcemapped building
 */
-var { series, parallel, src, dest, watch } = require("gulp");
+var { series, parallel, src, dest, watch, eventNames } = require("gulp");
 const pug = require("gulp-pug-3");
-// var babel = require("gulp-babel");
+const data = require("gulp-data");
+const fs = require("fs");
 var sass = require("gulp-sass")(require("sass"));
 var sourcemaps = require("gulp-sourcemaps");
 var del = require("del");
@@ -30,9 +31,21 @@ function copyPublic() {
 	return src("./src/public/**").pipe(dest("./dist"));
 }
 
+// get pug config path
+let pugConfigPath = process.env.PUG_CONFIG || "./src/pug/config.json";
+if (!fs.existsSync(pugConfigPath)) {
+	throw new ReferenceError(`Pug config "${pugConfigPath}" does not exist`);
+}
+const pugConfig = require;
 function buildHTML() {
 	return src("./src/pug/index.pug")
 		.pipe(sourcemaps.init())
+		.pipe(
+			data(function (file) {
+				// read pug config
+				return { config: JSON.parse(fs.readFileSync(pugConfigPath)) };
+			})
+		)
 		.pipe(pug())
 		.pipe(sourcemaps.write())
 		.pipe(dest("./dist"));
@@ -64,7 +77,11 @@ module.exports = {
 	buildStyles,
 	watch: series(clean, copyVendors, () => {
 		watch("./src/public/**", { ignoreInitial: false }, copyPublic);
-		watch("./src/pug/**/*.pug", { ignoreInitial: false }, buildHTML);
+		watch(
+			["./src/pug/**/*.pug", "./src/pug/**/*.json"],
+			{ ignoreInitial: false },
+			buildHTML
+		);
 		watch("./src/scss/**/*.scss", { ignoreInitial: false }, buildStyles);
 	}),
 	default: series(
