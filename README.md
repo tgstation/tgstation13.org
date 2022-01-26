@@ -30,3 +30,9 @@ See `./src/pug/config.json` for configuration of alerts and navbar.
 ## tgdb
 
 It's a magic box, only MrStonedOne knows what it does and how it works.
+
+## LICENSE
+
+This project is licensed under AGPL-3.0 see [LICENSE](./LICENSE) for more details.
+
+The sound assets are from [tgstation/tgstation](https://github.com/tgstation/tgstation) and are licensed under [Creative Commons 3.0 BY-SA](https://creativecommons.org/licenses/by-sa/3.0/).
