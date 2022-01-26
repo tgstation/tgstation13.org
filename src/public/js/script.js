@@ -123,34 +123,48 @@ settingsHandler.bgAnimation.initialize();
 autoJoinServer = {
 	initialize: function () {
 		document.querySelectorAll(".server-banner").forEach((banner) => {
-			banner.addEventListener("click", function (event) {
-				// Shift-click a server
-				if (!event.shiftKey) return;
-
-				event.preventDefault();
-
-				let sound;
-				// Toggle "watch" class, for styling and tracking
-				if (banner.classList.toggle("watch")) {
-					sound = "./sound/sound_machines_terminal_prompt_confirm.ogg";
-				} else {
-					sound = "./sound/sound_machines_terminal_error.ogg";
-				}
-
-				// Play on / off sound
-				sound = new Audio(sound);
-				sound.volume = 0.2;
-				sound.play();
-			});
+			banner.addEventListener("click", this.clickHandler);
 		});
 
 		// In the future, this should be tied-in with the gamebanner updates and not run on an interval
 		setInterval(this.check.bind(this), 12000);
 	},
+	clickHandler: function (event) {
+		// Shift-click a server
+		if (!event.shiftKey) return;
+
+		event.preventDefault();
+
+		// Request notification permission if available and not yet decided
+		if ("Notification" in window && Notification.permission === "default") {
+			Notification.requestPermission().then((permission) => {
+				// Warn the user about the delay now, instead of in the notifications, if they denied those
+				// Users whose browsers don't support Notification do not get a warning about the delay
+				if (permission === "denied") {
+					alert(
+						"Notice that joining is delayed by 10 seconds as joining too early is unreliable"
+					);
+				}
+			});
+		}
+
+		let sound;
+		// Toggle "watch" class, for styling and tracking
+		if (this.classList.toggle("watch")) {
+			sound = "./sound/sound_machines_terminal_prompt_confirm.ogg";
+		} else {
+			sound = "./sound/sound_machines_terminal_error.ogg";
+		}
+
+		// Play on / off sound
+		sound = new Audio(sound);
+		sound.volume = 0.2;
+		sound.play();
+	},
 	check: function () {
 		// Is there a watched server in roundend or lobby status?
 		let serverToJoin = document.querySelector(
-			".server-banner.watch .statusroundend, .server-banner.watch .statuslobby" //.statuslobby
+			".server-banner.watch .statuslobby"
 		);
 		if (!serverToJoin) return;
 
@@ -161,8 +175,24 @@ autoJoinServer = {
 		sound.volume = 0.2;
 		sound.play();
 
-		// Join game
-		serverToJoin.parentElement.click();
+		// Notify user via Notification or a fallback alert
+		let serverName = serverToJoin
+			.querySelector(".gamebanneraddrline") // Scrape from address as the banner name changes
+			.innerText.match(/^.*?(?=\.)/)[0];
+		serverName = serverName.charAt(0).toUpperCase() + serverName.slice(1); // Capitalize first letter
+
+		if ("Notification" in window && Notification.permission === "granted") {
+			// Notify the user about the join delay
+			new Notification(`Joining ${serverName}`, {
+				icon: "img/favicon.png",
+				body: `New game found. Connecting in 10 seconds!`,
+			});
+		}
+
+		// Join game in 10 seconds (joining is unreliable too early)
+		setTimeout(() => {
+			serverToJoin.parentElement.click();
+		}, 10000);
 	},
 	reset: function () {
 		// Remove the "watch" class from all server banners
