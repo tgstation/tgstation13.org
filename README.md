@@ -4,7 +4,11 @@ This repository includes the landing page and tgdb, a web interface for game adm
 
 ## Landing page
 
-The landing page must be built in order to get its static parts compiled.
+The landing page has vendors and compiled SCSS shipped via git. You only need Node.js, if you want to modify SCSS (or vendors for some reason).
+
+### Deploy
+
+Copy `src` to your PHP server. Configure as desired (see below).
 
 ### Docker
 
@@ -15,14 +19,50 @@ The webserver is available at ports 80 and 443
 
 - Clone
 - Install dependencies: `npm i`
-- Build site: `npm run build` or `npm run dev` to auto-build on file changes
+- `npm run build` or `npm run dev` to rebuild on file changes
   This does not start a webserver
 
-See `./src/pug/config.json` for configuration of alerts and navbar.
+### How to configure
+
+You can define a custom [configuration](./src/config.json). Either overwrite the existing one or edit the environment variable `CONFIG` (default: `"/config.json"`) to point towards a different config. JSON files containing the word config in their name are gitignored (except for the default one).
+
+```jsonc
+// ./src/config.json
+{
+	"alerts": [
+		{
+			"type": "warning", // contextual class https://getbootstrap.com/docs/5.1/components/alerts/#examples
+			"text": "This is an important announcement", // Body text
+			"icon": "exclamation-circle", // icon from https://icons.getbootstrap.com/ (optional)
+			// If it should be dismissible, this must be a unique ID. If permanent, remove property
+			"dismissibleId": "test-announcement"
+		}
+	],
+	"navigation": [
+		{
+			// This is a simple link
+			"href": "#",
+			"text": "Top-level link"
+		},
+		{
+			// A dropdown menu that opens on click
+			"text": "Dropdown Menu Header",
+			"href": "#", // only reachable via Mouse 3 (open in new tab) or when Js is blocked
+			"dropdownId": "navbarDropdownExample", // must be unique
+			"children": [
+				// You can use three different types of child elements
+				{ "href": "#", "text": "Link" }, // Normal Link child
+				{ "type": "div" }, // Separator
+				{ "type": "text", "text": "Just some Text" } // Plain text, no link
+			]
+		}
+	]
+}
+```
 
 ### Technologies
 
-- [Pug](https://pughtml.com/) - Pre-processor for HTML. Helps splitting large documents into smaller parts as well as easy alerts / navbar editing. See `./src/pug`.
+- [PHP](https://php.net/) - Server-side scripting language. Used for templating.
 - [sass](https://sass-lang.com/) - Pre-processor for CSS
 - [Bootstrap 5](https://getbootstrap.com/) - CSS framework. Installed as sass, in order to modify it with ease. See `./src/scss`.
 -

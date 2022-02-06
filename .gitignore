@@ -120,3 +120,6 @@ dist
 # tgstation.org stuff
 config.php
 localsettings.php
+
+src/*config*.json
+!src/config.json
