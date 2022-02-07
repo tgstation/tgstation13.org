@@ -65,10 +65,7 @@ a.dropdown-item:focus {
 	transform: translateY(-50%);
 	display: flex;
 	width: max-content;
-
-	> * {
-		filter: drop-shadow(2px 2px rgba(0, 0, 0, 0.25));
-	}
+	filter: drop-shadow(2px 2px rgba(0, 0, 0, 0.25));
 }
 .triangle-before {
 	background: linear-gradient(

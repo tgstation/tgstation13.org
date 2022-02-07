@@ -10,7 +10,7 @@
 			<p class="mt-2 mb-0">
 				Space Station 13 is a paranoia-laden round-based roleplaying game set against the backdrop of a nonsensical, metal death trap masquerading as a space station, with charming spritework designed to represent the sci-fi setting and its dangerous undertones. Have fun, and survive!
 			</p>
-			<div id="screenshotCarousel" class="carousel slide my-2" data-bs-ride="carouselXX">
+			<div id="screenshotCarousel" class="carousel slide my-2" data-bs-ride="carousel">
 				<div class="carousel-inner">
 					<div class="carousel-item active">
 						<img src="./img/carousel/1.png" class="d-block w-100" alt="...">
