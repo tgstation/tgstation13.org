@@ -9,7 +9,7 @@ COPY package-lock.json package-lock.json
 RUN npm install && npm run build && rm -rf node_modules
 
 # Alpine PHP + Apache from https://github.com/ulsmith/alpine-apache-php7/
-FROM alpine:edge
+FROM docker.io/alpine:edge
 MAINTAINER Paul Smith <pa.ulsmith.net>
 
 # Add repos
