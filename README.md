@@ -13,7 +13,7 @@ Copy `src` to your PHP server. Configure as desired (see below).
 ### Docker
 
 Start container: `docker-compose up`
-The webserver is available at ports 80 and 443
+The webserver is available at port 80
 
 ### Manual with npm
 
