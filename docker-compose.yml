@@ -4,6 +4,5 @@ services:
     image: ghcr.io/tgstation/tgstation13.org:master
     ports:
       - 80:80
-      - 443:443
     environment:
       - CONFIG=/config.json

@@ -1,7 +1,7 @@
 {
-	"name": "tgstation.org-landingpage",
+	"name": "tgstation13.org",
 	"version": "1.0.0",
-	"description": "The landing page for tgstation13",
+	"description": "Landing page and tgdb for tgstation13.org",
 	"main": "index.js",
 	"scripts": {
 		"dev": "gulp watch",
