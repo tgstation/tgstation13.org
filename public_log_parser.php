@@ -472,7 +472,9 @@ foreach ($servers as $server) {
 							case 'cargo.html':
 							case 'gravity.html':
 							case 'records.html':
+							case 'singulo.html':
 							case 'experimentor.html':
+							case 'supermatter.html':
 							case 'engine.html':
 							case 'botany.html':
 							case 'presents.html':
