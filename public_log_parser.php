@@ -475,6 +475,7 @@ foreach ($servers as $server) {
 							case 'singulo.html':
 							case 'experimentor.html':
 							case 'supermatter.html':
+							case 'engine.html':
 							case 'botany.html':
 							case 'presents.html':
 							case 'telesci.html':
