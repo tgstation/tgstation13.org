@@ -510,6 +510,7 @@ foreach ($servers as $server) {
 							case 'config_error.log':
 							case 'hrefs.html':
 							case 'hrefs.log':
+							case 'speech_indicators.log':
 								break;
 							default:
 								echo "!!(default) $logfile\n";
