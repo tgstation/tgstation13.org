@@ -434,6 +434,7 @@ foreach ($servers as $server) {
 								
 								break;
 							case 'attack.log':
+							case 'dynamic.log':
 							case 'qdel.log':
 							case 'initialize.log':
 							case 'pda.log':
