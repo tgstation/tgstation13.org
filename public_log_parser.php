@@ -452,6 +452,7 @@ foreach ($servers as $server) {
 							case 'uplink.log':
 							case 'paper.log':
 							case 'harddel.log':
+							case 'speech_indicators.log':
 								$basefilename = basename($basename, '.log');
 								$fullnewpath = $newpath.'/'.$basefilename.'.txt';
 								
