@@ -451,6 +451,7 @@ foreach ($servers as $server) {
 							case 'uplink.log':
 							case 'paper.log':
 							case 'harddel.log':
+							case 'speech_indicators.log':
 								$basefilename = basename($basename, '.log');
 								$fullnewpath = $newpath.'/'.$basefilename.'.txt';
 								
@@ -510,7 +511,6 @@ foreach ($servers as $server) {
 							case 'config_error.log':
 							case 'hrefs.html':
 							case 'hrefs.log':
-							case 'speech_indicators.log':
 								break;
 							default:
 								echo "!!(default) $logfile\n";
