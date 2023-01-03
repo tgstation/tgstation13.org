@@ -3126,6 +3126,9 @@ input[type="button"].btn-block {
     left: 0;
     right: auto;
   }
+  .navbar-nav > .dropdown:hover > .dropdown-menu{
+    display: block;
+  }
 }
 .btn-group,
 .btn-group-vertical {
