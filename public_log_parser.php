@@ -444,6 +444,7 @@ foreach ($servers as $server) {
 							case 'job_debug.log':
 							case 'virus.log':
 							case 'econ.log':
+							case 'signals.log':
 							case 'shuttle.log':
 							case 'mecha.log':
 							case 'asset.log':
