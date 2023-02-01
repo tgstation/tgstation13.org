@@ -497,6 +497,7 @@ foreach ($servers as $server) {
 							case 'profiler.json':
 							case 'sendmaps.json':
 							case 'id_card_changes.html':
+							case 'target_zone_switch.json':
 							case ((substr($basename, 0, 5) == 'perf-') ? $basename : !$basename):
 								$fullnewpath = $newpath.'/'.$basename;
 								
