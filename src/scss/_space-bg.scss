@@ -4,7 +4,7 @@
 @function multiple-box-shadow($n, $color: #fff) {
 	$value: "#{random(2000)}px #{random(2000)}px #{$color}";
 	@for $i from 2 through $n {
-		$value: "#{$value}, #{random(2000)}px #{random(2000)}px #{$color}";
+		$value: "#{$value}, #{random(4000)}px #{random(2000)}px #{$color}";
 	}
 	@return unquote($value);
 }
@@ -25,13 +25,13 @@
 /* -------------------------------------------------------------------------- */
 
 // Generate re-usable box shadow styling
-$space-1: multiple-box-shadow(700);
-$space-2: multiple-box-shadow(200);
-$space-2-blue: multiple-box-shadow(250, #b7e7ec75);
-$space-2-red: multiple-box-shadow(12, rgba(255, 0, 0, 0.445));
-$space-2-black: multiple-box-shadow(18, rgba(0, 0, 0, 0.486));
-$space-2-yellow: multiple-box-shadow(30, rgba(255, 255, 0, 0.384));
-$space-3: multiple-box-shadow(100);
+$space-1: multiple-box-shadow(1400);
+$space-2: multiple-box-shadow(400);
+$space-2-blue: multiple-box-shadow(500, #b7e7ec75);
+$space-2-red: multiple-box-shadow(24, rgba(255, 0, 0, 0.445));
+$space-2-black: multiple-box-shadow(36, rgba(0, 0, 0, 0.486));
+$space-2-yellow: multiple-box-shadow(60, rgba(255, 255, 0, 0.384));
+$space-3: multiple-box-shadow(200);
 
 .pause .bg-space {
 	animation-play-state: paused;
