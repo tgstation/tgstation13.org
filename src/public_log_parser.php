@@ -1,7 +1,7 @@
 <?php
 //This has very little documentation, and is a hobbled togeather mess where speed to code and preformance of the code were placed before code readability or maintainability. Only works on linux. Requires gzip and gunzip shell commands as well as the php extentions.
 
-//	edit the server array below to your server(s) 
+//	edit the server array below to your server(s)
 //	symlink server-gamedata/servername to the static folder of tgs3 (gamedata folder for tgs2), and symlink parsed-logs to a folder accessable by the webserver
 //	you also need the runtime condenser in the folder rc, with the binary named rc
 //	it creates .gz files, you can abuse http-gzip-static and a few rewrite rules in nginx to make nginx serve them up as http-gzip compressed text files.
@@ -16,12 +16,12 @@ function getfoldersinfolder($folder) {
 	$results = scandir($folder);
 	$folders = array();
 	foreach ($results as $result) {
-		if (!is_dir($folder . '/' . $result)) 
+		if (!is_dir($folder . '/' . $result))
 			continue;
 		if ($result === '.' or $result === '..')
 			continue;
 
-		$folders[] = $folder . '/' . $result;	
+		$folders[] = $folder . '/' . $result;
 	}
 	return $folders;
 }
@@ -30,7 +30,7 @@ function getfilesinfolder($folder) {
 	$results = scandir($folder);
 	$files = array();
 	foreach ($results as $result) {
-		if (!is_file($folder . '/' . $result)) 
+		if (!is_file($folder . '/' . $result))
 			continue;
 		if ($result === '.' or $result === '..')
 			continue;
@@ -42,29 +42,29 @@ function getfilesinfolder($folder) {
 
 function getroundsbyserver($server) {
 	$years = getfoldersinfolder('server-gamedata/'.$server.'/data/logs');
-	
+
 	$logfiles = array();
 	foreach ($years as $year) {
 
 		if (!is_numeric(basename($year)))
 			continue;
-		
+
 		$months = getfoldersinfolder($year);
 
 		foreach ($months as $month) {
 			if (!is_numeric(basename($month)))
 				continue;
 			$days = getfoldersinfolder($month);
-			
+
 			foreach ($days as $day) {
 				$rounds = getfoldersinfolder($day);
 				foreach ($rounds as $round) {
-					
+
 					$roundid = (int) substr(basename($round), 6);
 					//echo "$round => $roundid\n";
 					if ($roundid < 2)
 						continue;
-					
+
 					$logfiles[] = $round;
 				}
 			}
@@ -91,7 +91,7 @@ function condense_runtimes($infile, $outfile) {
 
 function parseruntime($runtime, $newpath, $monthruntimes, $dayruntimes) {
 	echo "parsing runtime: $runtime -> $newpath/runtime.log\n";
-	
+
 	$file = fopen($runtime, 'rb');
 	if ($file === false)
 		return;
@@ -196,17 +196,17 @@ function filterconfig($server, $configfile) {
 
 function fillzips($file, $basename, $monthzip, $dayzip, $roundzip, $day, $round) {
 	$handle = gzopen($file, 'r');
-	
+
 	$monthzip[$day.'/'.$round.'/'.$basename] = $handle;
 	$monthzip[$day.'/'.$round.'/'.$basename]->compress(Phar::BZ2);
-	
+
 	gzrewind($handle);
-	
+
 	$dayzip[$round.'/'.$basename] = $handle;
 	$dayzip[$round.'/'.$basename]->compress(Phar::BZ2);
-	
+
 	gzrewind($handle);
-	
+
 	$roundzip[$basename] = $handle;
 	$roundzip[$basename]->compress(Phar::BZ2);
 
@@ -225,12 +225,12 @@ foreach ($servers as $server) {
 	$first = true;
 	$last = false;
 	$years = array_reverse(getfoldersinfolder('server-gamedata/'.$server.'/data/logs'));
-	
+
 	foreach ($years as $year) {
 		$baseyear = basename($year);
 		if (!is_numeric($baseyear))
 			continue;
-		
+
 		$months = array_reverse(getfoldersinfolder($year));
 		foreach ($months as $month) {
 			$basemonth = basename($month);
@@ -239,7 +239,7 @@ foreach ($servers as $server) {
 				continue;
 			if (!file_exists("$basenewpath/$baseyear/$basemonth"))
 				mkdir("$basenewpath/$baseyear/$basemonth", 0775, true);
-			
+
 			$monthzip = new PharData("$basenewpath/$baseyear/month.$baseyear-$basemonth.zip", Phar::CURRENT_AS_FILEINFO | Phar::KEY_AS_FILENAME, null, Phar::ZIP);
 			$monthzip->startBuffering();
 			$monthruntimes = gzopen("$basenewpath/$baseyear/$basemonth/$baseyear-$basemonth.runtime.txt.gz", "ab9");
@@ -268,7 +268,7 @@ foreach ($servers as $server) {
 					$roundA = explode('/', $round);
 					$roundA[0] = 'parsed-logs';
 					$newpath = implode('/', $roundA);
-					
+
 					if (!file_exists($newpath)) {
 						mkdir($newpath,0775,true);
 					} else {
@@ -283,7 +283,7 @@ foreach ($servers as $server) {
 					}
 					$roundzip = new PharData($newpath.'.zip', Phar::CURRENT_AS_FILEINFO | Phar::KEY_AS_FILENAME, null, Phar::ZIP);
 					$roundzip->startBuffering();
-					
+
 					$logfiles = getfilesinfolder($round);
 					foreach ($logfiles as $logfile) {
 						$basename = basename($logfile);
@@ -292,36 +292,37 @@ foreach ($servers as $server) {
 								parselog($logfile, $newpath, TRUE, TRUE);
 								$basefilename = basename($basename, '.log');
 								$fullnewpath = $newpath.'/'.$basefilename.'.txt';
-								
+
 								fillzips($fullnewpath.'.gz', $basefilename.'.txt', $monthzip, $dayzip, $roundzip, $baseday, $baseround);
-								
+
 								$fullnewpath = $newpath.'/'.$basefilename.'.html';
-								
+
 								fillzips($fullnewpath.'.gz', $basefilename.'.html', $monthzip, $dayzip, $roundzip, $baseday, $baseround);
 								break;
-							
+
 							case 'runtime.log':
 								parseruntime($logfile, $newpath, $monthruntimes, $dayruntimes);
 								$basefilename = basename($basename, '.log');
 								$fullnewpath = $newpath.'/'.$basefilename.'.txt';
-								
+
 								fillzips($fullnewpath.'.gz', $basefilename.'.txt', $monthzip, $dayzip, $roundzip, $baseday, $baseround);
-								
+
 								$fullnewpath = $newpath.'/'.$basefilename.'.condensed.txt';
-								
+
 								fillzips($fullnewpath.'.gz', $basefilename.'.condensed.txt', $monthzip, $dayzip, $roundzip, $baseday, $baseround);
-								
+
 								break;
-							
+
 							case 'sql.log':
 								parselog($logfile, $newpath, FALSE, FALSE);
 								$basefilename = basename($basename, '.log');
 								$fullnewpath = $newpath.'/'.$basefilename.'.txt';
-								
+
 								fillzips($fullnewpath.'.gz', $basefilename.'.txt', $monthzip, $dayzip, $roundzip, $baseday, $baseround);
-								
+
 								break;
 							case 'attack.log':
+							case 'dynamic.log':
 							case 'qdel.log':
 							case 'initialize.log':
 							case 'pda.log':
@@ -330,24 +331,36 @@ foreach ($servers as $server) {
 							case 'manifest.log':
 							case 'job_debug.log':
 							case 'virus.log':
+							case 'econ.log':
+							case 'signals.log':
 							case 'shuttle.log':
+							case 'mecha.log':
+							case 'asset.log':
+							case 'map_errors.log':
+							case 'cloning.log':
+							case 'uplink.log':
+							case 'paper.log':
+							case 'harddel.log':
+							case 'speech_indicators.log':
 								$basefilename = basename($basename, '.log');
 								$fullnewpath = $newpath.'/'.$basefilename.'.txt';
-								
+
 								compressfile($logfile, $fullnewpath);
-								
+
 								fillzips($fullnewpath.'.gz', $basefilename.'.txt', $monthzip, $dayzip, $roundzip, $baseday, $baseround);
 								break;
-							
+
 							case 'kudzu.html':
 							case 'wires.html':
 							case 'atmos.html':
 							case 'cargo.html':
+							case 'deaths.html':
 							case 'gravity.html':
 							case 'records.html':
 							case 'singulo.html':
 							case 'experimentor.html':
 							case 'supermatter.html':
+							case 'engine.html':
 							case 'botany.html':
 							case 'telesci.html':
 							case 'research.html':
@@ -359,14 +372,20 @@ foreach ($servers as $server) {
 							case 'newscaster.json':
 							case 'dynamic.json':
 							case 'round_end_data.json':
+							case 'round_end_data.html':
+							case 'profiler.json':
+							case 'sendmaps.json':
+							case 'id_card_changes.html':
+							case 'target_zone_switch.json':
+							case 'silo.json':
 							case ((substr($basename, 0, 5) == 'perf-') ? $basename : !$basename):
 								$fullnewpath = $newpath.'/'.$basename;
-								
+
 								compressfile($logfile, $fullnewpath);
-								
+
 								fillzips($fullnewpath.'.gz', $basename, $monthzip, $dayzip, $roundzip, $baseday, $baseround);
 								break;
-							
+
 							case 'config_error.log':
 							case 'hrefs.html':
 								break;
@@ -385,9 +404,9 @@ foreach ($servers as $server) {
 								foreach (getfilesinfolder($logfolder) as $picturefile) {
 									$basename = basename($picturefile);
 									$fullnewpath = $newpath.'/photos/'.$basename;
-									
+
 									copy($picturefile, $fullnewpath);
-									
+
 									fillzips($fullnewpath, 'photos/'.$basename, $monthzip, $dayzip, $roundzip, $baseday, $baseround);
 								}
 							break;
@@ -395,7 +414,7 @@ foreach ($servers as $server) {
 								echo "(folder default) $logfile => $newpath/$basename\n";
 								break;
 						}
-						
+
 					}
 					$roundzip->stopBuffering();
 				}
@@ -415,7 +434,7 @@ function parselog($logfile, $newpath, $lineparse, $htmlify) {
 	$filename = basename($logfile);
 
 	echo "Parsing logfile as Game Log: $logfile\n";
-	
+
 	$file = fopen($logfile, "rb");
 	if ($file === false)
 		return;
@@ -429,7 +448,7 @@ function parselog($logfile, $newpath, $lineparse, $htmlify) {
 		@fclose($tofile);
 		return;
 	}
-	
+
 	$tofilehtml = NULL;
 	if ($htmlify) {
 		$tofilehtml = gzopen($newpath.'/game.html.gz', "wb9");
@@ -440,7 +459,7 @@ function parselog($logfile, $newpath, $lineparse, $htmlify) {
 		}
 		gzwrite($tofilehtml, '<html><head><title>Log file: '.$newpath.' - /tg/station 13</title><link rel="stylesheet" type="text/css" href="/logfilestyle.css"></head><body>');
 	}
-	
+
 	while (($line = fgets($file)) !== false) {
 		$rawline = trim($line, "\n\r");
 		$parsedline = $rawline;
@@ -449,7 +468,7 @@ function parselog($logfile, $newpath, $lineparse, $htmlify) {
 		$html = "";
 		if ($htmlify)
 			$html = preg_replace('/(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]?|[0-9])/', '<span class="censored">-censored(ip)-</span>', $parsedline[1]);
-		
+
 		$line = preg_replace('/(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]?|[0-9])/', '-censored(ip)-', $parsedline[0]); //remove ips
 
 		gzwrite($tofile, $line."\r\n");
@@ -464,8 +483,8 @@ function parselog($logfile, $newpath, $lineparse, $htmlify) {
 	gzclose($tofile);
 
 }
-	
-	
+
+
 function parseline ($line, $html) {
 	$line = trim($line);
 	if (!$line)
@@ -474,7 +493,7 @@ function parseline ($line, $html) {
 		return array('-censored(misc)-','<p class="censored">-censored(misc)-</p>');
 	$words = explode(' ', $line);
 	$htmlwords = explode(' ', $html);
-	
+
 	$logtype = (explode(']',$words[0])[1]);
 	switch ($logtype) {
 		case 'ACCESS:':
@@ -533,13 +552,11 @@ function parseline ($line, $html) {
 			break;
 		default:
 			break;
-	}		
-	
+	}
+
 	return array(implode(' ',$words), '<p class="'.rtrim(explode(']',$words[0])[1],':').'">'.implode(' ',$htmlwords).'</p>');
 }
 
 function censor($reason) {
 	return array('-censored('.$reason.')-','<p class="censored">-censored('.$reason.')-</p>');
 }
-
-?>
