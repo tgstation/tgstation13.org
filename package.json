@@ -1,0 +1,26 @@
+{
+	"name": "tgstation13.org",
+	"version": "1.0.0",
+	"description": "Landing page and tgdb for tgstation13.org",
+	"main": "index.js",
+	"scripts": {
+		"dev": "gulp watch",
+		"build": "gulp"
+	},
+	"keywords": [
+		"ss13",
+		"tgstation"
+	],
+	"author": "tgstation",
+	"license": "GPL-2.0 License",
+	"devDependencies": {
+		"bootstrap": "^5.1.2",
+		"bootstrap-icons": "^1.7.2",
+		"del": "^6.0.0",
+		"gulp": "^4.0.2",
+		"gulp-sass": "^5.0.0",
+		"gulp-sourcemaps": "^3.0.0",
+		"jquery": "^1.12.4",
+		"sass": "^1.42.1"
+	}
+}

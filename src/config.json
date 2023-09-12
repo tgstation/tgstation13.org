@@ -1,0 +1,127 @@
+{
+	"alerts": [
+		{
+			"type": "info",
+			"text": "You can shift-click a server to auto-join the next round.",
+			"dismissibleId": "shift-click-to-watch-server",
+			"icon": "info-circle"
+		}
+	],
+	"navigation": [
+		{
+			"href": "https://tgstation13.org/phpBB",
+			"text": "Forum"
+		},
+		{
+			"text": "Wiki",
+			"href": "/wiki",
+			"dropdownId": "navbarDropdownWiki",
+			"children": [
+				{ "href": "/wiki", "text": "Main Page" },
+				{ "href": "/wiki/Starter_guide", "text": "New Player Tutorial" },
+				{ "href": "/wiki/Rules", "text": "Rules" },
+				{ "href": "/wiki/Jobs", "text": "Jobs" },
+				{ "href": "/wiki/Objects", "text": "Objects" },
+				{ "href": "/wiki/Locations", "text": "Locations" },
+				{ "href": "/wiki/Game_Mode", "text": "Game Modes" },
+				{ "href": "/wiki/Space_Law", "text": "Space Law" },
+				{ "href": "/wiki/Guides", "text": "Guides" }
+			]
+		},
+		{
+			"text": "Patreon",
+			"href": "https://www.patreon.com/tgstation",
+			"dropdownId": "navbarDropdownPatreon",
+			"children": [
+				{
+					"href": "https://www.patreon.com/tgstation",
+					"text": "/tg/ Server Patreon"
+				},
+				{ "type": "div" },
+				{ "type": "text", "text": "Coder/Spriter/Misc Patreons:" },
+				{
+					"href": "https://www.patreon.com/spacestationart",
+					"text": "Auros's Spessmen Art Patreon"
+				},
+				{
+					"href": "https://www.patreon.com/incoming",
+					"text": "Incoming's Patreon"
+				},
+				{ "href": "https://www.patreon.com/BYOND", "text": "BYOND's Patreon" }
+			]
+		},
+		{
+			"text": "Cool Shit",
+			"href": "https://shop.spreadshirt.com/tgstation13/",
+			"dropdownId": "navbarDropdownCool",
+			"children": [
+				{ "href": "https://shop.spreadshirt.com/tgstation13/", "text": "Gear" },
+				{ "href": "https://sb.atlantaned.space", "text": "Game Stats" },
+				{
+					"href": "https://twitter.com/Poly_the_Parrot",
+					"text": "Poly the Parrot"
+				}
+			]
+		},
+		{
+			"href": "https://status.tgstation13.org/",
+			"text": "Status"
+		},
+		{
+			"text": "Dev",
+			"href": "https://github.com/tgstation/tgstation",
+			"dropdownId": "navbarDropdownDev",
+			"children": [
+				{
+					"href": "https://github.com/tgstation/tgstation",
+					"text": "/tg/ Github"
+				},
+				{
+					"href": "https://github.com/tgstation/tgstation13.org",
+					"text": "/tg/station13.org Github"
+				},
+				{
+					"href": "https://lzimann.org/icon_searcher/index.php?state=&icon=",
+					"text": "/tg/ Github Icon Searcher"
+				}
+			]
+		},
+		{
+			"text": "IRC",
+			"href": "#",
+			"dropdownId": "navbarDropdownIRC",
+			"children": [
+				{ "href": "irc://irc.rizon.net/tgstation13", "text": "#tgstation13" },
+				{ "href": "irc://irc.rizon.net/devbus", "text": "#devbus" },
+				{ "href": "irc://irc.rizon.net/coderbus", "text": "#coderbus" },
+				{ "href": "irc://irc.rizon.net/supportbus", "text": "#supportbus" }
+			]
+		},
+		{
+			"href": "https://tgstation13.org/phpBB/viewforum.php?f=60",
+			"text": "Discord"
+		},
+		{
+			"text": "Related Sites",
+			"href": "#",
+			"dropdownId": "navbarDropdownRelated",
+			"children": [
+				{ "type": "text", "text": "May Mays" },
+				{ "href": "https://boards.4chan.org/tg/", "text": "/tg/ (4chan)" },
+				{ "href": "https://boards.4chan.org/vg/", "text": "/vg/ (4chan)" },
+				{ "href": "https://reddit.com/r/ss13/", "text": "/r/ss13 (reddit)" },
+				{ "type": "text", "text": "Other stations" },
+				{
+					"href": "https://www.paradisestation.org/",
+					"text": "Paradise Station"
+				},
+				{
+					"href": "http://www.colonial-marines.com/",
+					"text": "Colonial Marines"
+				},
+				{ "href": "http://baystation12.net/", "text": "Bay Station" },
+				{ "href": "https://www.yogstation.net/", "text": "Yog Station" }
+			]
+		}
+	]
+}
