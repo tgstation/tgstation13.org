@@ -11,11 +11,11 @@
 	</noscript>
 	<?php foreach ($alerts as $alert) : ?>
 		<div id="<?= $alert->dismissibleId ?? "" ?>" class="alert alert-<?= $alert->type ?> border border-<?= $alert->type ?> position-relative px-4" role="alert">
-			<?php if (key_exists("icon", $alert)) : ?>
+			<?php if (property_exists($alert, "icon")) : ?>
 				<i class="bi bi-<?= $alert->icon ?> fs-5 top-50"></i>
 			<?php endif ?>
 			<?= $alert->text ?>
-			<?php if (key_exists("dismissibleId", $alert)) : ?>
+			<?php if (property_exists($alert, "dismissibleId")) : ?>
 				<button id="dismiss" class="btn-close custom-close top-50" type="button" aria-label="Close" data-close-target=<?= $alert->dismissibleId ?>></button>
 			<?php endif ?>
 		</div>

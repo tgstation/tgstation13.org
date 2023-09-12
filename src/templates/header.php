@@ -7,14 +7,14 @@
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav me-auto mb-2 mb-md-0 w-100 justify-content-center">
 					<?php foreach ($navigation as $navItem) : ?>
-						<?php if (key_exists("dropdownId", $navItem)) : ?>
+						<?php if (property_exists($navItem, "dropdownId")) : ?>
 							<li class="nav-item dropdown">
 								<a id="<?= $navItem->dropdownId ?>" href=" <?= $navItem->href ?>" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">
 									<?= $navItem->text ?>
 								</a>
 								<ul class="dropdown-menu dropdown-menu-dark border border-secondary">
 									<?php foreach ($navItem->children as $dropdownItem) : ?>
-										<?php if (!key_exists("type", $dropdownItem)) : ?>
+										<?php if (!property_exists($dropdownItem, "type")) : ?>
 											<li>
 												<a href="<?= $dropdownItem->href ?>" class="dropdown-item">
 													<?= $dropdownItem->text ?>
