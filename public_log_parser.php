@@ -439,6 +439,7 @@ foreach ($servers as $server) {
 							case 'initialize.log':
 							case 'pda.log':
 							case 'telecomms.log':
+							case 'transport.log':
 							case 'overlay.log':
 							case 'manifest.log':
 							case 'job_debug.log':
