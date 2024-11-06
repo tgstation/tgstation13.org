@@ -14,6 +14,14 @@
 // Import space background
 @import "space-bg";
 
+// Import flat background
+@import "flat-bg";
+
+html,
+body {
+	height: 100%;
+}
+
 // Link formatting
 a {
 	font-family: $font-family-monospace;

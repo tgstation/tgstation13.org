@@ -20,6 +20,10 @@
 			<input class="form-check-input" id="toggleBgAnimation" type="checkbox" checked="" />
 			<label class="form-check-label" for="toggleBgAnimation">Background animation</label>
 		</div>
+		<div class="form-check form-switch">
+			<input class="form-check-input" id="bgStyle" type="checkbox" checked="" />
+			<label class="form-check-label" for="bgStyle">Classic background</label>
+		</div>
 		<hr />
 		<p class="mb-1">
 			Your preferences are saved between sessions in <a class="link-inline" href="https://javascript.info/localstorage" target="_blank">Local Storage</a>. This is similar to cookies.

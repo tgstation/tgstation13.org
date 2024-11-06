@@ -15,8 +15,8 @@ require_once __BASE__ . "/templates/renderer.php";
 <!DOCTYPE html>
 <?= render("head") ?>
 
-<body>
-	<div id="bgAnimation">
+<body id="flat-bg" class="">
+	<div id="space-bg-container" class="">
 		<div class="bg-space space-1"></div>
 		<div class="bg-space space-2"></div>
 		<div class="bg-space space-2-blue"></div>

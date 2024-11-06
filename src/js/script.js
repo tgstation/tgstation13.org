@@ -80,18 +80,21 @@ settingsHandler = {};
 // Manual background animation toggle
 // #toggleBgAnimation
 settingsHandler.bgAnimation = {
-	bgAnimationContainer: document.getElementById("bgAnimation"),
+	flatBgContainer: document.getElementById("flat-bg"),
+	spaceBgContainer: document.getElementById("space-bg-container"),
 	bgAnimationToggler: document.getElementById("toggleBgAnimation"),
 	set: function (enable) {
 		if (enable) {
 			// Resume bg animation
-			this.bgAnimationContainer.classList.remove("pause");
+			this.flatBgContainer.classList.remove("pause");
+			this.spaceBgContainer.classList.remove("pause");
 
 			// Save status (remove, as it defaults to on)
 			localStorage.removeItem("bgAnimation");
 		} else {
 			// Pause bg animation
-			this.bgAnimationContainer.classList.add("pause");
+			this.flatBgContainer.classList.add("pause");
+			this.spaceBgContainer.classList.add("pause");
 
 			// Save status
 			localStorage.setItem("bgAnimation", "false");
@@ -118,6 +121,49 @@ settingsHandler.bgAnimation = {
 	},
 };
 settingsHandler.bgAnimation.initialize();
+
+// Switch between the different backgrounds
+settingsHandler.bgSwitcher = {
+	flatBgContainer: document.getElementById("flat-bg"),
+	spaceBgContainer: document.getElementById("space-bg-container"),
+	bgStyleToggler: document.getElementById("bgStyle"),
+	set: function (useClassicTheme) {
+		if (useClassicTheme) {
+			// Use classic space-bg theme
+			this.flatBgContainer.classList.remove("flat-bg");
+			this.spaceBgContainer.classList.remove("d-none");
+
+			// Save status (remove, as it defaults to on)
+			localStorage.setItem("bgStyle", "classic");
+		} else {
+			// Use in-game background
+			this.flatBgContainer.classList.add("flat-bg");
+			this.spaceBgContainer.classList.add("d-none");
+
+			// Save status
+			localStorage.setItem("bgStyle", "ingame");
+		}
+	},
+	initialize: function () {
+		let storedStatus = localStorage.getItem("bgStyle");
+		// Default to "classic"
+		if (storedStatus === null) storedStatus = "classic";
+
+		this.bgStyleToggler.checked = storedStatus === "classic";
+		this.set(this.bgStyleToggler.checked);
+
+		// Bind settingsHandler.bgAnimation.set to its settings checkbox toggler
+		this.bgStyleToggler.addEventListener("change", function (event) {
+			settingsHandler.bgSwitcher.set(this.checked);
+		});
+	},
+	reset: function () {
+		this.set(true);
+		localStorage.removeItem("bgStyle");
+	},
+};
+settingsHandler.bgSwitcher.initialize();
+
 
 // Auto-join server on next round (Shift-Click)
 autoJoinServer = {
@@ -209,6 +255,7 @@ document
 	.addEventListener("click", function (event) {
 		closedElementsHandler.reset();
 		settingsHandler.bgAnimation.reset();
+		settingsHandler.bgSwitcher.reset();
 
 		this.disabled = true;
 		this.classList.remove("btn-secondary");
