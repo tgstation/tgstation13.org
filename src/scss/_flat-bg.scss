@@ -1,7 +1,7 @@
 .flat-bg::before {
 	content: "";
 	background: center url("../img/background-stars.png") repeat;
-	position: absolute;
+	position: fixed;
 	top: 0;
 	left: 0;
 	height: 100%;
