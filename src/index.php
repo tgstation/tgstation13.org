@@ -33,9 +33,9 @@ require_once __BASE__ . "/templates/renderer.php";
 				<img class="img-fluid text-center" id="navbarLogo" src="img/logo.png" alt="/tg/station 13">
 			</div>
 			<?= render("sections/alerts", ["alerts" => $config->alerts]) ?>
+			<?= render("sections/userbanner") ?>
 			<?= render("sections/introText") ?>
 			<?= render("sections/servers") ?>
-			<?= render("sections/userbanner") ?>
 		</main>
 	</div>
 </body>
