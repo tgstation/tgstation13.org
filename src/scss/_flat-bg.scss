@@ -1,0 +1,38 @@
+.flat-bg::before {
+	content: "";
+	background: center url("../img/background-stars.png") repeat;
+	position: fixed;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+	z-index: -10;
+
+	image-rendering: crisp-edges;
+	image-rendering: pixelated;
+
+	animation: flat-bg 25s linear infinite;
+
+	/* Stop the animation if user prefers reduced motion */
+	@media (prefers-reduced-motion) {
+		animation-play-state: paused !important;
+	}
+}
+.flat-bg.pause::before {
+	animation-play-state: paused !important;
+}
+
+body {
+	position: relative;
+}
+
+@keyframes flat-bg {
+	from {
+		background-position-y: 0;
+		// transform: translateY(0px);
+	}
+	to {
+		background-position-y: -460px;
+		// transform: translateY(-460px);
+	}
+}

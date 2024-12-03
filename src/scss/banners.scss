@@ -1,0 +1,139 @@
+img.gamebannerplaceholder {
+	width: 240px;
+	height: 80px;
+}
+.server-banner.watch .gamebannername {
+	color: var(--bs-secondary);
+}
+span.gamebanner {
+	font-family: "Inconsolata", monospace;
+	display: inline-block;
+	width: 232px;
+	height: 72px;
+	overflow: hidden;
+	line-height: 1em;
+	margin: 0px 4px;
+	padding: 0px;
+	padding-left: 1px;
+	text-align: left;
+	white-space: nowrap;
+}
+span.gamebannerhidden {
+	display: none;
+}
+span.statusinprogress {
+	box-shadow: rgb(40, 43, 45) 0px 0px 0px 1px, rgb(47, 45, 81) 0px 0px 0px 2px,
+		rgb(59, 59, 108) 0px 0px 0px 3px, rgb(30, 33, 112) 0px 0px 0px 4px;
+	background-color: rgb(40, 43, 45);
+	color: rgb(131, 165, 221);
+}
+
+span.statuslobby {
+	box-shadow: rgb(34, 55, 43) 0px 0px 0px 1px, rgb(46, 83, 59) 0px 0px 0px 2px,
+		rgb(59, 110, 76) 0px 0px 0px 3px, rgb(30, 112, 38) 0px 0px 0px 4px;
+	background-color: rgb(34, 55, 43);
+	color: rgb(117, 218, 126);
+}
+
+span.statusroundend {
+	box-shadow: rgb(53, 36, 33) 0px 0px 0px 1px, rgb(81, 46, 46) 0px 0px 0px 2px,
+		rgb(109, 59, 61) 0px 0px 0px 3px, rgb(112, 30, 35) 0px 0px 0px 4px;
+	background-color: rgb(53, 36, 33);
+	color: rgb(218, 117, 123);
+}
+
+span.statuserror {
+	box-shadow: rgb(53, 36, 33) 0px 0px 0px 1px, rgb(81, 46, 46) 0px 0px 0px 2px,
+		rgb(109, 59, 61) 0px 0px 0px 3px, rgb(112, 30, 35) 0px 0px 0px 4px;
+	background-color: rgb(53, 36, 33);
+	color: rgb(218, 117, 123);
+}
+
+/*statusevent intentionally overrides statuserror, to allow us to announce future events on servers that are down.*/
+span.statusevent {
+	box-shadow: rgb(49, 52, 31) 0px 0px 0px 1px, rgb(79, 80, 45) 0px 0px 0px 2px,
+		rgb(108, 107, 59) 0px 0px 0px 3px, rgb(112, 109, 30) 0px 0px 0px 4px;
+	background-color: rgb(49, 52, 31);
+	color: rgb(218, 214, 117);
+}
+
+span.gamebanner span.gamebannerline {
+	line-height: 1.05em;
+	margin: 0px;
+	padding: 0px;
+	text-align: left;
+	display: list-item;
+	white-space: nowrap;
+}
+
+span.gamebanner span.gamebannericons {
+	float: right;
+}
+
+span.gamebanner span.gamebanneraddrline {
+	vertical-align: super;
+	font-size: 11px;
+	transform: scaleY(1.1);
+	color: rgb(160, 174, 201);
+}
+span.gamebanner span.gamebannername {
+	letter-spacing: -0.0125em;
+	font-size: 18px;
+	transform: scaleY(0.9);
+	font-weight: bold;
+}
+span.gamebanner span.gamebannermode {
+	font-size: 11px;
+	transform: scaleY(1.1);
+}
+span.gamebanner span.gamebannermap {
+	font-size: 11px;
+	transform: scaleY(1.1);
+}
+span.gamebanner span.gamebannerttl {
+	font-size: 13px;
+	transform: scaleY(1.1);
+}
+span.gamebanner span.gamebannererror {
+	font-size: 18px;
+	transform: scaleY(0.9);
+	font-weight: bold;
+	white-space: pre;
+	white-space: pre-wrap;
+	white-space: pre-line;
+}
+
+.gamebannerloader {
+	position: absolute;
+	border: 8px solid rgba(255, 255, 255, 0.15);
+	border-radius: 50%;
+	border-top: 8px solid rgba(0, 0, 0, 0.125);
+	border-color: rgba(140, 130, 115, 0.13) rgba(48, 52, 54, 0.15)
+		rgba(48, 52, 54, 0.15);
+	width: 35px;
+	height: 35px;
+	left: 100px;
+	top: 22px;
+	-webkit-animation: spin 3s linear infinite;
+	animation: spin 3s linear infinite;
+	display: inline;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+	0% {
+		-webkit-transform: rotate(0deg);
+	}
+	100% {
+		-webkit-transform: rotate(360deg);
+	}
+}
+
+@keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
