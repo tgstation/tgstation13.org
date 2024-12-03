@@ -36,6 +36,7 @@ require_once __BASE__ . "/templates/renderer.php";
 			<?= render("sections/userbanner") ?>
 			<?= render("sections/introText") ?>
 			<?= render("sections/servers") ?>
+			<div class="mb-3"></div>
 		</main>
 	</div>
 </body>
