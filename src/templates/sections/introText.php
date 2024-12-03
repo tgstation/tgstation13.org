@@ -8,9 +8,7 @@ if (!defined("__BASE__")) die("Access denied");
 */
 $screenshots = [
 	[
-		// Relative to ./img/carousel/
 		"img" => "1.png",
-		// Displayed with the image on larger screens. Accepts HTML.
 		"caption" => "A xenomorph infection",
 	],
 	[
