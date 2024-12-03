@@ -30,7 +30,7 @@ require_once __BASE__ . "/templates/renderer.php";
 		<main class="container mb-1">
 			<?= render("settings") ?>
 			<div class="text-center">
-				<img class="img-fluid text-center" id="navbarLogo" src="img/logo.png" alt="/tg/station 13">
+				<img class="img-fluid text-center" id="navbarLogo" src="img/logo.png" loading="lazy" alt="/tg/station 13">
 			</div>
 			<?= render("sections/alerts", ["alerts" => $config->alerts]) ?>
 			<?= render("sections/userbanner") ?>

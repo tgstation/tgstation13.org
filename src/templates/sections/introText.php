@@ -1,4 +1,29 @@
-<?php if (!defined("__BASE__")) die("Access denied"); ?>
+<?php
+if (!defined("__BASE__")) die("Access denied");
+/* Format of a screenshot-array-entry
+[
+	"img" => "1.png", Image file path relative to to ./img/carousel/
+	"caption" => "A xenomorph infection", Displayed caption with the image on larger screens. Accepts HTML.
+],
+*/
+$screenshots = [
+	[
+		// Relative to ./img/carousel/
+		"img" => "1.png",
+		// Displayed with the image on larger screens. Accepts HTML.
+		"caption" => "A xenomorph infection",
+	],
+	[
+		"img" => "2.png",
+		"caption" => "Miners setting out to get minerals",
+	],
+	[
+		"img" => "3.png",
+		"caption" => "A normal shift in Chemistry",
+	],
+];
+
+?>
 <section id="introText">
 	<div class="card bg-dark-850 border mt-5">
 		<div class="card-body pb-2">
@@ -12,30 +37,16 @@
 			</p>
 			<div id="screenshotCarousel" class="carousel slide my-2" data-bs-ride="carousel">
 				<div class="carousel-inner">
-					<div class="carousel-item active">
-						<img src="./img/carousel/1.png" class="d-block w-100" alt="...">
-						<div class="carousel-caption d-none d-md-flex p-0 flex-row justify-content-center">
-							<div class="bg-dark-850 px-3 py-1">
-								A xenomorph infection
+					<?php foreach ($screenshots as $index => $screenshot) : ?>
+						<div class="carousel-item<?= $index === 0 ? " active" : "" ?>">
+							<img src="./img/carousel/<?= $screenshot["img"] ?>" class="d-block w-100" loading="lazy">
+							<div class="carousel-caption d-none d-md-flex p-0 flex-row justify-content-center">
+								<div class="bg-dark-850 px-3 py-1">
+									<?= $screenshot["caption"] ?>
+								</div>
 							</div>
 						</div>
-					</div>
-					<div class="carousel-item">
-						<img src="./img/carousel/2.png" class="d-block w-100" alt="...">
-						<div class="carousel-caption d-none d-md-flex p-0 flex-row justify-content-center">
-							<div class="bg-dark-850 px-3 py-1">
-								Miners setting out to get minerals
-							</div>
-						</div>
-					</div>
-					<div class="carousel-item">
-						<img src="./img/carousel/3.png" class="d-block w-100" alt="...">
-						<div class="carousel-caption d-none d-md-flex p-0 flex-row justify-content-center">
-							<div class="bg-dark-850 px-3 py-1">
-								A normal shift in Chemistry
-							</div>
-						</div>
-					</div>
+					<?php endforeach ?>
 				</div>
 				<button class="carousel-control-prev" type="button" data-bs-target="#screenshotCarousel" data-bs-slide="prev">
 					<span class="carousel-control-prev-icon" aria-hidden="true"></span>
