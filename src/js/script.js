@@ -74,6 +74,29 @@ closeElementList.forEach((closeElement) => {
 	});
 });
 
+/* --------------------- User- and game-banner fallbacks -------------------- */
+{
+	const bannerImgs = document.querySelectorAll("#userbanner img");
+	for (const bannerImg of bannerImgs) {
+		bannerImg.addEventListener("error", (e) => {
+			console.warn("Could not load banner image", e.target.src)
+			e.target.outerHTML = "";
+		});
+	}
+}
+
+{
+	function checkIfGamebannersLoaded() {
+		if (document.querySelector(".bannerusercount").innerText !== "") return;
+
+		console.error("Game Banners did not load");
+		document.querySelectorAll('.server-banner a').forEach(elem => { elem.innerText = elem.href })
+		document.getElementById("alerts").insertAdjacentHTML("afterbegin", '<div class="alert alert-warning border border-warning position-relative px-4" role="alert"><i class="bi bi-wifi-off fs-5 top-50"></i>Game Banners did not load. Providing fallback links.<br/>Check <a href="https://status.tgstation13.org/" target="_blank">status</a>.</div>');
+	}
+
+	setTimeout(checkIfGamebannersLoaded, 20000);
+}
+
 /* -------------------------------- Settings -------------------------------- */
 settingsHandler = {};
 
