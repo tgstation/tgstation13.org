@@ -1,4 +1,3 @@
-tgstation13-website
-===================
+# Legacy tgstation13-website
 
-Website shit for tgstation13.org
+Now moved to https://github.com/tgstation-operations/website-v2
